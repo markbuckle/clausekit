@@ -1,37 +1,30 @@
 {
   "compilerOptions": {
-    "allowUnusedLabels": false,
-    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true,
-    "jsx": "react",
-    "module": "ES2020",
-    "moduleResolution": "node",
-    "noImplicitReturns": true,
-    "noUnusedParameters": true,
-    "outDir": "dist",
-    "removeComments": false,
-    "sourceMap": true,
-    "target": "es5",
     "lib": [
-      "es7",
-      "dom"
+      "ES2020",
+      "DOM"
     ],
-    "pretty": true,
-    "typeRoots": [
-      "node_modules/@types"
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noImplicitAny": true,
+    "outDir": "lib",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "strict": false,
+    "target": "ES2020",
+    "jsx": "react-jsx",
+    "types": [
+      "office-js",
+      "webpack-env"
     ]
   },
   "exclude": [
-    "node_modules"
-  ],
-  "compileOnSave": false,
-  "buildOnSave": false,
-  "ts-node": { 
-    "compilerOptions": {
-      "module": "commonjs"
-    },
-    "files": true 
-  }
+    "node_modules",
+    "dist",
+    "webpack.config.js",
+    "babel.config.json"
+  ]
 }
