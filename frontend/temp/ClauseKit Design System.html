@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ClauseKit — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     DESIGN TOKENS
+     ============================================================ */
+  :root {
+    /* Brand — near-black (Resend-inspired) */
+    --navy: #0E0E12;        /* primary brand ink (was navy) */
+    --navy-700: #2b2b34;    /* lighter ink for hover states */
+    --navy-300: #6c6c77;    /* mid neutral accent on light surfaces */
+    --ink-grad: linear-gradient(180deg, #16161b 0%, #0c0c10 60%, #050506 100%);
+    --ink-grad-soft: linear-gradient(180deg, #1d1d24 0%, #101015 100%);
+    --amber: #F59E0B;
+    --amber-600: #d4870a;
+    --amber-soft: #FEF3C7;
+    --amber-line: #FCD34D;
+    --amber-grad: linear-gradient(180deg, #FCC04A 0%, #F59E0B 52%, #E88B05 100%);
+    --amber-glow: inset 0 1px 0 rgba(255,255,255,.35), 0 2px 10px rgba(245,158,11,.4), 0 1px 2px rgba(160,98,0,.45);
+
+    /* Documentation page (dark, Resend-inspired) */
+    --page-bg: #08080A;
+    --doc-card: #141417;
+    --doc-border: #29292f;
+    --doc-text: #f5f5f6;
+    --doc-muted: #9a9aa4;
+    --doc-faint: #6f6f79;
+    --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+
+    /* Surfaces */
+    --bg: #F8F9FA;          /* chat area */
+    --surface: #FFFFFF;     /* cards, input */
+    --user-bubble: #EEF2FF; /* light navy */
+
+    /* Text */
+    --text-primary: #111827;
+    --text-secondary: #6B7280;
+    --text-on-navy: #F4F6FB;
+
+    /* Lines + status */
+    --border: #E5E7EB;
+    --border-strong: #D1D5DB;
+    --destructive: #EF4444;
+    --destructive-soft: #FEF2F2;
+
+    /* Type scale (task pane) */
+    --fs-header: 16px;
+    --fs-body: 13px;
+    --fs-label: 11px;
+    --fs-button: 13px;
+
+    /* Spacing — 8px base */
+    --s-1: 4px;
+    --s-2: 8px;
+    --s-3: 12px;
+    --s-4: 16px;
+    --s-5: 24px;
+    --s-6: 32px;
+    --pane-pad: 12px;
+
+    /* Radii / shadow */
+    --r-sm: 6px;
+    --r-md: 8px;
+    --r-lg: 12px;
+    --shadow-card: 0 1px 2px rgba(17,24,39,.06), 0 1px 3px rgba(17,24,39,.05);
+    --shadow-pane: 0 10px 40px rgba(27,42,74,.10), 0 2px 8px rgba(27,42,74,.06);
+    --shadow-float: 0 8px 24px rgba(17,24,39,.14);
+
+    --pane-w: 350px;
+  }
+
+  /* ============================================================
+     DOCUMENT SHELL (the reference page wrapper)
+     ============================================================ */
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    background: var(--page-bg);
+    color: var(--doc-text);
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,.04) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 56px 40px 96px; }
+
+  /* Section scaffolding */
+  .section { margin-top: 72px; }
+  .section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 24px; }
+  .section-num {
+    font-family: 'Roboto Mono', monospace; font-size: 12px; font-weight: 500;
+    color: var(--amber); letter-spacing: .04em;
+  }
+  .section-title { font-family: var(--font-display); font-size: 23px; font-weight: 600; letter-spacing: -.02em; margin: 0; color: var(--doc-text); }
+  .section-sub { font-size: 14px; color: var(--doc-muted); margin: 6px 0 0; max-width: 60ch; line-height: 1.55; }
+  .kicker {
+    font-family: 'Roboto Mono', monospace; font-size: 11px; font-weight: 500;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--doc-faint);
+  }
+
+  /* Specimen frame — renders a component at the TRUE pane width */
+  .specimens { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; }
+  .spec {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .spec-label { display: flex; align-items: center; gap: 8px; }
+  .spec-label .n { font-size: 13px; font-weight: 600; color: var(--doc-text); }
+  .spec-label .meta { font-family: 'Roboto Mono', monospace; font-size: 11px; color: var(--doc-faint); }
+  .spec-note { font-size: 12.5px; color: var(--doc-muted); line-height: 1.5; max-width: 350px; }
+  .pane-frame {
+    width: var(--pane-w);
+    background: var(--bg);
+    border: 1px solid var(--doc-border);
+    border-radius: 10px;
+    box-shadow: 0 16px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);
+    overflow: hidden;
+  }
+  .pane-frame.on-surface { background: var(--surface); }
+  .pad { padding: var(--pane-pad); }
+
+  /* ============================================================
+     MASTHEAD
+     ============================================================ */
+  .masthead { display: flex; flex-direction: column; gap: 0; }
+  .lockup { display: flex; align-items: center; gap: 14px; }
+  .mark {
+    width: 44px; height: 44px; border-radius: 11px; background: var(--ink-grad);
+    display: grid; place-items: center; box-shadow: 0 4px 16px rgba(0,0,0,.5);
+    border: 1px solid #2e2e36;
+    position: relative; flex: none;
+  }
+  .mark::after {
+    content: ""; position: absolute; left: 10px; right: 10px; bottom: 9px; height: 2px;
+    background: var(--amber); border-radius: 2px;
+  }
+  .mark span { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: .02em; line-height: 1; margin-bottom: 3px; }
+  .wordmark { font-family: var(--font-display); font-size: 26px; font-weight: 600; letter-spacing: -.02em; color: var(--doc-text); }
+  .wordmark b { font-weight: 700; }
+  .masthead h1 { font-family: var(--font-display); font-size: 42px; font-weight: 600; letter-spacing: -.03em; margin: 30px 0 0; max-width: 18ch; line-height: 1.07;
+    background: linear-gradient(180deg, #ffffff 0%, #b6b6bf 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .masthead p.lede { font-size: 16px; color: var(--doc-muted); margin: 16px 0 0; max-width: 56ch; line-height: 1.6; }
+  .traits { display: flex; gap: 10px; margin-top: 26px; flex-wrap: wrap; }
+  .trait {
+    font-size: 12.5px; font-weight: 500; color: var(--doc-text);
+    background: var(--doc-card); border: 1px solid var(--doc-border); border-radius: 999px;
+    padding: 7px 14px 7px 12px; display: flex; align-items: center; gap: 8px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  .trait .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 8px rgba(245,158,11,.6); }
+  .trait:nth-child(2) .dot { background: #d4d4d8; box-shadow: none; }
+  .trait:nth-child(3) .dot { background: #10b981; box-shadow: 0 0 8px rgba(16,185,129,.55); }
+
+  /* ============================================================
+     WORD HOST MOCK (generic, original chrome)
+     ============================================================ */
+  .host {
+    border-radius: 12px; overflow: hidden; background: #fff;
+    box-shadow: 0 24px 60px rgba(27,42,74,.18), 0 4px 12px rgba(27,42,74,.10);
+    border: 1px solid #d7dade;
+  }
+  .host-titlebar {
+    height: 40px; background: linear-gradient(#fbfbfc,#f3f4f6); border-bottom: 1px solid #e3e5e8;
+    display: flex; align-items: center; padding: 0 14px; gap: 12px;
+  }
+  .host-title { font-size: 12.5px; color: #4b5057; font-weight: 500; }
+  .host-title .saved { color: #9aa0a8; font-weight: 400; }
+  .host-winctl { margin-left: auto; display: flex; gap: 18px; align-items: center; color: #9aa0a8; }
+  .host-winctl i { width: 12px; height: 12px; display: inline-block; position: relative; }
+  .host-winctl i.min::before { content:""; position:absolute; left:0; right:0; top:6px; height:1.5px; background: currentColor; }
+  .host-winctl i.max { border: 1.5px solid currentColor; border-radius: 2px; }
+  .host-winctl i.cls::before, .host-winctl i.cls::after { content:""; position:absolute; left:5px; top:-1px; width:1.5px; height:14px; background: currentColor; }
+  .host-winctl i.cls::before { transform: rotate(45deg); }
+  .host-winctl i.cls::after { transform: rotate(-45deg); }
+
+  .host-toolbar {
+    height: 46px; background: #fff; border-bottom: 1px solid #ececef;
+    display: flex; align-items: center; gap: 6px; padding: 0 14px;
+  }
+  .tb-pill { font-size: 12px; color: #5a6068; border: 1px solid #e3e5e8; border-radius: 5px; padding: 5px 10px; display: flex; align-items: center; gap: 18px; background: #fcfcfd; }
+  .tb-pill .car { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 4px solid #9aa0a8; }
+  .tb-sep { width: 1px; height: 22px; background: #ececef; margin: 0 4px; }
+  .tb-btn { width: 30px; height: 30px; border-radius: 5px; display: grid; place-items: center; font-size: 13px; color: #5a6068; }
+  .tb-btn:hover { background: #f2f3f5; }
+  .tb-btn.b { font-weight: 700; }
+  .tb-btn.i { font-style: italic; font-family: Georgia, serif; }
+  .tb-btn.u { text-decoration: underline; }
+  .tb-dots { display: flex; gap: 3px; }
+  .tb-dots b { display:block; width: 14px; height: 1.5px; background: #9aa0a8; }
+  .tb-dots.r b:nth-child(2){ width:9px; margin-left:auto; }
+  .host-spacer { flex: 1; }
+  .tb-addin {
+    margin-left: auto; display: flex; align-items: center; gap: 7px;
+    font-size: 12px; font-weight: 600; color: #1f1f24;
+    background: #f3f3f4; border: 1px solid #e2e2e6; border-radius: 6px; padding: 5px 10px 5px 8px;
+  }
+  .tb-addin .m { width: 16px; height: 16px; border-radius: 4px; background: var(--ink-grad); display: grid; place-items: center; }
+  .tb-addin .m span { font-size: 8px; font-weight: 700; color: #fff; }
+
+  .host-body { display: flex; height: 1000px; }
+  .host-doc { flex: 1; background: #edeef1; overflow: hidden; position: relative; padding: 30px 0; }
+  .doc-page {
+    width: 92%; max-width: 560px; margin: 0 auto; background: #fff; border-radius: 2px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.10); padding: 52px 60px; height: 100%;
+    font-family: 'Inter', serif; overflow: hidden;
+  }
+  .doc-page h2 { font-size: 15px; letter-spacing: .08em; text-align: center; color: #1f2430; margin: 0 0 4px; font-weight: 700; }
+  .doc-page .sub { text-align: center; font-size: 10.5px; color: #8a909a; letter-spacing: .04em; margin-bottom: 26px; }
+  .doc-page h3 { font-size: 11.5px; font-weight: 700; color: #2a2f3a; margin: 18px 0 6px; }
+  .doc-page p { font-size: 10.5px; line-height: 1.85; color: #3d424d; margin: 0 0 12px; text-align: justify; }
+  .doc-hl { background: var(--amber-soft); box-shadow: -3px 0 0 var(--amber); padding: 2px 0; }
+
+  /* The docked pane fills host height */
+  .host-pane { width: var(--pane-w); flex: none; border-left: 1px solid var(--border); background: var(--bg); display: flex; flex-direction: column; }
+  .host-pane .ck-chat { flex: 1; overflow: hidden; }
+
+  /* ============================================================
+     CLAUSEKIT PANE COMPONENTS (shared styles)
+     ============================================================ */
+  .ck { font-family: 'Inter', sans-serif; color: var(--text-primary); }
+
+  /* Header bar */
+  .ck-header {
+    background: linear-gradient(180deg, #08080b 0%, #131318 55%, #232329 100%);
+    color: #fff; height: 52px; display: flex; align-items: center;
+    padding: 0 var(--pane-pad); gap: 10px; border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .ck-header .h-mark { width: 28px; height: 28px; border-radius: 7px; background: rgba(255,255,255,.10); display: grid; place-items: center; flex: none; position: relative; border: 1px solid rgba(255,255,255,.14); }
+  .ck-header .h-mark span { font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+  .ck-header .h-mark::after { content:""; position:absolute; left:6px; right:6px; bottom:6px; height:1.5px; background: var(--amber); border-radius:2px; }
+  .ck-header .h-txt { display: flex; flex-direction: column; line-height: 1.15; }
+  .ck-header .h-name { font-family: var(--font-display); font-size: var(--fs-header); font-weight: 600; letter-spacing: -.01em; }
+  .ck-header .h-status { font-size: var(--fs-label); color: rgba(244,246,251,.66); display: flex; align-items: center; gap: 5px; }
+  .ck-header .h-status .live { width: 6px; height: 6px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 2px rgba(52,211,153,.25); }
+  .ck-header .h-actions { margin-left: auto; display: flex; gap: 2px; }
+  .ck-icon-btn { width: 30px; height: 30px; border-radius: 6px; display: grid; place-items: center; color: rgba(255,255,255,.8); cursor: pointer; }
+  .ck-icon-btn:hover { background: rgba(255,255,255,.12); }
+  .ck-icon-btn .gear { width: 15px; height: 15px; border-radius: 50%; border: 1.6px solid currentColor; position: relative; }
+  .ck-icon-btn .gear::after { content:""; position:absolute; inset: 3.5px; border-radius: 50%; border: 1.6px solid currentColor; }
+  .ck-icon-btn .kebab { display:flex; flex-direction: column; gap: 2.5px; }
+  .ck-icon-btn .kebab b { width: 3px; height: 3px; border-radius: 50%; background: currentColor; }
+
+  /* Chat scroll area */
+  .ck-chat { background: var(--bg); padding: var(--pane-pad); display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
+  .ck-daydiv { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: var(--fs-label); }
+  .ck-daydiv::before, .ck-daydiv::after { content:""; height:1px; background: var(--border); flex:1; }
+
+  /* Bubbles */
+  .ck-row { display: flex; gap: 8px; }
+  .ck-row.user { justify-content: flex-end; }
+  .ck-avatar { width: 24px; height: 24px; border-radius: 6px; background: var(--navy); display: grid; place-items: center; flex: none; margin-top: 2px; }
+  .ck-avatar span { font-size: 9px; font-weight: 700; color: #fff; letter-spacing: .02em; }
+  .ck-bubble { font-size: var(--fs-body); line-height: 1.55; padding: 10px 12px; border-radius: 12px; max-width: 264px; }
+  .ck-bubble.user { background: var(--user-bubble); color: var(--navy); border-radius: 12px 12px 4px 12px; }
+  .ck-bubble.ai { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); }
+  .ck-bubble p { margin: 0; }
+  .ck-bubble p + p { margin-top: 8px; }
+  .ck-bubble strong { font-weight: 600; }
+  .ck-time { font-size: 10px; color: var(--text-secondary); margin-top: 4px; }
+  .ck-row.user .ck-time { text-align: right; }
+
+  /* Document quote block */
+  .ck-quote {
+    background: #fafbfc; border: 1px solid var(--border); border-left: 3px solid var(--navy-300);
+    border-radius: 6px; padding: 9px 11px; margin: 10px 0 4px;
+  }
+  .ck-quote .q-meta { font-family: 'Roboto Mono', monospace; font-size: 10px; color: var(--text-secondary); letter-spacing: .02em; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
+  .ck-quote .q-meta::before { content:"“"; font-family: Georgia, serif; font-size: 16px; line-height: 0; color: var(--navy-300); position: relative; top: 3px; }
+  .ck-quote .q-text { font-size: 12px; line-height: 1.6; color: #374151; font-style: italic; }
+  .ck-quote .q-text mark { background: var(--amber-soft); font-style: normal; padding: 0 1px; }
+
+  /* Citation chip */
+  .ck-cite {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 8px;
+    font-size: 11px; font-weight: 500; color: var(--navy);
+    background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 999px; padding: 4px 10px 4px 8px; cursor: pointer;
+  }
+  .ck-cite:hover { background: #e4eafd; }
+  .ck-cite .pin { width: 11px; height: 11px; position: relative; flex: none; }
+  .ck-cite .pin::before { content:""; position:absolute; inset:0; border:1.5px solid var(--navy); border-radius:50% 50% 50% 0; transform: rotate(-45deg); }
+  .ck-cite .arr { margin-left: 1px; color: var(--navy-300); font-size: 10px; }
+
+  /* Suggested action card */
+  .ck-action {
+    background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--amber);
+    border-radius: 8px; box-shadow: var(--shadow-card); overflow: hidden;
+  }
+  .ck-action .a-head { padding: 11px 12px 0; display: flex; align-items: flex-start; gap: 8px; }
+  .ck-action .a-badge { font-family: 'Roboto Mono', monospace; font-size: 9.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--amber-600); background: var(--amber-soft); border-radius: 4px; padding: 3px 6px; flex: none; }
+  .ck-action .a-title { font-size: 12.5px; font-weight: 600; line-height: 1.35; color: var(--text-primary); }
+  .ck-action .a-body { padding: 9px 12px 0; }
+  .ck-action .a-desc { font-size: 12px; line-height: 1.5; color: var(--text-secondary); }
+
+  /* diff view */
+  .ck-diff { margin: 10px 0 2px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; font-family: 'Roboto Mono', monospace; font-size: 11px; line-height: 1.55; }
+  .ck-diff .d-line { padding: 6px 10px 6px 24px; position: relative; }
+  .ck-diff .d-del { background: var(--destructive-soft); color: #b42318; }
+  .ck-diff .d-del .t { text-decoration: line-through; text-decoration-color: rgba(180,35,24,.5); }
+  .ck-diff .d-add { background: #ecfdf3; color: #067647; border-top: 1px solid #d1fadf; }
+  .ck-diff .d-line::before { position: absolute; left: 9px; top: 6px; font-weight: 700; }
+  .ck-diff .d-del::before { content: "−"; color: #d92d20; }
+  .ck-diff .d-add::before { content: "+"; color: #079455; }
+
+  /* action buttons */
+  .ck-action .a-foot { display: flex; gap: 8px; padding: 12px; align-items: center; }
+  .ck-btn { font-size: var(--fs-button); font-weight: 500; border-radius: 6px; padding: 8px 14px; cursor: pointer; border: 1px solid transparent; line-height: 1; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; transition: background .12s, border-color .12s; }
+  .ck-btn.primary { background: var(--amber-grad); color: #3a2900; font-weight: 600; border-color: rgba(150,92,0,.45); box-shadow: var(--amber-glow); }
+  .ck-btn.primary:hover { filter: brightness(1.04); }
+  .ck-btn.navy { background: var(--ink-grad-soft); color: #fff; border-color: rgba(255,255,255,.08); }
+  .ck-btn.navy:hover { background: var(--navy-700); }
+  .ck-btn.ghost { background: transparent; color: var(--text-secondary); }
+  .ck-btn.ghost:hover { background: #f3f4f6; color: var(--text-primary); }
+  .ck-btn.danger-ghost { background: transparent; color: var(--text-secondary); }
+  .ck-btn.danger-ghost:hover { background: var(--destructive-soft); color: var(--destructive); }
+  .ck-btn .chk { width: 6px; height: 11px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(40deg) translateY(-1px); }
+  .ck-action .a-foot .spacer { flex: 1; }
+
+  /* multi-action list */
+  .ck-multi { padding: 4px 12px 0; display: flex; flex-direction: column; }
+  .ck-multi .m-item { display: flex; gap: 9px; align-items: flex-start; padding: 9px 0; border-top: 1px solid var(--border); }
+  .ck-multi .m-item:first-child { border-top: 0; }
+  .ck-multi .m-check { width: 16px; height: 16px; border-radius: 4px; border: 1.6px solid var(--border-strong); flex: none; margin-top: 1px; position: relative; }
+  .ck-multi .m-check.on { background: var(--navy); border-color: var(--navy); }
+  .ck-multi .m-check.on::after { content:""; position: absolute; left: 4.5px; top: 1.5px; width: 5px; height: 9px; border-right: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(40deg); }
+  .ck-multi .m-txt { font-size: 12px; line-height: 1.4; }
+  .ck-multi .m-txt .m-t { font-weight: 600; color: var(--text-primary); }
+  .ck-multi .m-txt .m-s { color: var(--text-secondary); font-size: 11px; }
+  .ck-multi .m-loc { font-family: 'Roboto Mono', monospace; font-size: 10px; color: var(--navy-300); margin-left: auto; flex: none; padding-top: 1px; }
+
+  /* Input */
+  .ck-input-wrap { background: var(--surface); border-top: 1px solid var(--border); padding: 10px var(--pane-pad) 8px; }
+  .ck-input { background: #fff; border: 1px solid var(--border-strong); border-radius: 10px; padding: 9px 10px 9px 12px; display: flex; align-items: flex-end; gap: 8px; transition: border-color .12s, box-shadow .12s; }
+  .ck-input.focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(27,42,74,.10); }
+  .ck-input .ph { flex: 1; font-size: var(--fs-body); color: var(--text-secondary); line-height: 1.5; padding: 1px 0; }
+  .ck-input .typed { color: var(--text-primary); }
+  .ck-send { width: 32px; height: 32px; border-radius: 8px; background: var(--navy); display: grid; place-items: center; flex: none; cursor: pointer; }
+  .ck-send:hover { background: var(--navy-700); }
+  .ck-send.disabled { background: #c9ced6; cursor: default; }
+  .ck-send .arrow { width: 13px; height: 13px; position: relative; }
+  .ck-send .arrow::before { content:""; position:absolute; left:5.5px; top:1px; width:2px; height:12px; background:#fff; border-radius:2px; }
+  .ck-send .arrow::after { content:""; position:absolute; left:2.5px; top:1px; width:8px; height:8px; border-top:2px solid #fff; border-left:2px solid #fff; transform: rotate(45deg); border-radius:2px 0 0 0; }
+  .ck-hint { font-size: var(--fs-label); color: var(--text-secondary); margin-top: 7px; display: flex; align-items: center; gap: 5px; padding: 0 2px; }
+  .ck-hint .lock { width: 9px; height: 9px; border: 1.4px solid var(--text-secondary); border-radius: 2px; position: relative; flex: none; }
+  .ck-hint .lock::before { content:""; position:absolute; left:1.5px; top:-3px; width:5px; height:5px; border:1.4px solid var(--text-secondary); border-bottom:0; border-radius:3px 3px 0 0; }
+
+  /* Thinking indicator */
+  .ck-thinking { display: flex; gap: 8px; align-items: center; }
+  .ck-thinking .t-bubble { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); padding: 12px 14px; display: flex; gap: 5px; align-items: center; }
+  .ck-thinking .t-bubble i { width: 6px; height: 6px; border-radius: 50%; background: var(--navy-300); animation: blink 1.2s infinite ease-in-out; }
+  .ck-thinking .t-bubble i:nth-child(2){ animation-delay: .18s; }
+  .ck-thinking .t-bubble i:nth-child(3){ animation-delay: .36s; }
+  @keyframes blink { 0%,60%,100%{ opacity:.28; transform: translateY(0);} 30%{ opacity:1; transform: translateY(-2px);} }
+  .ck-thinking .t-label { font-size: var(--fs-label); color: var(--text-secondary); }
+
+  /* Empty state */
+  .ck-empty { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 36px 22px; gap: 0; }
+  .ck-empty .e-mark { width: 52px; height: 52px; border-radius: 14px; background: var(--ink-grad); display: grid; place-items: center; position: relative; box-shadow: 0 8px 22px rgba(0,0,0,.3); border: 1px solid #2e2e36; margin-bottom: 18px; }
+  .ck-empty .e-mark span { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .ck-empty .e-mark::after { content:""; position:absolute; left:13px; right:13px; bottom:11px; height:2.5px; background: var(--amber); border-radius:2px; }
+  .ck-empty h3 { font-family: var(--font-display); font-size: 15px; font-weight: 600; margin: 0 0 6px; color: var(--text-primary); }
+  .ck-empty p { font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; margin: 0 0 18px; max-width: 30ch; }
+  .ck-suggest { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+  .ck-suggest .s-btn { text-align: left; font-size: 12.5px; color: var(--navy); background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; cursor: pointer; box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 9px; }
+  .ck-suggest .s-btn:hover { border-color: var(--navy-300); }
+  .ck-suggest .s-btn .ar { margin-left: auto; color: var(--navy-300); }
+  .ck-suggest .s-btn .sd { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); flex: none; }
+
+  /* Toast */
+  .ck-toast {
+    background: var(--ink-grad-soft); color: #fff; border-radius: 9px; padding: 11px 12px; display: flex; align-items: center; gap: 10px;
+    box-shadow: var(--shadow-float); border: 1px solid rgba(255,255,255,.07);
+  }
+  .ck-toast .t-ico { width: 20px; height: 20px; border-radius: 50%; background: #10b981; display: grid; place-items: center; flex: none; }
+  .ck-toast .t-ico .chk { width: 9px; height: 6px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translateY(-1px); }
+  .ck-toast .t-txt { font-size: 12.5px; line-height: 1.3; }
+  .ck-toast .t-txt b { font-weight: 600; }
+  .ck-toast .t-txt .sub { font-size: 11px; color: rgba(244,246,251,.7); }
+  .ck-toast .t-undo { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--amber-line); cursor: pointer; flex: none; }
+
+  /* Privacy footer */
+  .ck-privacy { background: #fff; border-top: 1px solid var(--border); padding: 10px 12px; display: flex; align-items: center; gap: 9px; }
+  .ck-privacy .p-shield { width: 22px; height: 24px; flex: none; position: relative; }
+  .ck-privacy .p-shield::before { content:""; position:absolute; inset:0; background: #eef2ff; border:1.4px solid #dbe3fb; border-radius: 4px 4px 9px 9px / 4px 4px 14px 14px; }
+  .ck-privacy .p-shield::after { content:""; position:absolute; left:7px; top:8px; width:5px; height:8px; border-right:1.8px solid var(--navy); border-bottom:1.8px solid var(--navy); transform: rotate(40deg); }
+  .ck-privacy .p-txt { font-size: var(--fs-label); color: var(--text-secondary); line-height: 1.45; }
+  .ck-privacy .p-txt b { color: var(--text-primary); font-weight: 600; }
+  .ck-privacy .p-link { color: var(--navy); font-weight: 500; text-decoration: none; }
+
+  /* ============================================================
+     FOUNDATIONS
+     ============================================================ */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 14px; }
+  .swatch { background: var(--doc-card); border: 1px solid var(--doc-border); border-radius: 10px; overflow: hidden; box-shadow: inset 0 1px 0 rgba(255,255,255,.03); }
+  .swatch .chip { height: 72px; position: relative; }
+  .swatch .chip .ring { position:absolute; inset:0; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+  .swatch .meta { padding: 11px 13px 13px; }
+  .swatch .meta .nm { font-size: 13px; font-weight: 600; color: var(--doc-text); }
+  .swatch .meta .hex { font-family: 'Roboto Mono', monospace; font-size: 11.5px; color: var(--doc-muted); margin-top: 2px; text-transform: uppercase; }
+  .swatch .meta .use { font-size: 11.5px; color: var(--doc-muted); margin-top: 7px; line-height: 1.45; }
+  .group-label { font-family:'Roboto Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--doc-faint); margin: 22px 0 12px; }
+  .group-label:first-child { margin-top: 0; }
+
+  .type-card { background:var(--doc-card); border:1px solid var(--doc-border); border-radius: 10px; box-shadow: inset 0 1px 0 rgba(255,255,255,.03); overflow: hidden; }
+  .type-row { display: flex; align-items: center; gap: 20px; padding: 18px 22px; border-top: 1px solid var(--doc-border); }
+  .type-row:first-child { border-top: 0; }
+  .type-spec { width: 188px; flex: none; }
+  .type-spec .ts-name { font-size: 13px; font-weight: 600; color: var(--doc-text); }
+  .type-spec .ts-meta { font-family: 'Roboto Mono', monospace; font-size: 11px; color: var(--doc-muted); margin-top: 3px; }
+  .type-sample { color: var(--doc-text); }
+
+  .spacing-card { background:var(--doc-card); border:1px solid var(--doc-border); border-radius: 10px; box-shadow: inset 0 1px 0 rgba(255,255,255,.03); padding: 22px; }
+  .sp-row { display: flex; align-items: center; gap: 16px; padding: 7px 0; }
+  .sp-token { font-family:'Roboto Mono', monospace; font-size: 12px; width: 64px; color: var(--doc-muted); }
+  .sp-bar { height: 16px; background: #3f3f46; border-radius: 3px; }
+  .sp-bar.base { background: var(--amber-grad); }
+  .sp-px { font-family:'Roboto Mono', monospace; font-size: 11px; color: var(--doc-muted); }
+  .sp-note { font-size: 12.5px; color: var(--doc-muted); margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--doc-border); line-height: 1.6; }
+  .sp-note b { color: var(--doc-text); font-weight: 600; }
+
+  .footer { margin-top: 90px; padding-top: 28px; border-top: 1px solid var(--doc-border); display: flex; align-items: center; gap: 12px; color: var(--doc-muted); font-size: 12.5px; }
+  .footer .mark { width: 30px; height: 30px; border-radius: 8px; }
+  .footer .mark span { font-size: 12px; }
+
+  .legend { font-size: 12px; color: var(--doc-muted); background: var(--doc-card); border: 1px dashed var(--doc-border); border-radius: 8px; padding: 9px 13px; margin-top: 14px; line-height: 1.5; max-width: 760px; }
+  .legend b { color: var(--doc-text); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ MASTHEAD ============ -->
+  <header class="masthead" data-screen-label="Masthead">
+    <div class="lockup">
+      <div class="mark"><span>CK</span></div>
+      <div class="wordmark">Clause<b>Kit</b></div>
+    </div>
+    <h1>The design system for a calmer kind of legal AI.</h1>
+    <p class="lede">ClauseKit is an AI legal assistant that lives in a Microsoft Word task pane — reviewing contracts beside the lawyer, never in front of them. This is its visual language: the tokens, type, and components that make it feel like a brilliant colleague you can trust with sensitive documents.</p>
+    <div class="traits">
+      <span class="trait"><span class="dot"></span>Precise</span>
+      <span class="trait"><span class="dot"></span>Trustworthy</span>
+      <span class="trait"><span class="dot"></span>Intelligent</span>
+    </div>
+  </header>
+
+  <!-- ============ IN CONTEXT ============ -->
+  <section class="section" data-screen-label="In context">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <div>
+        <h2 class="section-title">In context</h2>
+        <p class="section-sub">Docked to the right of the document at its native ~350px width. The chrome below is a generic word-processor frame — the pane is built to sit quietly beside a host app's Fluent UI without competing with it.</p>
+      </div>
+    </div>
+
+    <div class="host">
+      <!-- title bar -->
+      <div class="host-titlebar">
+        <span class="host-title">MimbleCorp_MSA_v4.docx <span class="saved">— Saved to this PC</span></span>
+        <div class="host-winctl"><i class="min"></i><i class="max"></i><i class="cls"></i></div>
+      </div>
+      <!-- toolbar (generic, original) -->
+      <div class="host-toolbar">
+        <span class="tb-pill">Calibri <span class="car"></span></span>
+        <span class="tb-pill">11 <span class="car"></span></span>
+        <span class="tb-sep"></span>
+        <span class="tb-btn b">B</span>
+        <span class="tb-btn i">I</span>
+        <span class="tb-btn u">U</span>
+        <span class="tb-sep"></span>
+        <span class="tb-btn"><span class="tb-dots"><b></b><b></b><b></b></span></span>
+        <span class="tb-btn"><span class="tb-dots r"><b></b><b></b><b></b></span></span>
+        <span class="tb-addin"><span class="m"><span>CK</span></span>ClauseKit</span>
+      </div>
+      <!-- body -->
+      <div class="host-body">
+        <div class="host-doc">
+          <div class="doc-page">
+            <h2>MASTER SERVICES AGREEMENT</h2>
+            <div class="sub">MimbleCorp, Inc. &nbsp;•&nbsp; Northwind Systems LLC &nbsp;•&nbsp; Execution Copy</div>
+            <h3>8. Indemnification</h3>
+            <p>Each party (the “Indemnifying Party”) shall defend, indemnify, and hold harmless the other party from and against any third-party claims, damages, and reasonable attorneys’ fees arising out of the Indemnifying Party’s breach of this Agreement, gross negligence, or willful misconduct.</p>
+            <h3>9. Limitation of Liability</h3>
+            <p><span class="doc-hl">9.1 &nbsp;Except as set forth herein, in no event shall either party’s aggregate liability arising out of or related to this Agreement exceed the total fees paid by Customer in the twelve (12) months preceding the event giving rise to the claim.</span></p>
+            <p>9.2&nbsp; Neither party shall be liable for any indirect, incidental, consequential, special, or punitive damages, including lost profits, whether in contract, tort, or otherwise, even if advised of the possibility of such damages.</p>
+            <h3>10. Confidentiality</h3>
+            <p>Each party shall protect the other’s Confidential Information using no less than a reasonable standard of care and shall not disclose it to any third party except as expressly permitted under this Agreement.</p>
+          </div>
+        </div>
+        <!-- DOCKED PANE -->
+        <div class="host-pane ck">
+          <div class="ck-header">
+            <div class="h-mark"><span>CK</span></div>
+            <div class="h-txt">
+              <span class="h-name">ClauseKit</span>
+              <span class="h-status"><span class="live"></span>Reviewing MSA · §9</span>
+            </div>
+            <div class="h-actions">
+              <span class="ck-icon-btn"><span class="kebab"><b></b><b></b><b></b></span></span>
+            </div>
+          </div>
+          <div class="ck-chat">
+            <div class="ck-daydiv">Today</div>
+
+            <!-- user -->
+            <div class="ck-row user">
+              <div>
+                <div class="ck-bubble user">Is our liability cap mutual? And does it carve out the indemnity obligations in §8?</div>
+                <div class="ck-time">10:42 AM</div>
+              </div>
+            </div>
+
+            <!-- ai -->
+            <div class="ck-row">
+              <div class="ck-avatar"><span>CK</span></div>
+              <div>
+                <div class="ck-bubble ai">
+                  <p>The cap in <strong>§9.1</strong> is mutual — but it applies to <strong>all</strong> claims, including your indemnification duties under §8, capping that exposure at one year of fees.</p>
+                  <div class="ck-quote">
+                    <div class="q-meta">§9.1 · Limitation of Liability</div>
+                    <div class="q-text">“…in no event shall either party’s aggregate liability… exceed <mark>the total fees paid by Customer in the twelve (12) months</mark> preceding the event…”</div>
+                  </div>
+                  <span class="ck-cite"><span class="pin"></span>Go to §9.1 in document<span class="arr">↗</span></span>
+                </div>
+                <div class="ck-time">10:42 AM</div>
+              </div>
+            </div>
+
+            <!-- suggested action: diff -->
+            <div class="ck-row">
+              <div class="ck-avatar" style="visibility:hidden"></div>
+              <div style="flex:1">
+                <div class="ck-action">
+                  <div class="a-head">
+                    <span class="a-badge">Suggested edit</span>
+                  </div>
+                  <div class="a-body">
+                    <div class="a-title">Carve indemnity &amp; confidentiality out of the liability cap</div>
+                    <div class="ck-diff">
+                      <div class="d-line d-del"><span class="t">…shall either party’s aggregate liability arising out of or related to this Agreement exceed…</span></div>
+                      <div class="d-line d-add">…shall either party’s aggregate liability <strong>(excluding liability arising under §8 (Indemnification) and §10 (Confidentiality))</strong> arising out of or related to this Agreement exceed…</div>
+                    </div>
+                  </div>
+                  <div class="a-foot">
+                    <button class="ck-btn primary"><span class="chk"></span>Apply change</button>
+                    <span class="spacer"></span>
+                    <button class="ck-btn danger-ghost">Dismiss</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ck-privacy">
+            <span class="p-shield"></span>
+            <span class="p-txt"><b>Private &amp; on-device.</b> Document text stays in this session and is never used for training. <a href="#" class="p-link">Privacy</a></span>
+          </div>
+
+          <div class="ck-input-wrap">
+            <div class="ck-input">
+              <span class="ph">Ask about this contract…</span>
+              <span class="ck-send disabled"><span class="arrow"></span></span>
+            </div>
+            <div class="ck-hint"><span class="lock"></span>ClauseKit can make mistakes. Verify edits before accepting.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="legend"><b>Note on host chrome:</b> the surrounding window is an original, generic word-processor mock used only to demonstrate docking and scale. It intentionally avoids any specific product's branded ribbon, icons, or command layout.</div>
+  </section>
+
+  <!-- ============ FOUNDATIONS: COLOR ============ -->
+  <section class="section" data-screen-label="Color">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <div>
+        <h2 class="section-title">Color</h2>
+        <p class="section-sub">A restrained, lawyerly palette. Near-black carries authority and structure; amber — warmed with a soft top-down gradient — appears only where the user makes a consequential decision. Everything else stays quiet.</p>
+      </div>
+    </div>
+
+    <div class="group-label">Brand</div>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:linear-gradient(180deg,#16161b,#050506)"><span class="ring"></span></div><div class="meta"><div class="nm">Near Black</div><div class="hex">#0E0E12</div><div class="use">Header bar, avatars, send &amp; primary actions — rendered with a subtle top-down gradient.</div></div></div>
+      <div class="swatch"><div class="chip" style="background:linear-gradient(180deg,#FCC04A,#E88B05)"><span class="ring"></span></div><div class="meta"><div class="nm">Amber</div><div class="hex">#F59E0B</div><div class="use">The accent. Used sparingly as a gradient — the “Apply change” CTA and action-card edge only.</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#FEF3C7"><span class="ring"></span></div><div class="meta"><div class="nm">Amber Soft</div><div class="hex">#FEF3C7</div><div class="use">Highlighted excerpt fill inside quote blocks; badge backgrounds.</div></div></div>
+    </div>
+
+    <div class="group-label">Surfaces</div>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#F8F9FA"><span class="ring"></span></div><div class="meta"><div class="nm">Background</div><div class="hex">#F8F9FA</div><div class="use">Off-white. The main chat area canvas.</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#FFFFFF"><span class="ring"></span></div><div class="meta"><div class="nm">Surface</div><div class="hex">#FFFFFF</div><div class="use">Message cards, action cards, input area.</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#EEF2FF"><span class="ring"></span></div><div class="meta"><div class="nm">User Bubble</div><div class="hex">#EEF2FF</div><div class="use">Light navy tint for the user’s own messages.</div></div></div>
+    </div>
+
+    <div class="group-label">Text &amp; lines</div>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#111827"><span class="ring"></span></div><div class="meta"><div class="nm">Text Primary</div><div class="hex">#111827</div><div class="use">Body copy, headings, message text.</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#6B7280"><span class="ring"></span></div><div class="meta"><div class="nm">Text Secondary</div><div class="hex">#6B7280</div><div class="use">Labels, hints, timestamps, metadata.</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#E5E7EB"><span class="ring"></span></div><div class="meta"><div class="nm">Border</div><div class="hex">#E5E7EB</div><div class="use">Card outlines, dividers, input borders.</div></div></div>
+    </div>
+
+    <div class="group-label">Status</div>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#EF4444"><span class="ring"></span></div><div class="meta"><div class="nm">Destructive</div><div class="hex">#EF4444</div><div class="use">Dismiss / remove on hover; deletion in diff view.</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#10B981"><span class="ring"></span></div><div class="meta"><div class="nm">Success</div><div class="hex">#10B981</div><div class="use">Live status dot, applied-change confirmation, diff additions.</div></div></div>
+    </div>
+  </section>
+
+  <!-- ============ FOUNDATIONS: TYPE ============ -->
+  <section class="section" data-screen-label="Typography">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <div>
+        <h2 class="section-title">Typography</h2>
+        <p class="section-sub">Space Grotesk handles display moments — the wordmark and headings — for a precise, modern voice. Inter does the work: it stays legible at the small sizes a task pane demands and reads as professional, not playful. Roboto Mono is reserved for clause references and legal locators.</p>
+      </div>
+    </div>
+    <div class="type-card">
+      <div class="type-row">
+        <div class="type-spec"><div class="ts-name">Display</div><div class="ts-meta">Space Grotesk · 23px+ · 600</div></div>
+        <div class="type-sample" style="font-family:var(--font-display);font-size:24px;font-weight:600;letter-spacing:-.02em">Review with confidence</div>
+      </div>
+      <div class="type-row">
+        <div class="type-spec"><div class="ts-name">Header name</div><div class="ts-meta">Space Grotesk · 16px · 600</div></div>
+        <div class="type-sample" style="font-family:var(--font-display);font-size:16px;font-weight:600;letter-spacing:-.01em">ClauseKit</div>
+      </div>
+      <div class="type-row">
+        <div class="type-spec"><div class="ts-name">Body / chat</div><div class="ts-meta">Inter · 13px · 400</div></div>
+        <div class="type-sample" style="font-size:13px;font-weight:400;line-height:1.55;max-width:42ch">The cap in §9.1 is mutual, but it applies to all claims — including your indemnification duties.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-spec"><div class="ts-name">Label / hint</div><div class="ts-meta">Inter · 11px · 400 · secondary</div></div>
+        <div class="type-sample" style="font-size:11px;font-weight:400;color:var(--text-secondary)">ClauseKit can make mistakes. Verify edits before accepting.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-spec"><div class="ts-name">Button</div><div class="ts-meta">Inter · 13px · 500</div></div>
+        <div class="type-sample" style="font-size:13px;font-weight:500">Apply change</div>
+      </div>
+      <div class="type-row">
+        <div class="type-spec"><div class="ts-name">Legal locator</div><div class="ts-meta">Roboto Mono · 10–11px · 500</div></div>
+        <div class="type-sample" style="font-family:'Roboto Mono',monospace;font-size:11px;font-weight:500;color:var(--navy-300)">§9.1 · Limitation of Liability</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOUNDATIONS: SPACING ============ -->
+  <section class="section" data-screen-label="Spacing">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <div>
+        <h2 class="section-title">Spacing</h2>
+        <p class="section-sub">An 8px base unit keeps rhythm tight in a narrow column. Horizontal padding inside the pane holds at 12px so content never feels cramped against the edges.</p>
+      </div>
+    </div>
+    <div class="spacing-card">
+      <div class="sp-row"><span class="sp-token">--s-1</span><span class="sp-bar" style="width:4px"></span><span class="sp-px">4px</span></div>
+      <div class="sp-row"><span class="sp-token">--s-2</span><span class="sp-bar base" style="width:8px"></span><span class="sp-px">8px · base unit</span></div>
+      <div class="sp-row"><span class="sp-token">--s-3</span><span class="sp-bar" style="width:12px"></span><span class="sp-px">12px · pane h-padding</span></div>
+      <div class="sp-row"><span class="sp-token">--s-4</span><span class="sp-bar" style="width:16px"></span><span class="sp-px">16px</span></div>
+      <div class="sp-row"><span class="sp-token">--s-5</span><span class="sp-bar" style="width:24px"></span><span class="sp-px">24px</span></div>
+      <div class="sp-row"><span class="sp-token">--s-6</span><span class="sp-bar" style="width:32px"></span><span class="sp-px">32px</span></div>
+      <div class="sp-note"><b>Rule of thumb:</b> gaps between messages = 14px, padding inside bubbles = 10/12px, card internal padding = 12px. The pane is a fixed <b>350px</b> wide and fills the document height.</div>
+    </div>
+  </section>
+
+  <!-- ============ COMPONENTS ============ -->
+  <section class="section" data-screen-label="Components">
+    <div class="section-head">
+      <span class="section-num">05</span>
+      <div>
+        <h2 class="section-title">Components</h2>
+        <p class="section-sub">Every piece rendered at the true 350px pane width. These are the same styles assembled in the live pane above.</p>
+      </div>
+    </div>
+
+    <div class="specimens">
+
+      <!-- Header -->
+      <div class="spec">
+        <div class="spec-label"><span class="n">Header bar</span><span class="meta">52px · navy</span></div>
+        <div class="pane-frame on-surface ck">
+          <div class="ck-header">
+            <div class="h-mark"><span>CK</span></div>
+            <div class="h-txt"><span class="h-name">ClauseKit</span><span class="h-status"><span class="live"></span>Reviewing MSA · §9</span></div>
+            <div class="h-actions"><span class="ck-icon-btn"><span class="kebab"><b></b><b></b><b></b></span></span></div>
+          </div>
+        </div>
+        <div class="spec-note">Persistent identity. Live status names the document and section under review so the lawyer always knows ClauseKit’s focus.</div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="spec">
+        <div class="spec-label"><span class="n">Empty state</span><span class="meta">no conversation</span></div>
+        <div class="pane-frame ck">
+          <div class="ck-empty">
+            <div class="e-mark"><span>CK</span></div>
+            <h3>Review with confidence</h3>
+            <p>Ask about any clause, or start with a common check.</p>
+            <div class="ck-suggest">
+              <button class="s-btn"><span class="sd"></span>Find one-sided liability terms<span class="ar">→</span></button>
+              <button class="s-btn"><span class="sd"></span>Check indemnity carve-outs<span class="ar">→</span></button>
+              <button class="s-btn"><span class="sd"></span>Summarize this agreement<span class="ar">→</span></button>
+            </div>
+          </div>
+        </div>
+        <div class="spec-note">Calm, useful first impression — leads with reassurance and three high-value prompts rather than an empty box.</div>
+      </div>
+
+      <!-- Bubbles -->
+      <div class="spec">
+        <div class="spec-label"><span class="n">Message bubbles</span><span class="meta">user · AI</span></div>
+        <div class="pane-frame ck">
+          <div class="ck-chat" style="gap:14px">
+            <div class="ck-row user">
+              <div>
+                <div class="ck-bubble user">Does §9 cap apply to the indemnity in §8?</div>
+                <div class="ck-time">10:42 AM</div>
+              </div>
+            </div>
+            <div class="ck-row">
+              <div class="ck-avatar"><span>CK</span></div>
+              <div>
+                <div class="ck-bubble ai"><p>Yes — and that’s worth flagging. The cap is mutual but sweeps in your indemnification duties, limiting them to one year of fees.</p></div>
+                <div class="ck-time">10:42 AM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-note">User messages are right-aligned in a light-navy bubble; AI replies left-aligned on white with a hairline border and avatar. Tails differ to reinforce direction.</div>
+      </div>
+
+      <!-- Quote block + citation -->
+      <div class="spec">
+        <div class="spec-label"><span class="n">Document quote + citation chip</span></div>
+        <div class="pane-frame ck">
+          <div class="pad">
+            <div class="ck-quote">
+              <div class="q-meta">§9.1 · Limitation of Liability</div>
+              <div class="q-text">“…in no event shall either party’s aggregate liability… exceed <mark>the total fees paid by Customer in the twelve (12) months</mark> preceding the event…”</div>
+            </div>
+            <span class="ck-cite"><span class="pin"></span>Go to §9.1 in document<span class="arr">↗</span></span>
+          </div>
+        </div>
+        <div class="spec-note">Verbatim excerpts get a quiet bordered block; the relevant phrase is marked in amber-soft. The citation chip jumps the cursor to that exact spot in the document.</div>
+      </div>
+
+      <!-- Thinking + input -->
+      <div class="spec">
+        <div class="spec-label"><span class="n">Thinking · input · focus</span></div>
+        <div class="pane-frame ck">
+          <div class="ck-chat" style="padding-bottom:8px">
+            <div class="ck-thinking">
+              <div class="ck-avatar"><span>CK</span></div>
+              <div class="t-bubble"><i></i><i></i><i></i></div>
+              <span class="t-label">Reading §8–§10…</span>
+            </div>
+          </div>
+          <div class="ck-input-wrap">
+            <div class="ck-input focus">
+              <span class="ph typed">Limit indemnity to direct damages only</span>
+              <span class="ck-send"><span class="arrow"></span></span>
+            </div>
+            <div class="ck-hint"><span class="lock"></span>Document text stays private to this session.</div>
+          </div>
+        </div>
+        <div class="spec-note">The thinking indicator names what ClauseKit is reading — transparency builds trust. Input shows the focused state with an active navy send button.</div>
+      </div>
+
+      <!-- Toast -->
+      <div class="spec">
+        <div class="spec-label"><span class="n">Confirmation toast</span><span class="meta">after apply</span></div>
+        <div class="pane-frame ck">
+          <div class="pad">
+            <div class="ck-toast">
+              <span class="t-ico"><span class="chk"></span></span>
+              <span class="t-txt"><b>Change applied to §9.1</b><span class="sub">Tracked change added · ready to review</span></span>
+              <span class="t-undo">Undo</span>
+            </div>
+          </div>
+        </div>
+        <div class="spec-note">Edits land as tracked changes, never silent rewrites. The toast confirms what changed and keeps Undo within reach.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ ACTION CARD VARIATIONS ============ -->
+  <section class="section" data-screen-label="Suggested action card">
+    <div class="section-head">
+      <span class="section-num">06</span>
+      <div>
+        <h2 class="section-title">Suggested action card — variations</h2>
+        <p class="section-sub">The most consequential component: where ClauseKit proposes a concrete edit and the lawyer decides. Amber appears here and almost nowhere else. Three directions, from simplest to richest.</p>
+      </div>
+    </div>
+
+    <div class="specimens">
+
+      <!-- A: basic -->
+      <div class="spec">
+        <div class="spec-label"><span class="n">A · Basic proposal</span></div>
+        <div class="pane-frame ck">
+          <div class="pad">
+            <div class="ck-action">
+              <div class="a-head"><span class="a-badge">Suggested edit</span></div>
+              <div class="a-body">
+                <div class="a-title">Add an indemnity carve-out to §9.1</div>
+                <div class="a-desc" style="margin-top:6px">Excludes §8 indemnification and §10 confidentiality from the liability cap so they remain fully recoverable.</div>
+              </div>
+              <div class="a-foot">
+                <button class="ck-btn primary"><span class="chk"></span>Apply change</button>
+                <span class="spacer"></span>
+                <button class="ck-btn danger-ghost">Dismiss</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-note">Plain-language summary of the proposed change. Lowest friction — best when the edit is small or self-evident.</div>
+      </div>
+
+      <!-- B: diff -->
+      <div class="spec">
+        <div class="spec-label"><span class="n">B · With diff view</span><span class="meta">recommended</span></div>
+        <div class="pane-frame ck">
+          <div class="pad">
+            <div class="ck-action">
+              <div class="a-head"><span class="a-badge">Suggested edit</span></div>
+              <div class="a-body">
+                <div class="a-title">Carve indemnity &amp; confidentiality out of the cap</div>
+                <div class="ck-diff">
+                  <div class="d-line d-del"><span class="t">…either party’s aggregate liability arising out of or related to this Agreement…</span></div>
+                  <div class="d-line d-add">…either party’s aggregate liability <strong>(excluding §8 and §10)</strong> arising out of or related to this Agreement…</div>
+                </div>
+              </div>
+              <div class="a-foot">
+                <button class="ck-btn primary"><span class="chk"></span>Apply change</button>
+                <span class="spacer"></span>
+                <button class="ck-btn danger-ghost">Dismiss</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-note">Exact redline — removed text struck in red, added text in green. Lawyers trust what they can verify word-for-word, so this is the default.</div>
+      </div>
+
+      <!-- C: multi-action -->
+      <div class="spec">
+        <div class="spec-label"><span class="n">C · Multi-action</span><span class="meta">batch review</span></div>
+        <div class="pane-frame ck">
+          <div class="pad">
+            <div class="ck-action">
+              <div class="a-head">
+                <span class="a-badge">3 suggested edits</span>
+              </div>
+              <div class="a-body" style="padding-bottom:4px">
+                <div class="a-title">Strengthen liability &amp; indemnity terms</div>
+              </div>
+              <div class="ck-multi">
+                <div class="m-item">
+                  <span class="m-check on"></span>
+                  <span class="m-txt"><span class="m-t">Add indemnity carve-out</span><br><span class="m-s">Exclude §8 from the cap</span></span>
+                  <span class="m-loc">§9.1</span>
+                </div>
+                <div class="m-item">
+                  <span class="m-check on"></span>
+                  <span class="m-txt"><span class="m-t">Make the cap a 12-month multiple</span><br><span class="m-s">Raise to 12× monthly fees</span></span>
+                  <span class="m-loc">§9.1</span>
+                </div>
+                <div class="m-item">
+                  <span class="m-check"></span>
+                  <span class="m-txt"><span class="m-t">Add a confidentiality super-cap</span><br><span class="m-s">Optional — higher limit for §10</span></span>
+                  <span class="m-loc">§9.2</span>
+                </div>
+              </div>
+              <div class="a-foot">
+                <button class="ck-btn navy"><span class="chk"></span>Apply 2 selected</button>
+                <span class="spacer"></span>
+                <button class="ck-btn ghost">Review each</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-note">When several related fixes apply, bundle them with checkboxes. The lawyer accepts all, cherry-picks, or steps through one at a time.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ PRIVACY FOOTER ============ -->
+  <section class="section" data-screen-label="Privacy footer">
+    <div class="section-head">
+      <span class="section-num">07</span>
+      <div>
+        <h2 class="section-title">Privacy reassurance footer</h2>
+        <p class="section-sub">Sits above the input. A small, persistent reminder that sensitive document text is handled with care — the single most important thing a lawyer needs to believe.</p>
+      </div>
+    </div>
+    <div class="specimens">
+      <div class="spec">
+        <div class="pane-frame on-surface ck">
+          <div class="ck-privacy">
+            <span class="p-shield"></span>
+            <span class="p-txt"><b>Private &amp; on-device.</b> Document text stays in this session and is never used for training. <a href="#" class="p-link">Privacy</a></span>
+          </div>
+        </div>
+        <div class="spec-note">Quiet, factual, always present — reassurance without alarm.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="mark"><span>CK</span></div>
+    <span>ClauseKit Design System · v1.1 · Space Grotesk + Inter + Roboto Mono · 350px task pane</span>
+  </footer>
+
+</div>
+</body>
+</html>
