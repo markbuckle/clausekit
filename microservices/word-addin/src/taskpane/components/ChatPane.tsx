@@ -32,7 +32,7 @@ export default function ChatPane({ query }: ChatPaneProps) {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div className="ck-bubble ai">
             <p>
-              The cap ties total liability to <strong>12 months of fees</strong> — below market for a deal of this value.
+              The cap ties total liability to <strong>12 months of fees</strong> - below market for a deal of this value.
             </p>
             <div className="ck-quote">
               <div className="q-meta">§ 9.1 · Limitation of Liability</div>

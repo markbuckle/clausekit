@@ -5,7 +5,7 @@ export default function FinalCta() {
         <div className="cta reveal">
           <h2 className="serif-grad">See ClauseKit on your next contract.</h2>
           <p>
-            Install the add-in, open a draft, and watch it review the document beside you — in
+            Install the add-in, open a draft, and watch it review the document beside you - in
             the panel where your work already happens.
           </p>
           <div className="cta-btns">

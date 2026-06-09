@@ -29,7 +29,7 @@ export default function SpotlightApply() {
                 <span className="ic"><span className="chk" /></span>
                 <span className="ft">
                   <b>Edit before you accept</b>
-                  <span>Tweak the wording inline — it&apos;s your signature on the page.</span>
+                  <span>Tweak the wording inline - it&apos;s your signature on the page.</span>
                 </span>
               </li>
             </ul>

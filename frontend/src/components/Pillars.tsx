@@ -6,7 +6,7 @@ export default function Pillars() {
           <span className="kicker">Review · Draft · Ask</span>
           <h2 className="serif-grad">A sharper first read on every contract.</h2>
           <p className="sub">
-            ClauseKit works the way lawyers already do — in the document, clause by clause — and does
+            ClauseKit works the way lawyers already do - in the document, clause by clause - and does
             the slow parts in seconds.
           </p>
         </div>
@@ -14,10 +14,10 @@ export default function Pillars() {
 
           <div className="pcard reveal">
             <div className="pico"><span className="shield" /></div>
-            <div className="pnum">01 — Review</div>
+            <div className="pnum">01 - Review</div>
             <h3>Catch what a tired read misses.</h3>
             <p>
-              Surface risk the moment you open a draft — uncapped indemnities, off-market terms, and
+              Surface risk the moment you open a draft - uncapped indemnities, off-market terms, and
               the protections that simply aren&apos;t there.
             </p>
             <ul className="plist">
@@ -33,7 +33,7 @@ export default function Pillars() {
                 <path d="M2 11.5 11 2.5l2.5 2.5-9 9H2v-2.5Z" stroke="#FCD34D" strokeWidth="1.4" strokeLinejoin="round" />
               </svg>
             </div>
-            <div className="pnum">02 — Draft</div>
+            <div className="pnum">02 - Draft</div>
             <h3>Redline to your standards.</h3>
             <p>
               ClauseKit proposes precise edits in your firm&apos;s voice and playbook. Review the
@@ -53,10 +53,10 @@ export default function Pillars() {
                 <path d="m11 11 3 3" stroke="#FCD34D" strokeWidth="1.4" strokeLinecap="round" />
               </svg>
             </div>
-            <div className="pnum">03 — Ask</div>
+            <div className="pnum">03 - Ask</div>
             <h3>Ask the document anything.</h3>
             <p>
-              Plain-language answers about what you&apos;re signing — grounded in the contract and cited
+              Plain-language answers about what you&apos;re signing - grounded in the contract and cited
               to the exact clause, every time.
             </p>
             <ul className="plist">

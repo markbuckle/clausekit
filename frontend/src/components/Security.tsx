@@ -10,7 +10,7 @@ const cards: Card[] = [
   {
     icon: <span className="shield" />,
     title: 'SOC 2 Type II',
-    desc: 'Independently audited controls for security, availability, and confidentiality — report available under NDA.',
+    desc: 'Independently audited controls for security, availability, and confidentiality - report available under NDA.',
   },
   {
     icon: (
@@ -59,7 +59,7 @@ const cards: Card[] = [
       </svg>
     ),
     title: 'Full audit trail',
-    desc: 'Every suggestion, edit, and apply is logged — so you can show exactly how a clause came to be.',
+    desc: 'Every suggestion, edit, and apply is logged - so you can show exactly how a clause came to be.',
   },
 ];
 
@@ -71,7 +71,7 @@ export default function Security() {
           <span className="kicker">Built for privileged work</span>
           <h2 className="serif-grad">Security your clients would approve.</h2>
           <p className="sub">
-            ClauseKit is designed for documents under privilege. Your contracts stay yours — they&apos;re
+            ClauseKit is designed for documents under privilege. Your contracts stay yours - they&apos;re
             never used to train anyone&apos;s model.
           </p>
         </div>

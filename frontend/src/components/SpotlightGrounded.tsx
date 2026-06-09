@@ -7,7 +7,7 @@ export default function SpotlightGrounded() {
             <span className="kicker">Grounded answers</span>
             <h2 className="serif-grad">Grounded in the clause, never a guess.</h2>
             <p>
-              Ask anything — what triggers indemnity, where the governing law sits, whether the cap
+              Ask anything - what triggers indemnity, where the governing law sits, whether the cap
               survives termination. ClauseKit answers from the document in front of you and links you
               to the exact language.
             </p>
@@ -30,7 +30,7 @@ export default function SpotlightGrounded() {
                 <span className="ic"><span className="chk" /></span>
                 <span className="ft">
                   <b>Says when it&apos;s unsure</b>
-                  <span>If the contract is silent, it tells you — instead of inventing.</span>
+                  <span>If the contract is silent, it tells you - instead of inventing.</span>
                 </span>
               </li>
             </ul>
@@ -53,7 +53,7 @@ export default function SpotlightGrounded() {
                 <div className="row">
                   <div className="av"><span>CK</span></div>
                   <div className="bub ai">
-                    <p>Yes — for <strong>three years</strong> after termination, and indefinitely for trade secrets.</p>
+                    <p>Yes - for <strong>three years</strong> after termination, and indefinitely for trade secrets.</p>
                     <div className="quote">
                       <div className="qm">§ 10.4 · Confidentiality</div>
                       <div className="qt">
@@ -62,7 +62,7 @@ export default function SpotlightGrounded() {
                     </div>
                     <p>
                       Note: §10 doesn&apos;t define a return-or-destroy duty for Confidential Information
-                      on termination — worth adding.
+                      on termination - worth adding.
                     </p>
                   </div>
                 </div>

@@ -8,10 +8,10 @@ export default function Nav() {
         </a>
         <nav className="nav-links">
           <a href="#product">Product <span className="car" /></a>
-          <a href="#customers">Customers</a>
-          <a href="#security">Security</a>
-          <a href="#pricing">Pricing</a>
-          <a href="#resources">Resources <span className="car" /></a>
+          {/* <a href="#customers">Customers</a> */}
+          {/* <a href="#security">Security</a> */}
+          {/* <a href="#pricing">Pricing</a> */}
+          {/* <a href="#resources">Resources <span className="car" /></a> */}
         </nav>
         <div className="nav-cta">
           <a className="login" href="#login">Log in</a>

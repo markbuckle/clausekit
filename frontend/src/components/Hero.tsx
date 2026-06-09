@@ -11,7 +11,7 @@ export default function Hero() {
           Faster redlines.<br /><em>Fewer</em> surprises.
         </h1>
         <p className="lede reveal">
-          ClauseKit is an AI legal assistant that reviews the contract you&apos;re already in —
+          ClauseKit is an AI legal assistant that reviews the contract you&apos;re already in -
           flagging risk, suggesting edits, and answering questions{' '}
           <b>right inside the Microsoft Word task pane.</b> No uploads. No new tab. No copy-paste.
         </p>
@@ -35,7 +35,7 @@ export default function Hero() {
             {/* Title bar */}
             <div className="host-bar">
               <span className="title">
-                MimbleCorp_MSA_v4.docx <span className="saved">— Saved to this PC</span>
+                MimbleCorp_MSA_v4.docx <span className="saved">- Saved to this PC</span>
               </span>
               <span className="dots"><i /><i /><i /></span>
             </div>
@@ -101,7 +101,7 @@ export default function Hero() {
                     <div className="av"><span>CK</span></div>
                     <div className="bub ai">
                       <p>
-                        The cap ties total liability to <strong>12 months of fees</strong> — below
+                        The cap ties total liability to <strong>12 months of fees</strong> - below
                         market for a deal of this value.
                       </p>
                       <div className="quote">

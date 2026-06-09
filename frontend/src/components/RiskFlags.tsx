@@ -8,7 +8,7 @@ interface Flag {
 }
 
 const flags: Flag[] = [
-  { sev: 'high', title: 'Indemnification is uncapped', desc: '§8 carves indemnity out of the liability cap — exposure is unlimited.', loc: '§ 8.1' },
+  { sev: 'high', title: 'Indemnification is uncapped', desc: '§8 carves indemnity out of the liability cap - exposure is unlimited.', loc: '§ 8.1' },
   { sev: 'high', title: 'Liability cap below market', desc: 'Capped at 12 months’ fees; comparable MSAs sit at 2× or greater.', loc: '§ 9.1' },
   { sev: 'med', title: 'Auto-renewal with no notice window', desc: 'Renews for successive terms with no opt-out period defined.', loc: '§ 12.2' },
   { sev: 'med', title: 'Governing law favors counterparty', desc: 'Venue set to Delaware; your standard is the client’s home state.', loc: '§ 17.3' },
@@ -23,7 +23,7 @@ export default function RiskFlags() {
           <span className="kicker">Risk review</span>
           <h2 className="serif-grad">A second set of eyes on every page.</h2>
           <p className="sub">
-            Open a draft and ClauseKit reads it end to end — ranking issues by severity so you spend
+            Open a draft and ClauseKit reads it end to end - ranking issues by severity so you spend
             your attention where it counts.
           </p>
         </div>

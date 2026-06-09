@@ -5,7 +5,7 @@ export default function Testimonial() {
         <div className="quotebox reveal">
           <p className="big">
             "ClauseKit caught a one-sided indemnity our template had carried for two years. It{' '}
-            <mark>paid for itself</mark> on the first MSA — and it lives right where my team already works."
+            <mark>paid for itself</mark> on the first MSA - and it lives right where my team already works."
           </p>
           <div className="who">
             <span className="ava">JR</span>

@@ -16,7 +16,7 @@ export default function EmptyState({ onPrompt }: EmptyStateProps) {
       </div>
       <h3>Review with confidence</h3>
       <p className="e-sub">
-        Ask anything about the contract you&apos;re in — or pick a starting point below.
+        Ask anything about the contract you&apos;re in - or pick a starting point below.
       </p>
       <div className="ck-suggest">
         {PROMPTS.map((p) => (

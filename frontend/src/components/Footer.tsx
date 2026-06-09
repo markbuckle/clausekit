@@ -8,7 +8,7 @@ export default function Footer() {
               <span className="mark"><span>CK</span></span>
               <span className="wordmark">Clause<b>Kit</b></span>
             </a>
-            <p>The AI legal assistant that reviews contracts beside the lawyer — inside Microsoft Word.</p>
+            <p>The AI legal assistant that reviews contracts beside the lawyer - inside Microsoft Word.</p>
           </div>
           <div className="fcol">
             <h5>Product</h5>
