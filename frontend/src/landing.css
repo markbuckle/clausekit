@@ -66,6 +66,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
   background: linear-gradient(176deg, #ffffff 0%, #c9c9d2 62%, #8f8f99 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
+.text-gold-grad {
+  background: linear-gradient(90deg, #f2cb3a 0%, #dd8a1a 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
 
 /* ============================================================
    NAV
