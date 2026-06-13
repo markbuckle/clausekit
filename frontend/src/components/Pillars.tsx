@@ -1,3 +1,7 @@
+import shieldIcon from '../../assets/icons/shield.svg';
+import penIcon from '../../assets/icons/pen.svg';
+import searchIcon from '../../assets/icons/search.svg';
+
 export default function Pillars() {
   return (
     <section className="section" id="features">
@@ -13,7 +17,7 @@ export default function Pillars() {
         <div className="pillars">
 
           <div className="pcard reveal">
-            <div className="pico"><span className="shield" /></div>
+            <div className="pico"><img src={shieldIcon} alt="" /></div>
             <div className="pnum">01 - Review</div>
             <h3>Catch what a tired read misses.</h3>
             <p>
@@ -28,11 +32,7 @@ export default function Pillars() {
           </div>
 
           <div className="pcard reveal">
-            <div className="pico">
-              <svg className="g" viewBox="0 0 16 16" fill="none">
-                <path d="M2 11.5 11 2.5l2.5 2.5-9 9H2v-2.5Z" stroke="#FCD34D" strokeWidth="1.4" strokeLinejoin="round" />
-              </svg>
-            </div>
+            <div className="pico"><img src={penIcon} alt="" /></div>
             <div className="pnum">02 - Draft</div>
             <h3>Redline to your standards.</h3>
             <p>
@@ -47,12 +47,7 @@ export default function Pillars() {
           </div>
 
           <div className="pcard reveal">
-            <div className="pico">
-              <svg className="g" viewBox="0 0 16 16" fill="none">
-                <circle cx="7" cy="7" r="5" stroke="#FCD34D" strokeWidth="1.4" />
-                <path d="m11 11 3 3" stroke="#FCD34D" strokeWidth="1.4" strokeLinecap="round" />
-              </svg>
-            </div>
+            <div className="pico"><img src={searchIcon} alt="" /></div>
             <div className="pnum">03 - Ask</div>
             <h3>Ask the document anything.</h3>
             <p>

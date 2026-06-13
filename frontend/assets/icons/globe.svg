@@ -1,0 +1,24 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ck-globe-ink" x1="12" y1="1" x2="12" y2="23" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFF0C9"></stop>
+      <stop offset="0.5" stop-color="#F7B43A"></stop>
+      <stop offset="1" stop-color="#D8890A"></stop>
+    </linearGradient>
+    <filter id="ck-globe-blur" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="1.1"></feGaussianBlur>
+    </filter>
+  </defs>
+  <g transform="translate(32 32) scale(2.25) translate(-12 -12)" fill="none" stroke="#F59E0B" stroke-opacity="0.55" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" filter="url(#ck-globe-blur)">
+      <path d="M12 2 L12 22"></path>
+      <path d="M12 2 a3.2 10 0 0 0 0 20 a3.2 10 0 0 0 0 -20"></path>
+      <path d="M12 2 a6.6 10 0 0 0 0 20 a6.6 10 0 0 0 0 -20"></path>
+      <circle cx="12" cy="12" r="10"></circle>
+  </g>
+  <g transform="translate(32 32) scale(2.25) translate(-12 -12)" fill="none" stroke="url(#ck-globe-ink)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2 L12 22"></path>
+      <path d="M12 2 a3.2 10 0 0 0 0 20 a3.2 10 0 0 0 0 -20"></path>
+      <path d="M12 2 a6.6 10 0 0 0 0 20 a6.6 10 0 0 0 0 -20"></path>
+      <circle cx="12" cy="12" r="10"></circle>
+  </g>
+</svg>

@@ -1,0 +1,26 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ck-document-ink" x1="12" y1="1" x2="12" y2="23" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFF0C9"></stop>
+      <stop offset="0.5" stop-color="#F7B43A"></stop>
+      <stop offset="1" stop-color="#D8890A"></stop>
+    </linearGradient>
+    <filter id="ck-document-blur" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="1.1"></feGaussianBlur>
+    </filter>
+  </defs>
+  <g transform="translate(32 32) scale(2.25) translate(-12 -12)" fill="none" stroke="#F59E0B" stroke-opacity="0.55" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#ck-document-blur)">
+      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+      <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+      <path d="M10 9H8"></path>
+      <path d="M16 13H8"></path>
+      <path d="M16 17H8"></path>
+  </g>
+  <g transform="translate(32 32) scale(2.25) translate(-12 -12)" fill="none" stroke="url(#ck-document-ink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+      <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+      <path d="M10 9H8"></path>
+      <path d="M16 13H8"></path>
+      <path d="M16 17H8"></path>
+  </g>
+</svg>
