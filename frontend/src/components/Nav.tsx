@@ -1,9 +1,11 @@
+import gavelBooks from '../../assets/gavel-books.svg';
+
 export default function Nav() {
   return (
     <header className="nav">
       <div className="wrap nav-inner">
         <a className="brand" href="#top">
-          <span className="mark"><span>CK</span></span>
+          <span className="mark logo"><img src={gavelBooks} alt="ClauseKit" /></span>
           <span className="wordmark">Clause<b>Kit</b></span>
         </a>
         <nav className="nav-links">
