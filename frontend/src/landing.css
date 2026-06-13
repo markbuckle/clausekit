@@ -112,11 +112,38 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 .nav-cta .login:hover { color: var(--text); }
 
 /* Buttons */
-.btn { font-family: var(--font-body); font-size: 13.5px; font-weight: 600; border-radius: 8px; padding: 9px 16px; cursor: pointer; border: 1px solid transparent; display: inline-flex; align-items: center; gap: 8px; line-height: 1; white-space: nowrap; transition: filter .14s, background .14s, border-color .14s; }
-.btn.primary { background: var(--amber-grad); color: #3a2900; border-color: rgba(150,92,0,.45); box-shadow: var(--amber-glow); }
-.btn.primary:hover { filter: brightness(1.05); }
+.btn { font-family: var(--font-body); font-size: 13.5px; font-weight: 600; border-radius: 8px; padding: 9px 16px; cursor: pointer; border: 1px solid transparent; display: inline-flex; align-items: center; gap: 8px; line-height: 1; white-space: nowrap; transition: filter .3s ease, background .3s ease, border-color .3s ease, box-shadow .3s ease, color .3s ease; position: relative; }
+.btn.primary { background: linear-gradient(180deg, #E0A23E 0%, #D78B0A 52%, #CC7A04 100%); color: #3a2900; border-color: rgba(150,92,0,.45); box-shadow: var(--amber-glow); }
+.btn.primary:hover {
+  background: linear-gradient(90deg, #f2cb3a 0%, #dd8a1a 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  border-color: #3a3a42;
+  box-shadow: 0 0 24px rgba(245,158,11,.45);
+}
+.btn.primary:hover::before {
+  content: "";
+  position: absolute; inset: 0; z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(180deg, #2c2c33 0%, #1c1c22 100%);
+  transition: background .3s ease;
+}
 .btn.dark { background: #141418; color: var(--text); border-color: #2c2c33; }
-.btn.dark:hover { background: #1c1c22; border-color: #3a3a42; }
+.btn.dark:hover,
+.btn.dark:hover .arr {
+  background: linear-gradient(90deg, #f2cb3a 0%, #dd8a1a 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.btn.dark:hover {
+  border-color: #3a3a42;
+  box-shadow: 0 0 24px rgba(245,158,11,.45);
+}
+.btn.dark:hover::before {
+  content: "";
+  position: absolute; inset: 0; z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(180deg, #2c2c33 0%, #1c1c22 100%);
+  transition: background .3s ease;
+}
 .btn.ghost { background: transparent; color: var(--text); border-color: transparent; }
 .btn.ghost:hover { color: #fff; }
 .btn.lg { font-size: 15px; padding: 13px 22px; border-radius: 9px; }
@@ -133,8 +160,13 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
   background: linear-gradient(180deg, rgba(245,158,11,.10), rgba(245,158,11,.03));
   border: 1px solid rgba(245,158,11,.28); border-radius: 999px;
   padding: 5px 12px 5px 7px; margin-bottom: 34px;
+  transition: box-shadow .2s, border-color .2s;
 }
-.pill .tag { font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1c1305; background: var(--amber-line); border-radius: 999px; padding: 2px 8px; }
+.pill:hover {
+  border-color: rgba(245,158,11,.45);
+  box-shadow: 0 4px 18px rgba(245,158,11,.25);
+}
+.pill .tag { font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #3a2900; background: linear-gradient(180deg, #E0A23E 0%, #D78B0A 52%, #CC7A04 100%); border-radius: 999px; padding: 2px 8px; }
 .pill .arr { color: var(--amber-line); }
 .hero h1 { font-size: clamp(46px, 8vw, 92px); line-height: .98; letter-spacing: -.032em; max-width: 14ch; margin: 0 auto; }
 .hero h1 em { font-style: italic; }
