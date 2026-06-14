@@ -10,6 +10,7 @@ import Security from './components/Security';
 import Stats from './components/Stats';
 import Testimonial from './components/Testimonial';
 import FinalCta from './components/FinalCta';
+import FooterWordmark from './components/FooterWordmark';
 import Footer from './components/Footer';
 
 function useReveal() {
@@ -66,6 +67,7 @@ export default function App() {
         <Testimonial />
         <FinalCta />
       </main>
+      <FooterWordmark />
       <Footer />
     </>
   );

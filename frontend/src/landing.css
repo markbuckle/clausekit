@@ -365,6 +365,30 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 .cta p { font-size: 17px; color: var(--muted); margin: 18px auto 0; max-width: 48ch; }
 .cta .cta-btns { display: flex; gap: 14px; justify-content: center; margin-top: 32px; flex-wrap: wrap; }
 
+/* Footer wordmark */
+.footer-wordmark {
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  opacity: .7;
+  width: 100%;
+  padding-top: 10rem;
+  display: flex;
+  justify-content: center;
+}
+.footer-wordmark-svg { display: block; flex: none; width: 135%; height: auto; }
+.footer-wordmark-spotlight {
+  opacity: 0;
+  transition: opacity .4s;
+  pointer-events: none;
+}
+.footer-wordmark:hover .footer-wordmark-spotlight { opacity: 1; }
+.footer-wordmark-shelf {
+  position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+  width: 84%; height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,.10) 50%, transparent);
+}
+
 /* Footer */
 .foot {
   border-top: 1px solid transparent;
