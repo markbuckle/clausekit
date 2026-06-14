@@ -80,7 +80,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
   backdrop-filter: saturate(140%) blur(14px);
   border-bottom: 1px solid transparent;
   border-image: linear-gradient(to right, transparent, rgba(255,255,255,.16) 50%, transparent) 1;
+  transform: translateY(0);
+  transition: transform .45s ease;
 }
+.nav.nav-hidden { transform: translateY(-100%); }
 .nav-inner { display: flex; align-items: center; gap: 36px; height: 64px; }
 .brand { display: flex; align-items: baseline; gap: 8px; position: relative; top: -2px; }
 .mark {
