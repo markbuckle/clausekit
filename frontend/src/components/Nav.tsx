@@ -17,7 +17,7 @@ export default function Nav() {
         </nav>
         <div className="nav-cta">
           <a className="login" href="#login">Log in</a>
-          <a className="btn primary" href="#demo">Book a demo</a>
+          <a className="btn primary" href="#signup">Sign up</a>
         </div>
       </div>
     </header>
