@@ -4,6 +4,7 @@ import lockIcon from '../../assets/icons/lock.svg';
 import checkCircleIcon from '../../assets/icons/check-circle.svg';
 import globeIcon from '../../assets/icons/globe.svg';
 import documentIcon from '../../assets/icons/document.svg';
+import userIcon from '../../assets/icons/user.svg';
 
 interface Card {
   icon: ReactNode;
@@ -33,7 +34,7 @@ const cards: Card[] = [
     desc: 'Choose where your data lives. US and EU regions available for firms with jurisdictional requirements.',
   },
   {
-    icon: <img src={lockIcon} alt="" />,
+    icon: <img src={userIcon} alt="" />,
     title: 'SSO & access control',
     desc: 'SAML single sign-on, SCIM provisioning, and role-based permissions managed by your firm’s admins.',
   },
