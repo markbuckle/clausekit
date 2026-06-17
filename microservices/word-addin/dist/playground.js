@@ -1,5 +1,405 @@
 "use strict";
-(globalThis["webpackChunkclausekit"] = globalThis["webpackChunkclausekit"] || []).push([["taskpane"],{
+(globalThis["webpackChunkclausekit"] = globalThis["webpackChunkclausekit"] || []).push([["playground"],{
+
+/***/ "./src/fixtures/lease/document.ts"
+/*!****************************************!*\
+  !*** ./src/fixtures/lease/document.ts ***!
+  \****************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LEASE_TITLE: () => (/* binding */ LEASE_TITLE),
+/* harmony export */   getClauseByRef: () => (/* binding */ getClauseByRef),
+/* harmony export */   getLeaseFullText: () => (/* binding */ getLeaseFullText),
+/* harmony export */   leaseClauses: () => (/* binding */ leaseClauses),
+/* harmony export */   leaseRecitals: () => (/* binding */ leaseRecitals)
+/* harmony export */ });
+/**
+ * The seeded demo document: a long-form commercial lease (landlord vs tenant)
+ * authored as clause-addressable data. This is the genuine input the LLM
+ * reasons over — it contains NO answer key. Six clauses carry deliberately
+ * off-market, landlord-favorable language (see ./metadata.ts for the curated
+ * sidecar): §5, §9, §11, §15, §16, §17.
+ */
+const LEASE_TITLE = "COMMERCIAL LEASE AGREEMENT";
+const leaseRecitals = "This Commercial Lease Agreement (this “Lease”) is entered into as of March 1, 2026 " + "(the “Effective Date”) by and between Meridian Harbor Properties, LLC, a Delaware limited " + "liability company (“Landlord”), and Northwind Apothecary, Inc., a Washington corporation " + "(“Tenant”). Landlord is the owner of the retail center commonly known as Harbor Point Commons " + "located at 1200 Wharfside Avenue, Seattle, Washington (the “Center”), and Tenant desires to " + "lease certain premises therein. In consideration of the mutual covenants below, the parties agree as follows.";
+const leaseClauses = [{
+  ref: "§1",
+  heading: "Premises",
+  text: "Landlord leases to Tenant, and Tenant leases from Landlord, those certain premises consisting of " + "approximately 3,200 rentable square feet and known as Suite 140 (the “Premises”), as more " + "particularly depicted on Exhibit A. The Premises are leased together with the non-exclusive right to " + "use the common areas of the Center, subject to the terms of this Lease and Landlord's rules and " + "regulations as reasonably amended from time to time."
+}, {
+  ref: "§2",
+  heading: "Term",
+  text: "The initial term of this Lease (the “Initial Term”) shall be five (5) years, commencing on " + "April 1, 2026 (the “Commencement Date”) and expiring at 11:59 p.m. on March 31, 2031, unless " + "sooner terminated or extended as provided herein. If Landlord is unable to deliver possession of the " + "Premises by the Commencement Date, this Lease shall not be void or voidable, but the Commencement Date " + "shall be adjusted to the date possession is tendered."
+}, {
+  ref: "§3",
+  heading: "Permitted Use",
+  text: "The Premises shall be used and occupied solely for the operation of a retail pharmacy and the sale of " + "related health, wellness, and convenience goods, and for no other purpose without Landlord's prior " + "written consent. Tenant shall continuously operate its business in the Premises during the customary " + "business hours of the Center and shall not abandon or vacate the Premises during the Term."
+}, {
+  ref: "§4",
+  heading: "Base Rent",
+  text: "Tenant shall pay to Landlord base rent (“Base Rent”) for the first Lease Year in the amount of " + "One Hundred Forty-Four Thousand Dollars ($144,000.00) per annum, payable in equal monthly installments " + "of Twelve Thousand Dollars ($12,000.00) in advance on the first day of each calendar month, without " + "demand, deduction, or setoff. As used herein, “Lease Year” means each successive twelve (12) " + "month period during the Term, the first of which begins on the Commencement Date."
+}, {
+  ref: "§5",
+  heading: "Rent Escalation",
+  text: "Commencing on the first anniversary of the Commencement Date and on each anniversary thereafter during " + "the Term, the Base Rent then in effect shall automatically increase by five percent (5%) over the Base " + "Rent payable during the immediately preceding Lease Year, compounded annually. Such increases shall " + "require no further notice to Tenant and shall apply to any renewal or extension of the Term."
+}, {
+  ref: "§6",
+  heading: "Security Deposit",
+  text: "Upon execution of this Lease, Tenant shall deposit with Landlord the sum of Twenty-Four Thousand Dollars " + "($24,000.00) as security for the full and faithful performance of Tenant's obligations (the " + "“Security Deposit”). Landlord may, but shall not be obligated to, apply all or part of the " + "Security Deposit to cure any default of Tenant. The Security Deposit shall not bear interest and may be " + "commingled with Landlord's other funds."
+}, {
+  ref: "§7",
+  heading: "Operating Expenses",
+  text: "In addition to Base Rent, Tenant shall pay as additional rent its proportionate share of the Center's " + "operating expenses, common area maintenance, real property taxes, and insurance (collectively, " + "“Operating Expenses”), based on the ratio of the rentable area of the Premises to the total " + "rentable area of the Center. Landlord shall furnish Tenant an annual reconciliation statement, and " + "controllable Operating Expenses shall not increase by more than five percent (5%) per year on a " + "cumulative basis."
+}, {
+  ref: "§8",
+  heading: "Utilities",
+  text: "Tenant shall arrange and pay for all utilities and services supplied to the Premises, including " + "electricity, gas, water, sewer, telephone, and data, together with any connection or hook-up fees. " + "Where any such utility is not separately metered, Tenant shall pay Landlord's reasonable estimate of " + "Tenant's share. Landlord shall not be liable for any interruption of utility services not caused by " + "Landlord's gross negligence or willful misconduct."
+}, {
+  ref: "§9",
+  heading: "Maintenance and Repairs",
+  text: "Tenant shall, at Tenant's sole cost and expense, keep and maintain the entire Premises in good order " + "and repair, including the roof, foundation, exterior and structural walls, and the heating, " + "ventilation, and air-conditioning systems serving the Premises, and shall replace any of the foregoing " + "as and when necessary. Landlord shall have no obligation whatsoever to maintain, repair, or replace any " + "portion of the Premises."
+}, {
+  ref: "§10",
+  heading: "Alterations",
+  text: "Tenant shall not make any alterations, additions, or improvements to the Premises without Landlord's " + "prior written consent, which consent shall not be unreasonably withheld for non-structural interior " + "alterations. All permitted alterations shall be performed in a good and workmanlike manner, in " + "compliance with applicable laws, and shall become the property of Landlord upon installation unless " + "Landlord elects otherwise in writing."
+}, {
+  ref: "§11",
+  heading: "Assignment and Subletting",
+  text: "Tenant shall not assign this Lease or sublet all or any portion of the Premises, whether voluntarily or " + "by operation of law, without the prior written consent of Landlord, which consent Landlord may grant or " + "withhold in its sole and absolute discretion for any reason or no reason. Any purported assignment or " + "sublease made without such consent shall be void and shall constitute an Event of Default."
+}, {
+  ref: "§12",
+  heading: "Insurance",
+  text: "Tenant shall, at its expense, maintain commercial general liability insurance with limits of not less " + "than Two Million Dollars ($2,000,000) per occurrence, naming Landlord as an additional insured, " + "together with property insurance covering Tenant's personal property and improvements. Tenant shall " + "deliver certificates of insurance to Landlord prior to occupancy and upon each renewal of coverage."
+}, {
+  ref: "§13",
+  heading: "Indemnification",
+  text: "Tenant shall indemnify, defend, and hold harmless Landlord from and against any and all claims, " + "damages, liabilities, and expenses arising out of Tenant's use of the Premises or any act or omission " + "of Tenant, its employees, agents, or invitees, except to the extent caused by Landlord's gross " + "negligence or willful misconduct."
+}, {
+  ref: "§14",
+  heading: "Default and Remedies",
+  text: "The occurrence of any of the following shall constitute an “Event of Default”: (a) Tenant's " + "failure to pay any Base Rent or additional rent within five (5) days after the same is due; (b) " + "Tenant's failure to perform any other obligation under this Lease within fifteen (15) days after " + "written notice; or (c) the insolvency or bankruptcy of Tenant. Upon an Event of Default, Landlord may " + "terminate this Lease and pursue all remedies available at law or in equity."
+}, {
+  ref: "§15",
+  heading: "Holdover",
+  text: "If Tenant remains in possession of the Premises after the expiration or earlier termination of this " + "Lease without Landlord's written consent, such occupancy shall be a tenancy at sufferance, and Tenant " + "shall pay holdover rent equal to two hundred percent (200%) of the Base Rent and additional rent " + "payable during the last month of the Term for each month or partial month of holdover. Tenant shall " + "also be liable for all consequential damages arising from such holdover."
+}, {
+  ref: "§16",
+  heading: "Renewal Option",
+  text: "Tenant may request to extend the Term for one (1) additional period of five (5) years by delivering " + "written notice to Landlord not less than nine (9) months prior to expiration; provided, however, that " + "any such extension shall be granted or denied by Landlord in its sole discretion, and the Base Rent for " + "any extension term shall be as determined by Landlord. Tenant shall have no vested right to renew this " + "Lease."
+}, {
+  ref: "§17",
+  heading: "Personal Guaranty",
+  text: "As a material inducement to Landlord's entry into this Lease, the principal of Tenant, Dr. Eleanor Voss " + "(the “Guarantor”), shall personally, absolutely, and unconditionally guarantee all of Tenant's " + "obligations under this Lease, without limitation as to amount or duration, for the entire Term and any " + "extension thereof. The Guarantor's liability shall be primary and shall survive any assignment, " + "termination, or modification of this Lease."
+}, {
+  ref: "§18",
+  heading: "Surrender",
+  text: "Upon the expiration or termination of this Lease, Tenant shall surrender the Premises to Landlord in " + "good order and condition, broom-clean, ordinary wear and tear excepted, and shall remove all of " + "Tenant's personal property and any alterations Landlord requires to be removed. Any property left in " + "the Premises may be deemed abandoned and disposed of by Landlord at Tenant's expense."
+}, {
+  ref: "§19",
+  heading: "Notices",
+  text: "All notices under this Lease shall be in writing and delivered personally, by nationally recognized " + "overnight courier, or by certified mail, return receipt requested, to the addresses set forth in the " + "preamble or such other address as either party may designate by notice. Notices shall be deemed given " + "upon receipt or refusal of delivery."
+}, {
+  ref: "§20",
+  heading: "Governing Law; Miscellaneous",
+  text: "This Lease shall be governed by the laws of the State of Washington, without regard to its conflicts of " + "law principles. This Lease constitutes the entire agreement between the parties and supersedes all " + "prior negotiations and understandings. No amendment shall be effective unless in writing and signed by " + "both parties. If any provision is held unenforceable, the remainder shall continue in full force and " + "effect."
+}];
+/** Returns the clause with the given ref, or undefined. */
+function getClauseByRef(ref) {
+  return leaseClauses.find(c => c.ref === ref);
+}
+/**
+ * Derives the full plain text of the lease from its clause structure. This is
+ * what a DocumentService.getFullText() implementation backed by this fixture
+ * would return.
+ */
+function getLeaseFullText() {
+  const body = leaseClauses.map(c => `${c.ref}. ${c.heading}\n\n${c.text}`).join("\n\n");
+  return `${LEASE_TITLE}\n\n${leaseRecitals}\n\n${body}\n`;
+}
+
+/***/ },
+
+/***/ "./src/fixtures/lease/index.ts"
+/*!*************************************!*\
+  !*** ./src/fixtures/lease/index.ts ***!
+  \*************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LEASE_TITLE: () => (/* reexport safe */ _document__WEBPACK_IMPORTED_MODULE_0__.LEASE_TITLE),
+/* harmony export */   contestedClauses: () => (/* reexport safe */ _metadata__WEBPACK_IMPORTED_MODULE_1__.contestedClauses),
+/* harmony export */   contestedRefs: () => (/* reexport safe */ _metadata__WEBPACK_IMPORTED_MODULE_1__.contestedRefs),
+/* harmony export */   getClauseByRef: () => (/* reexport safe */ _document__WEBPACK_IMPORTED_MODULE_0__.getClauseByRef),
+/* harmony export */   getContestedClause: () => (/* reexport safe */ _metadata__WEBPACK_IMPORTED_MODULE_1__.getContestedClause),
+/* harmony export */   getLeaseFullText: () => (/* reexport safe */ _document__WEBPACK_IMPORTED_MODULE_0__.getLeaseFullText),
+/* harmony export */   leaseClauses: () => (/* reexport safe */ _document__WEBPACK_IMPORTED_MODULE_0__.leaseClauses),
+/* harmony export */   leaseRecitals: () => (/* reexport safe */ _document__WEBPACK_IMPORTED_MODULE_0__.leaseRecitals)
+/* harmony export */ });
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./document */ "./src/fixtures/lease/document.ts");
+/* harmony import */ var _metadata__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./metadata */ "./src/fixtures/lease/metadata.ts");
+
+
+
+/***/ },
+
+/***/ "./src/fixtures/lease/metadata.ts"
+/*!****************************************!*\
+  !*** ./src/fixtures/lease/metadata.ts ***!
+  \****************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   contestedClauses: () => (/* binding */ contestedClauses),
+/* harmony export */   contestedRefs: () => (/* binding */ contestedRefs),
+/* harmony export */   getContestedClause: () => (/* binding */ getContestedClause)
+/* harmony export */ });
+/**
+ * Curated reference sidecar for the seeded lease — SEPARATE from the prose in
+ * ./document.ts. This is NOT an answer key fed to the LLM: it is our curation
+ * for review and the pre-wired fallback ladders the step 9 Negotiation
+ * Simulator reuses. Each ladder is ordered landlord-favorable → tenant-favorable,
+ * with rung[0] echoing the clause's current (off-market) language, so either
+ * side can be role-played from its own end of the ladder.
+ */
+const contestedClauses = [{
+  clauseRef: "§5",
+  issue: "Base Rent escalates 5% compounding annually with no cap — well above market for a five-year " + "retail lease, roughly doubling rent over a typical renewal horizon.",
+  favoredParty: "landlord",
+  fallbackLadder: [{
+    label: "Landlord opening",
+    language: "increase by five percent (5%) over the Base Rent payable during the immediately preceding Lease " + "Year, compounded annually",
+    rationale: "Aggressive fixed escalator that compounds well ahead of typical retail inflation."
+  }, {
+    label: "Market",
+    language: "increase by three percent (3%) over the Base Rent payable during the immediately preceding Lease Year",
+    rationale: "Fixed 3% annual bumps are the prevailing norm for multi-year retail leases."
+  }, {
+    label: "Tenant target",
+    language: "increase by the lesser of (a) the percentage increase in the Consumer Price Index or (b) two and " + "one-half percent (2.5%) over the Base Rent payable during the immediately preceding Lease Year",
+    rationale: "CPI-with-a-cap ties rent to actual inflation and shields Tenant in high-inflation years."
+  }]
+}, {
+  clauseRef: "§9",
+  issue: "Tenant bears full repair AND replacement of the roof, foundation, structure, and HVAC, with Landlord " + "carrying no obligation at all — atypical for a single suite in a multi-tenant center.",
+  favoredParty: "landlord",
+  fallbackLadder: [{
+    label: "Landlord opening",
+    language: "including the roof, foundation, exterior and structural walls, and the heating, ventilation, and " + "air-conditioning systems serving the Premises, and shall replace any of the foregoing as and when necessary",
+    rationale: "Pushes all building-envelope and capital-replacement risk onto a small-suite tenant."
+  }, {
+    label: "Market",
+    language: "excluding the roof, foundation, and exterior structural walls, which Landlord shall maintain and " + "repair; Tenant shall maintain the heating, ventilation, and air-conditioning systems serving the Premises",
+    rationale: "Standard split: Landlord keeps the structure/envelope, Tenant handles interior and routine HVAC."
+  }, {
+    label: "Tenant target",
+    language: "excluding the roof, foundation, exterior structural walls, and the heating, ventilation, and " + "air-conditioning systems, all of which Landlord shall maintain, repair, and replace; Tenant shall be " + "responsible only for routine HVAC servicing under a maintenance contract",
+    rationale: "Caps Tenant to predictable routine servicing and shifts HVAC capital replacement to Landlord."
+  }]
+}, {
+  clauseRef: "§11",
+  issue: "Consent to assignment or subletting is at Landlord's sole and absolute discretion for any or no reason, " + "leaving Tenant no exit, no affiliate transfers, and no path through a sale of the business.",
+  favoredParty: "landlord",
+  fallbackLadder: [{
+    label: "Landlord opening",
+    language: "which consent Landlord may grant or withhold in its sole and absolute discretion for any reason or no reason",
+    rationale: "Absolute veto; Tenant cannot transfer even to a qualified successor."
+  }, {
+    label: "Market",
+    language: "which consent Landlord shall not unreasonably withhold, condition, or delay",
+    rationale: "The reasonableness standard is the prevailing default and preserves Landlord's legitimate interests."
+  }, {
+    label: "Tenant target",
+    language: "which consent Landlord shall not unreasonably withhold, condition, or delay, and no consent shall be " + "required for an assignment to an affiliate or in connection with a merger or sale of substantially all " + "of Tenant's assets to a successor meeting Landlord's reasonable net-worth criteria",
+    rationale: "Adds permitted-transfer carve-outs for corporate reorganizations Tenant cannot control."
+  }]
+}, {
+  clauseRef: "§15",
+  issue: "Holdover rent is set at 200% of rent plus consequential damages — punitive versus the 125–150% market " + "range, and an inadvertent holdover could expose Tenant to open-ended consequentials.",
+  favoredParty: "landlord",
+  fallbackLadder: [{
+    label: "Landlord opening",
+    language: "two hundred percent (200%)",
+    rationale: "Double rent plus consequentials is a penalty, not holdover compensation."
+  }, {
+    label: "Market",
+    language: "one hundred fifty percent (150%)",
+    rationale: "150% of the last month's rent is the common holdover premium."
+  }, {
+    label: "Tenant target",
+    language: "one hundred twenty-five percent (125%)",
+    rationale: "125% covers Landlord's real holdover cost; pair with a waiver of consequential damages for an " + "inadvertent, short holdover."
+  }]
+}, {
+  clauseRef: "§16",
+  issue: "Renewal is entirely at Landlord's discretion with Landlord-set rent — an illusory option that gives " + "Tenant no enforceable right to stay and no rent protection.",
+  favoredParty: "landlord",
+  fallbackLadder: [{
+    label: "Landlord opening",
+    language: "any such extension shall be granted or denied by Landlord in its sole discretion, and the Base Rent " + "for any extension term shall be as determined by Landlord",
+    rationale: "Illusory option; Tenant has no enforceable right to renew."
+  }, {
+    label: "Market",
+    language: "Tenant shall have the option to extend, exercisable by such notice, at a Base Rent equal to the " + "then-fair-market rent for comparable space in the Center",
+    rationale: "A true tenant option at fair-market rent is the standard renewal construct."
+  }, {
+    label: "Tenant target",
+    language: "Tenant shall have the option to extend, exercisable by such notice, at a Base Rent equal to the " + "lesser of fair-market rent or 103% of the prior year's Base Rent, with fair-market rent determined by " + "binding appraisal if the parties disagree",
+    rationale: "Caps renewal rent and adds an appraisal backstop so Landlord cannot price Tenant out."
+  }]
+}, {
+  clauseRef: "§17",
+  issue: "The personal guaranty is unlimited in amount and duration and survives termination — open-ended personal " + "exposure for the Guarantor with no cap and no sunset.",
+  favoredParty: "landlord",
+  fallbackLadder: [{
+    label: "Landlord opening",
+    language: "without limitation as to amount or duration, for the entire Term and any extension thereof",
+    rationale: "Open-ended personal liability with no cap and no end date."
+  }, {
+    label: "Market",
+    language: "limited to obligations accruing during the first twenty-four (24) months of the Term and to a maximum " + "of six (6) months' Base Rent",
+    rationale: "A guaranty capped in time and amount is typical for a creditworthy small-business tenant."
+  }, {
+    label: "Tenant target",
+    language: "which guaranty shall terminate upon Tenant's completion of twenty-four (24) months without an uncured " + "monetary default and shall in no event exceed three (3) months' Base Rent",
+    rationale: "Burn-down guaranty rewards a clean payment history and caps downside to one quarter's rent."
+  }]
+}];
+/** Refs of the contested clauses, in document order. */
+const contestedRefs = contestedClauses.map(c => c.clauseRef);
+/** Returns the contested-clause metadata for a ref, or undefined. */
+function getContestedClause(ref) {
+  return contestedClauses.find(c => c.clauseRef === ref);
+}
+
+/***/ },
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/playground/playground.css"
+/*!*****************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/playground/playground.css ***!
+  \*****************************************************************************/
+(module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, `/* ── ClauseKit Playground chrome ──
+ *
+ * Playground-only layout: a two-pane demo surface (lease document on the
+ * left, the real task pane docked on the right). This file styles ONLY the
+ * playground shell and the rendered document — the task pane itself comes
+ * entirely from the shared design system (clausekit.css).
+ */
+
+.pg-root {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: #eef0f3;
+}
+
+/* ── Document pane (left/center) ── */
+.pg-doc-pane {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 32px 24px 64px;
+  display: flex;
+  justify-content: center;
+}
+
+.pg-doc {
+  width: 100%;
+  max-width: 760px;
+  background: #fff;
+  border: 1px solid #e3e6ea;
+  border-radius: 4px;
+  box-shadow: 0 4px 24px rgba(17, 24, 39, 0.08);
+  padding: 56px 72px 72px;
+  /* A serif gives the document a contractual feel, distinct from the pane UI. */
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #1f2430;
+}
+
+.pg-doc-title {
+  text-align: center;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0 0 28px;
+}
+
+.pg-recitals {
+  font-size: 14px;
+  line-height: 1.75;
+  text-align: justify;
+  margin: 0 0 28px;
+}
+
+.pg-clause {
+  margin: 0 0 22px;
+  scroll-margin-top: 24px;
+}
+
+.pg-clause-head {
+  font-size: 14.5px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.pg-ref {
+  font-family: var(--font-mono, 'Roboto Mono', monospace);
+  font-size: 12.5px;
+  color: #6b7280;
+  flex: none;
+}
+
+.pg-clause-text {
+  font-size: 14px;
+  line-height: 1.8;
+  text-align: justify;
+  margin: 0;
+}
+
+/* ── Task-pane host (right) ── */
+.pg-pane-host {
+  width: 372px;
+  flex: none;
+  height: 100vh;
+  background: var(--bg, #f8f9fa);
+  border-left: 1px solid #d6dae0;
+  box-shadow: -6px 0 24px rgba(17, 24, 39, 0.08);
+  overflow: hidden;
+}
+
+/* The shared .ck-pane fills the host exactly as it does the Office task pane. */
+.pg-pane-host .ck-pane {
+  height: 100%;
+}
+`, "",{"version":3,"sources":["webpack://./src/playground/playground.css"],"names":[],"mappings":"AAAA;;;;;;EAME;;AAEF;EACE,aAAa;EACb,aAAa;EACb,WAAW;EACX,gBAAgB;EAChB,mBAAmB;AACrB;;AAEA,sCAAsC;AACtC;EACE,OAAO;EACP,YAAY;EACZ,gBAAgB;EAChB,uBAAuB;EACvB,aAAa;EACb,uBAAuB;AACzB;;AAEA;EACE,WAAW;EACX,gBAAgB;EAChB,gBAAgB;EAChB,yBAAyB;EACzB,kBAAkB;EAClB,6CAA6C;EAC7C,uBAAuB;EACvB,8EAA8E;EAC9E,8CAA8C;EAC9C,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,eAAe;EACf,gBAAgB;EAChB,sBAAsB;EACtB,yBAAyB;EACzB,gBAAgB;AAClB;;AAEA;EACE,eAAe;EACf,iBAAiB;EACjB,mBAAmB;EACnB,gBAAgB;AAClB;;AAEA;EACE,gBAAgB;EAChB,uBAAuB;AACzB;;AAEA;EACE,iBAAiB;EACjB,gBAAgB;EAChB,eAAe;EACf,aAAa;EACb,QAAQ;EACR,qBAAqB;AACvB;;AAEA;EACE,uDAAuD;EACvD,iBAAiB;EACjB,cAAc;EACd,UAAU;AACZ;;AAEA;EACE,eAAe;EACf,gBAAgB;EAChB,mBAAmB;EACnB,SAAS;AACX;;AAEA,iCAAiC;AACjC;EACE,YAAY;EACZ,UAAU;EACV,aAAa;EACb,8BAA8B;EAC9B,8BAA8B;EAC9B,8CAA8C;EAC9C,gBAAgB;AAClB;;AAEA,gFAAgF;AAChF;EACE,YAAY;AACd","sourcesContent":["/* ── ClauseKit Playground chrome ──\n *\n * Playground-only layout: a two-pane demo surface (lease document on the\n * left, the real task pane docked on the right). This file styles ONLY the\n * playground shell and the rendered document — the task pane itself comes\n * entirely from the shared design system (clausekit.css).\n */\n\n.pg-root {\n  display: flex;\n  height: 100vh;\n  width: 100%;\n  overflow: hidden;\n  background: #eef0f3;\n}\n\n/* ── Document pane (left/center) ── */\n.pg-doc-pane {\n  flex: 1;\n  min-width: 0;\n  overflow-y: auto;\n  padding: 32px 24px 64px;\n  display: flex;\n  justify-content: center;\n}\n\n.pg-doc {\n  width: 100%;\n  max-width: 760px;\n  background: #fff;\n  border: 1px solid #e3e6ea;\n  border-radius: 4px;\n  box-shadow: 0 4px 24px rgba(17, 24, 39, 0.08);\n  padding: 56px 72px 72px;\n  /* A serif gives the document a contractual feel, distinct from the pane UI. */\n  font-family: Georgia, 'Times New Roman', serif;\n  color: #1f2430;\n}\n\n.pg-doc-title {\n  text-align: center;\n  font-size: 19px;\n  font-weight: 700;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  margin: 0 0 28px;\n}\n\n.pg-recitals {\n  font-size: 14px;\n  line-height: 1.75;\n  text-align: justify;\n  margin: 0 0 28px;\n}\n\n.pg-clause {\n  margin: 0 0 22px;\n  scroll-margin-top: 24px;\n}\n\n.pg-clause-head {\n  font-size: 14.5px;\n  font-weight: 700;\n  margin: 0 0 8px;\n  display: flex;\n  gap: 8px;\n  align-items: baseline;\n}\n\n.pg-ref {\n  font-family: var(--font-mono, 'Roboto Mono', monospace);\n  font-size: 12.5px;\n  color: #6b7280;\n  flex: none;\n}\n\n.pg-clause-text {\n  font-size: 14px;\n  line-height: 1.8;\n  text-align: justify;\n  margin: 0;\n}\n\n/* ── Task-pane host (right) ── */\n.pg-pane-host {\n  width: 372px;\n  flex: none;\n  height: 100vh;\n  background: var(--bg, #f8f9fa);\n  border-left: 1px solid #d6dae0;\n  box-shadow: -6px 0 24px rgba(17, 24, 39, 0.08);\n  overflow: hidden;\n}\n\n/* The shared .ck-pane fills the host exactly as it does the Office task pane. */\n.pg-pane-host .ck-pane {\n  height: 100%;\n}\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ },
 
 /***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/clausekit.css"
 /*!************************************************************************!*\
@@ -314,10 +714,10 @@ module.exports = function (item) {
 
 /***/ },
 
-/***/ "./src/taskpane/taskpane.html"
-/*!************************************!*\
-  !*** ./src/taskpane/taskpane.html ***!
-  \************************************/
+/***/ "./src/playground/playground.html"
+/*!****************************************!*\
+  !*** ./src/playground/playground.html ***!
+  \****************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -325,52 +725,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 // Module
-var code = `<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license. -->
-<!-- See LICENSE in the project root for license information -->
-
-<!doctype html>
-<html lang="en" data-framework="typescript">
+var code = `<!doctype html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ClauseKit</title>
+    <title>ClauseKit — Playground</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-    <!-- Office JavaScript API -->
-    ${"<" + "script"} type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js">${"<" + "/script"}>
-
-    <!-- Design-system styles are imported by src/taskpane/index.tsx from
-         src/styles/clausekit.css (the single source of truth shared with the
-         browser playground). -->
+    <!-- No Office.js: this entry runs in a plain browser tab. Styles and the
+         React app are loaded by src/playground/playground.tsx. -->
 </head>
 
-<body style="width: 100%; height: 100%; margin: 0; padding: 0;">
-    <div id="container"></div>
-
-    <!--
-        Fluent UI React v. 9 uses modern JavaScript syntax that is not supported in
-        Trident (Internet Explorer) or EdgeHTML (Edge Legacy), so this add-in won't
-        work in Office versions that use these webviews. The script below makes the
-        following div display when an unsupported webview is in use, and hides the
-        React container div.
-    -->
-    <div id="tridentmessage" style="display: none; padding: 10;">
-        This add-in will not run in your version of Office. Please upgrade either to perpetual Office 2021 (or later)
-        or to a Microsoft 365 account.
-    </div>
-    ${"<" + "script"}>
-        if ((navigator.userAgent.indexOf("Trident") !== -1) || (navigator.userAgent.indexOf("Edge") !== -1)) {
-            var tridentMessage = document.getElementById("tridentmessage");
-            var normalContainer = document.getElementById("container");
-            tridentMessage.style.display = "block";
-            normalContainer.style.display = "none";
-        }
-    ${"<" + "/script"}>
+<body>
+    <div id="root"></div>
 </body>
 
 </html>
@@ -1772,6 +2144,58 @@ if (false) // removed by dead control flow
 
 /***/ },
 
+/***/ "./src/playground/playground.css"
+/*!***************************************!*\
+  !*** ./src/playground/playground.css ***!
+  \***************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_playground_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./playground.css */ "./node_modules/css-loader/dist/cjs.js!./src/playground/playground.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_playground_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_playground_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_playground_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_playground_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ },
+
 /***/ "./src/styles/clausekit.css"
 /*!**********************************!*\
   !*** ./src/styles/clausekit.css ***!
@@ -2091,6 +2515,46 @@ module.exports = styleTagTransform;
 
 /***/ },
 
+/***/ "./src/playground/playground.tsx"
+/*!***************************************!*\
+  !*** ./src/playground/playground.tsx ***!
+  \***************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
+/* harmony import */ var _taskpane_components_App__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../taskpane/components/App */ "./src/taskpane/components/App.tsx");
+/* harmony import */ var _fixtures_lease__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../fixtures/lease */ "./src/fixtures/lease/index.ts");
+/* harmony import */ var _styles_clausekit_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../styles/clausekit.css */ "./src/styles/clausekit.css");
+/* harmony import */ var _playground_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./playground.css */ "./src/playground/playground.css");
+
+
+
+
+
+
+/* global document */
+/**
+ * Browser playground: the real task pane (reused, not reimplemented) running
+ * next to the seeded lease rendered as a document. No Office host — this entry
+ * mounts React directly rather than waiting on Office.onReady. Wiring the pane
+ * to a DocumentService is step 4b; here it stays in its current mocked state.
+ */
+function LeaseDocument() {
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("article", { className: "pg-doc", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", { className: "pg-doc-title", children: _fixtures_lease__WEBPACK_IMPORTED_MODULE_3__.LEASE_TITLE }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "pg-recitals", children: _fixtures_lease__WEBPACK_IMPORTED_MODULE_3__.leaseRecitals }), _fixtures_lease__WEBPACK_IMPORTED_MODULE_3__.leaseClauses.map((clause) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("section", { className: "pg-clause", id: `clause-${clause.ref}`, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", { className: "pg-clause-head", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "pg-ref", children: clause.ref }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { children: clause.heading })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "pg-clause-text", children: clause.text })] }, clause.ref)))] }));
+}
+function Playground() {
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "pg-root", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "pg-doc-pane", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(LeaseDocument, {}) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "pg-pane-host", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_taskpane_components_App__WEBPACK_IMPORTED_MODULE_2__["default"], { title: "ClauseKit" }) })] }));
+}
+const rootElement = document.getElementById("root");
+if (rootElement) {
+    (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(rootElement).render((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(Playground, {}));
+}
+
+
+/***/ },
+
 /***/ "./src/taskpane/components/ActionCard.tsx"
 /*!************************************************!*\
   !*** ./src/taskpane/components/ActionCard.tsx ***!
@@ -2265,40 +2729,12 @@ function EmptyState({ onPrompt }) {
 }
 
 
-/***/ },
-
-/***/ "./src/taskpane/index.tsx"
-/*!********************************!*\
-  !*** ./src/taskpane/index.tsx ***!
-  \********************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
-/* harmony import */ var _components_App__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/App */ "./src/taskpane/components/App.tsx");
-/* harmony import */ var _styles_clausekit_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../styles/clausekit.css */ "./src/styles/clausekit.css");
-
-
-
-
-/* global document, Office, module, require, HTMLElement */
-const title = "ClauseKit";
-const rootElement = document.getElementById("container");
-const root = rootElement ? (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(rootElement) : undefined;
-Office.onReady(() => {
-    root?.render((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_App__WEBPACK_IMPORTED_MODULE_2__["default"], { title: title }));
-});
-if (false) // removed by dead control flow
-{}
-
-
 /***/ }
 
 },
 /******/ __webpack_require__ => { // webpackRuntimeModules
 /******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-/******/ var __webpack_exports__ = (__webpack_exec__("./src/taskpane/index.tsx"), __webpack_exec__("./src/taskpane/taskpane.html"));
+/******/ var __webpack_exports__ = (__webpack_exec__("./src/playground/playground.tsx"), __webpack_exec__("./src/playground/playground.html"));
 /******/ }
 ]);
-//# sourceMappingURL=taskpane.js.map
+//# sourceMappingURL=playground.js.map

@@ -24,6 +24,10 @@ module.exports = async (env, options) => {
         import: ["./src/taskpane/index.tsx", "./src/taskpane/taskpane.html"],
         dependOn: "react",
       },
+      playground: {
+        import: ["./src/playground/playground.tsx", "./src/playground/playground.html"],
+        dependOn: "react",
+      },
     },
     output: {
       clean: true,
@@ -51,6 +55,10 @@ module.exports = async (env, options) => {
           use: "html-loader",
         },
         {
+          test: /\.css$/,
+          use: ["style-loader", "css-loader"],
+        },
+        {
           test: /\.(png|jpg|jpeg|ttf|woff|woff2|gif|ico)$/,
           type: "asset/resource",
           generator: {
@@ -64,6 +72,11 @@ module.exports = async (env, options) => {
         filename: "taskpane.html",
         template: "./src/taskpane/taskpane.html",
         chunks: ["polyfill", "taskpane", "react"],
+      }),
+      new HtmlWebpackPlugin({
+        filename: "playground.html",
+        template: "./src/playground/playground.html",
+        chunks: ["polyfill", "playground", "react"],
       }),
       new CopyWebpackPlugin({
         patterns: [
