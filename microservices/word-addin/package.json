@@ -16,7 +16,7 @@
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
     "dev-server": "webpack serve --mode development",
-    "playground": "webpack serve --mode development --open /playground.html",
+    "playground": "webpack serve --mode development --port 3001 --open /playground.html",
     "lint": "office-addin-lint check",
     "lint:fix": "office-addin-lint fix",
     "prettier": "office-addin-lint prettier",

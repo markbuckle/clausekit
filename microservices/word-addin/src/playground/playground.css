@@ -22,6 +22,10 @@
   padding: 32px 24px 64px;
   display: flex;
   justify-content: center;
+  /* Top-align so the page sizes to its content height instead of being
+     stretched to the (viewport-bound) pane height. The pane is the scroll
+     container; gray shows only as the margin around the page. */
+  align-items: flex-start;
 }
 
 .pg-doc {
@@ -32,6 +36,9 @@
   border-radius: 4px;
   box-shadow: 0 4px 24px rgba(17, 24, 39, 0.08);
   padding: 56px 72px 72px;
+  /* height is auto (grows with content); fill the viewport when the document
+     is short. 96px = the pane's top (32) + bottom (64) padding. */
+  min-height: calc(100vh - 96px);
   /* A serif gives the document a contractual feel, distinct from the pane UI. */
   font-family: Georgia, 'Times New Roman', serif;
   color: #1f2430;
