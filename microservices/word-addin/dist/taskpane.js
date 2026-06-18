@@ -1,279 +1,23 @@
 "use strict";
 (globalThis["webpackChunkclausekit"] = globalThis["webpackChunkclausekit"] || []).push([["taskpane"],{
 
-/***/ "./src/fixtures/lease/document.ts"
-/*!****************************************!*\
-  !*** ./src/fixtures/lease/document.ts ***!
-  \****************************************/
+/***/ "./src/config.ts"
+/*!***********************!*\
+  !*** ./src/config.ts ***!
+  \***********************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   LEASE_TITLE: () => (/* binding */ LEASE_TITLE),
-/* harmony export */   getClauseByRef: () => (/* binding */ getClauseByRef),
-/* harmony export */   getLeaseFullText: () => (/* binding */ getLeaseFullText),
-/* harmony export */   leaseClauses: () => (/* binding */ leaseClauses),
-/* harmony export */   leaseRecitals: () => (/* binding */ leaseRecitals)
+/* harmony export */   API_BASE_URL: () => (/* binding */ API_BASE_URL)
 /* harmony export */ });
 /**
- * The seeded demo document: a long-form commercial lease (landlord vs tenant)
- * authored as clause-addressable data. This is the genuine input the LLM
- * reasons over — it contains NO answer key. Six clauses carry deliberately
- * off-market, landlord-favorable language (see ./metadata.ts for the curated
- * sidecar): §5, §9, §11, §15, §16, §17.
+ * Runtime configuration for the task pane.
+ *
+ * Single source of truth for the backend base URL. Defaults to the local
+ * backend (step 5a); change here (or wire to an env var) when deploying.
  */
-const LEASE_TITLE = "COMMERCIAL LEASE AGREEMENT";
-const leaseRecitals = "This Commercial Lease Agreement (this “Lease”) is entered into as of March 1, 2026 " + "(the “Effective Date”) by and between Meridian Harbor Properties, LLC, a Delaware limited " + "liability company (“Landlord”), and Northwind Apothecary, Inc., a Washington corporation " + "(“Tenant”). Landlord is the owner of the retail center commonly known as Harbor Point Commons " + "located at 1200 Wharfside Avenue, Seattle, Washington (the “Center”), and Tenant desires to " + "lease certain premises therein. In consideration of the mutual covenants below, the parties agree as follows.";
-const leaseClauses = [{
-  ref: "§1",
-  heading: "Premises",
-  text: "Landlord leases to Tenant, and Tenant leases from Landlord, those certain premises consisting of " + "approximately 3,200 rentable square feet and known as Suite 140 (the “Premises”), as more " + "particularly depicted on Exhibit A. The Premises are leased together with the non-exclusive right to " + "use the common areas of the Center, subject to the terms of this Lease and Landlord's rules and " + "regulations as reasonably amended from time to time."
-}, {
-  ref: "§2",
-  heading: "Term",
-  text: "The initial term of this Lease (the “Initial Term”) shall be five (5) years, commencing on " + "April 1, 2026 (the “Commencement Date”) and expiring at 11:59 p.m. on March 31, 2031, unless " + "sooner terminated or extended as provided herein. If Landlord is unable to deliver possession of the " + "Premises by the Commencement Date, this Lease shall not be void or voidable, but the Commencement Date " + "shall be adjusted to the date possession is tendered."
-}, {
-  ref: "§3",
-  heading: "Permitted Use",
-  text: "The Premises shall be used and occupied solely for the operation of a retail pharmacy and the sale of " + "related health, wellness, and convenience goods, and for no other purpose without Landlord's prior " + "written consent. Tenant shall continuously operate its business in the Premises during the customary " + "business hours of the Center and shall not abandon or vacate the Premises during the Term."
-}, {
-  ref: "§4",
-  heading: "Base Rent",
-  text: "Tenant shall pay to Landlord base rent (“Base Rent”) for the first Lease Year in the amount of " + "One Hundred Forty-Four Thousand Dollars ($144,000.00) per annum, payable in equal monthly installments " + "of Twelve Thousand Dollars ($12,000.00) in advance on the first day of each calendar month, without " + "demand, deduction, or setoff. As used herein, “Lease Year” means each successive twelve (12) " + "month period during the Term, the first of which begins on the Commencement Date."
-}, {
-  ref: "§5",
-  heading: "Rent Escalation",
-  text: "Commencing on the first anniversary of the Commencement Date and on each anniversary thereafter during " + "the Term, the Base Rent then in effect shall automatically increase by five percent (5%) over the Base " + "Rent payable during the immediately preceding Lease Year, compounded annually. Such increases shall " + "require no further notice to Tenant and shall apply to any renewal or extension of the Term."
-}, {
-  ref: "§6",
-  heading: "Security Deposit",
-  text: "Upon execution of this Lease, Tenant shall deposit with Landlord the sum of Twenty-Four Thousand Dollars " + "($24,000.00) as security for the full and faithful performance of Tenant's obligations (the " + "“Security Deposit”). Landlord may, but shall not be obligated to, apply all or part of the " + "Security Deposit to cure any default of Tenant. The Security Deposit shall not bear interest and may be " + "commingled with Landlord's other funds."
-}, {
-  ref: "§7",
-  heading: "Operating Expenses",
-  text: "In addition to Base Rent, Tenant shall pay as additional rent its proportionate share of the Center's " + "operating expenses, common area maintenance, real property taxes, and insurance (collectively, " + "“Operating Expenses”), based on the ratio of the rentable area of the Premises to the total " + "rentable area of the Center. Landlord shall furnish Tenant an annual reconciliation statement, and " + "controllable Operating Expenses shall not increase by more than five percent (5%) per year on a " + "cumulative basis."
-}, {
-  ref: "§8",
-  heading: "Utilities",
-  text: "Tenant shall arrange and pay for all utilities and services supplied to the Premises, including " + "electricity, gas, water, sewer, telephone, and data, together with any connection or hook-up fees. " + "Where any such utility is not separately metered, Tenant shall pay Landlord's reasonable estimate of " + "Tenant's share. Landlord shall not be liable for any interruption of utility services not caused by " + "Landlord's gross negligence or willful misconduct."
-}, {
-  ref: "§9",
-  heading: "Maintenance and Repairs",
-  text: "Tenant shall, at Tenant's sole cost and expense, keep and maintain the entire Premises in good order " + "and repair, including the roof, foundation, exterior and structural walls, and the heating, " + "ventilation, and air-conditioning systems serving the Premises, and shall replace any of the foregoing " + "as and when necessary. Landlord shall have no obligation whatsoever to maintain, repair, or replace any " + "portion of the Premises."
-}, {
-  ref: "§10",
-  heading: "Alterations",
-  text: "Tenant shall not make any alterations, additions, or improvements to the Premises without Landlord's " + "prior written consent, which consent shall not be unreasonably withheld for non-structural interior " + "alterations. All permitted alterations shall be performed in a good and workmanlike manner, in " + "compliance with applicable laws, and shall become the property of Landlord upon installation unless " + "Landlord elects otherwise in writing."
-}, {
-  ref: "§11",
-  heading: "Assignment and Subletting",
-  text: "Tenant shall not assign this Lease or sublet all or any portion of the Premises, whether voluntarily or " + "by operation of law, without the prior written consent of Landlord, which consent Landlord may grant or " + "withhold in its sole and absolute discretion for any reason or no reason. Any purported assignment or " + "sublease made without such consent shall be void and shall constitute an Event of Default."
-}, {
-  ref: "§12",
-  heading: "Insurance",
-  text: "Tenant shall, at its expense, maintain commercial general liability insurance with limits of not less " + "than Two Million Dollars ($2,000,000) per occurrence, naming Landlord as an additional insured, " + "together with property insurance covering Tenant's personal property and improvements. Tenant shall " + "deliver certificates of insurance to Landlord prior to occupancy and upon each renewal of coverage."
-}, {
-  ref: "§13",
-  heading: "Indemnification",
-  text: "Tenant shall indemnify, defend, and hold harmless Landlord from and against any and all claims, " + "damages, liabilities, and expenses arising out of Tenant's use of the Premises or any act or omission " + "of Tenant, its employees, agents, or invitees, except to the extent caused by Landlord's gross " + "negligence or willful misconduct."
-}, {
-  ref: "§14",
-  heading: "Default and Remedies",
-  text: "The occurrence of any of the following shall constitute an “Event of Default”: (a) Tenant's " + "failure to pay any Base Rent or additional rent within five (5) days after the same is due; (b) " + "Tenant's failure to perform any other obligation under this Lease within fifteen (15) days after " + "written notice; or (c) the insolvency or bankruptcy of Tenant. Upon an Event of Default, Landlord may " + "terminate this Lease and pursue all remedies available at law or in equity."
-}, {
-  ref: "§15",
-  heading: "Holdover",
-  text: "If Tenant remains in possession of the Premises after the expiration or earlier termination of this " + "Lease without Landlord's written consent, such occupancy shall be a tenancy at sufferance, and Tenant " + "shall pay holdover rent equal to two hundred percent (200%) of the Base Rent and additional rent " + "payable during the last month of the Term for each month or partial month of holdover. Tenant shall " + "also be liable for all consequential damages arising from such holdover."
-}, {
-  ref: "§16",
-  heading: "Renewal Option",
-  text: "Tenant may request to extend the Term for one (1) additional period of five (5) years by delivering " + "written notice to Landlord not less than nine (9) months prior to expiration; provided, however, that " + "any such extension shall be granted or denied by Landlord in its sole discretion, and the Base Rent for " + "any extension term shall be as determined by Landlord. Tenant shall have no vested right to renew this " + "Lease."
-}, {
-  ref: "§17",
-  heading: "Personal Guaranty",
-  text: "As a material inducement to Landlord's entry into this Lease, the principal of Tenant, Dr. Eleanor Voss " + "(the “Guarantor”), shall personally, absolutely, and unconditionally guarantee all of Tenant's " + "obligations under this Lease, without limitation as to amount or duration, for the entire Term and any " + "extension thereof. The Guarantor's liability shall be primary and shall survive any assignment, " + "termination, or modification of this Lease."
-}, {
-  ref: "§18",
-  heading: "Surrender",
-  text: "Upon the expiration or termination of this Lease, Tenant shall surrender the Premises to Landlord in " + "good order and condition, broom-clean, ordinary wear and tear excepted, and shall remove all of " + "Tenant's personal property and any alterations Landlord requires to be removed. Any property left in " + "the Premises may be deemed abandoned and disposed of by Landlord at Tenant's expense."
-}, {
-  ref: "§19",
-  heading: "Notices",
-  text: "All notices under this Lease shall be in writing and delivered personally, by nationally recognized " + "overnight courier, or by certified mail, return receipt requested, to the addresses set forth in the " + "preamble or such other address as either party may designate by notice. Notices shall be deemed given " + "upon receipt or refusal of delivery."
-}, {
-  ref: "§20",
-  heading: "Governing Law; Miscellaneous",
-  text: "This Lease shall be governed by the laws of the State of Washington, without regard to its conflicts of " + "law principles. This Lease constitutes the entire agreement between the parties and supersedes all " + "prior negotiations and understandings. No amendment shall be effective unless in writing and signed by " + "both parties. If any provision is held unenforceable, the remainder shall continue in full force and " + "effect."
-}];
-/** Returns the clause with the given ref, or undefined. */
-function getClauseByRef(ref) {
-  return leaseClauses.find(c => c.ref === ref);
-}
-/**
- * Derives the full plain text of the lease from its clause structure. This is
- * what a DocumentService.getFullText() implementation backed by this fixture
- * would return.
- */
-function getLeaseFullText() {
-  const body = leaseClauses.map(c => `${c.ref}. ${c.heading}\n\n${c.text}`).join("\n\n");
-  return `${LEASE_TITLE}\n\n${leaseRecitals}\n\n${body}\n`;
-}
-
-/***/ },
-
-/***/ "./src/fixtures/lease/index.ts"
-/*!*************************************!*\
-  !*** ./src/fixtures/lease/index.ts ***!
-  \*************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   LEASE_TITLE: () => (/* reexport safe */ _document__WEBPACK_IMPORTED_MODULE_0__.LEASE_TITLE),
-/* harmony export */   contestedClauses: () => (/* reexport safe */ _metadata__WEBPACK_IMPORTED_MODULE_1__.contestedClauses),
-/* harmony export */   contestedRefs: () => (/* reexport safe */ _metadata__WEBPACK_IMPORTED_MODULE_1__.contestedRefs),
-/* harmony export */   getClauseByRef: () => (/* reexport safe */ _document__WEBPACK_IMPORTED_MODULE_0__.getClauseByRef),
-/* harmony export */   getContestedClause: () => (/* reexport safe */ _metadata__WEBPACK_IMPORTED_MODULE_1__.getContestedClause),
-/* harmony export */   getLeaseFullText: () => (/* reexport safe */ _document__WEBPACK_IMPORTED_MODULE_0__.getLeaseFullText),
-/* harmony export */   leaseClauses: () => (/* reexport safe */ _document__WEBPACK_IMPORTED_MODULE_0__.leaseClauses),
-/* harmony export */   leaseRecitals: () => (/* reexport safe */ _document__WEBPACK_IMPORTED_MODULE_0__.leaseRecitals)
-/* harmony export */ });
-/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./document */ "./src/fixtures/lease/document.ts");
-/* harmony import */ var _metadata__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./metadata */ "./src/fixtures/lease/metadata.ts");
-
-
-
-/***/ },
-
-/***/ "./src/fixtures/lease/metadata.ts"
-/*!****************************************!*\
-  !*** ./src/fixtures/lease/metadata.ts ***!
-  \****************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   contestedClauses: () => (/* binding */ contestedClauses),
-/* harmony export */   contestedRefs: () => (/* binding */ contestedRefs),
-/* harmony export */   getContestedClause: () => (/* binding */ getContestedClause)
-/* harmony export */ });
-/**
- * Curated reference sidecar for the seeded lease — SEPARATE from the prose in
- * ./document.ts. This is NOT an answer key fed to the LLM: it is our curation
- * for review and the pre-wired fallback ladders the step 9 Negotiation
- * Simulator reuses. Each ladder is ordered landlord-favorable → tenant-favorable,
- * with rung[0] echoing the clause's current (off-market) language, so either
- * side can be role-played from its own end of the ladder.
- */
-const contestedClauses = [{
-  clauseRef: "§5",
-  issue: "Base Rent escalates 5% compounding annually with no cap — well above market for a five-year " + "retail lease, roughly doubling rent over a typical renewal horizon.",
-  favoredParty: "landlord",
-  fallbackLadder: [{
-    label: "Landlord opening",
-    language: "increase by five percent (5%) over the Base Rent payable during the immediately preceding Lease " + "Year, compounded annually",
-    rationale: "Aggressive fixed escalator that compounds well ahead of typical retail inflation."
-  }, {
-    label: "Market",
-    language: "increase by three percent (3%) over the Base Rent payable during the immediately preceding Lease Year",
-    rationale: "Fixed 3% annual bumps are the prevailing norm for multi-year retail leases."
-  }, {
-    label: "Tenant target",
-    language: "increase by the lesser of (a) the percentage increase in the Consumer Price Index or (b) two and " + "one-half percent (2.5%) over the Base Rent payable during the immediately preceding Lease Year",
-    rationale: "CPI-with-a-cap ties rent to actual inflation and shields Tenant in high-inflation years."
-  }]
-}, {
-  clauseRef: "§9",
-  issue: "Tenant bears full repair AND replacement of the roof, foundation, structure, and HVAC, with Landlord " + "carrying no obligation at all — atypical for a single suite in a multi-tenant center.",
-  favoredParty: "landlord",
-  fallbackLadder: [{
-    label: "Landlord opening",
-    language: "including the roof, foundation, exterior and structural walls, and the heating, ventilation, and " + "air-conditioning systems serving the Premises, and shall replace any of the foregoing as and when necessary",
-    rationale: "Pushes all building-envelope and capital-replacement risk onto a small-suite tenant."
-  }, {
-    label: "Market",
-    language: "excluding the roof, foundation, and exterior structural walls, which Landlord shall maintain and " + "repair; Tenant shall maintain the heating, ventilation, and air-conditioning systems serving the Premises",
-    rationale: "Standard split: Landlord keeps the structure/envelope, Tenant handles interior and routine HVAC."
-  }, {
-    label: "Tenant target",
-    language: "excluding the roof, foundation, exterior structural walls, and the heating, ventilation, and " + "air-conditioning systems, all of which Landlord shall maintain, repair, and replace; Tenant shall be " + "responsible only for routine HVAC servicing under a maintenance contract",
-    rationale: "Caps Tenant to predictable routine servicing and shifts HVAC capital replacement to Landlord."
-  }]
-}, {
-  clauseRef: "§11",
-  issue: "Consent to assignment or subletting is at Landlord's sole and absolute discretion for any or no reason, " + "leaving Tenant no exit, no affiliate transfers, and no path through a sale of the business.",
-  favoredParty: "landlord",
-  fallbackLadder: [{
-    label: "Landlord opening",
-    language: "which consent Landlord may grant or withhold in its sole and absolute discretion for any reason or no reason",
-    rationale: "Absolute veto; Tenant cannot transfer even to a qualified successor."
-  }, {
-    label: "Market",
-    language: "which consent Landlord shall not unreasonably withhold, condition, or delay",
-    rationale: "The reasonableness standard is the prevailing default and preserves Landlord's legitimate interests."
-  }, {
-    label: "Tenant target",
-    language: "which consent Landlord shall not unreasonably withhold, condition, or delay, and no consent shall be " + "required for an assignment to an affiliate or in connection with a merger or sale of substantially all " + "of Tenant's assets to a successor meeting Landlord's reasonable net-worth criteria",
-    rationale: "Adds permitted-transfer carve-outs for corporate reorganizations Tenant cannot control."
-  }]
-}, {
-  clauseRef: "§15",
-  issue: "Holdover rent is set at 200% of rent plus consequential damages — punitive versus the 125–150% market " + "range, and an inadvertent holdover could expose Tenant to open-ended consequentials.",
-  favoredParty: "landlord",
-  fallbackLadder: [{
-    label: "Landlord opening",
-    language: "two hundred percent (200%)",
-    rationale: "Double rent plus consequentials is a penalty, not holdover compensation."
-  }, {
-    label: "Market",
-    language: "one hundred fifty percent (150%)",
-    rationale: "150% of the last month's rent is the common holdover premium."
-  }, {
-    label: "Tenant target",
-    language: "one hundred twenty-five percent (125%)",
-    rationale: "125% covers Landlord's real holdover cost; pair with a waiver of consequential damages for an " + "inadvertent, short holdover."
-  }]
-}, {
-  clauseRef: "§16",
-  issue: "Renewal is entirely at Landlord's discretion with Landlord-set rent — an illusory option that gives " + "Tenant no enforceable right to stay and no rent protection.",
-  favoredParty: "landlord",
-  fallbackLadder: [{
-    label: "Landlord opening",
-    language: "any such extension shall be granted or denied by Landlord in its sole discretion, and the Base Rent " + "for any extension term shall be as determined by Landlord",
-    rationale: "Illusory option; Tenant has no enforceable right to renew."
-  }, {
-    label: "Market",
-    language: "Tenant shall have the option to extend, exercisable by such notice, at a Base Rent equal to the " + "then-fair-market rent for comparable space in the Center",
-    rationale: "A true tenant option at fair-market rent is the standard renewal construct."
-  }, {
-    label: "Tenant target",
-    language: "Tenant shall have the option to extend, exercisable by such notice, at a Base Rent equal to the " + "lesser of fair-market rent or 103% of the prior year's Base Rent, with fair-market rent determined by " + "binding appraisal if the parties disagree",
-    rationale: "Caps renewal rent and adds an appraisal backstop so Landlord cannot price Tenant out."
-  }]
-}, {
-  clauseRef: "§17",
-  issue: "The personal guaranty is unlimited in amount and duration and survives termination — open-ended personal " + "exposure for the Guarantor with no cap and no sunset.",
-  favoredParty: "landlord",
-  fallbackLadder: [{
-    label: "Landlord opening",
-    language: "without limitation as to amount or duration, for the entire Term and any extension thereof",
-    rationale: "Open-ended personal liability with no cap and no end date."
-  }, {
-    label: "Market",
-    language: "limited to obligations accruing during the first twenty-four (24) months of the Term and to a maximum " + "of six (6) months' Base Rent",
-    rationale: "A guaranty capped in time and amount is typical for a creditworthy small-business tenant."
-  }, {
-    label: "Tenant target",
-    language: "which guaranty shall terminate upon Tenant's completion of twenty-four (24) months without an uncured " + "monetary default and shall in no event exceed three (3) months' Base Rent",
-    rationale: "Burn-down guaranty rewards a clean payment history and caps downside to one quarter's rent."
-  }]
-}];
-/** Refs of the contested clauses, in document order. */
-const contestedRefs = contestedClauses.map(c => c.clauseRef);
-/** Returns the contested-clause metadata for a ref, or undefined. */
-function getContestedClause(ref) {
-  return contestedClauses.find(c => c.clauseRef === ref);
-}
+const API_BASE_URL = "http://localhost:4000";
 
 /***/ },
 
@@ -324,6 +68,105 @@ class StubDocumentService {
   async scrollTo(_target) {
     return false;
   }
+}
+
+/***/ },
+
+/***/ "./src/taskpane/components/useChat.ts"
+/*!********************************************!*\
+  !*** ./src/taskpane/components/useChat.ts ***!
+  \********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useChat: () => (/* binding */ useChat)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services */ "./src/services/index.ts");
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../config */ "./src/config.ts");
+
+
+
+/**
+ * How many prior turns to send as conversation history. The document itself
+ * never rides in history — it goes in `documentText`, which the backend caches
+ * as a stable prefix. Keeping history short keeps the uncached part small.
+ */
+const HISTORY_TURNS = 6;
+/**
+ * Owns the live chat: the message list, loading/error state, and the call to
+ * the backend's /api/ask, grounded in the document via the DocumentService seam.
+ * Prose Q&A only — structured edit cards are step 6.
+ */
+function useChat() {
+  const service = (0,_services__WEBPACK_IMPORTED_MODULE_1__.useDocumentService)();
+  const [messages, setMessages] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [error, setError] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const ask = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (message, history) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const documentText = await service.getFullText();
+      const res = await fetch(`${_config__WEBPACK_IMPORTED_MODULE_2__.API_BASE_URL}/api/ask`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          documentText,
+          message,
+          history: history.slice(-HISTORY_TURNS)
+        })
+      });
+      if (!res.ok) {
+        throw new Error(`The assistant is unavailable (error ${res.status}).`);
+      }
+      const data = await res.json();
+      const answer = (data.answer ?? "").trim();
+      setMessages(prev => [...prev, {
+        role: "assistant",
+        content: answer || "(The assistant returned an empty answer.)"
+      }]);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Couldn't reach the assistant.");
+    } finally {
+      setLoading(false);
+    }
+  }, [service]);
+  const send = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(text => {
+    const trimmed = text.trim();
+    if (!trimmed || loading) return;
+    const history = messages;
+    setMessages(prev => [...prev, {
+      role: "user",
+      content: trimmed
+    }]);
+    void ask(trimmed, history);
+  }, [ask, loading, messages]);
+  const retry = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(() => {
+    if (loading) return;
+    // On error the assistant reply was never appended, so the last message is
+    // the user turn that failed — re-ask it with the history before it.
+    let lastUserIdx = -1;
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].role === "user") {
+        lastUserIdx = i;
+        break;
+      }
+    }
+    if (lastUserIdx === -1) return;
+    void ask(messages[lastUserIdx].content, messages.slice(0, lastUserIdx));
+  }, [messages, ask, loading]);
+  return {
+    messages,
+    loading,
+    error,
+    send,
+    retry
+  };
 }
 
 /***/ },
@@ -434,6 +277,15 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .q-text { font-size: 12px; line-height: 1.6; color: #374151; font-style: italic; }
 .q-text mark { background: var(--amber-soft); font-style: normal; padding: 0 1px; }
 
+/* Empty lines inside an AI answer (preserves list/paragraph spacing) */
+.ck-bubble.ai .ck-gap { height: 8px; }
+
+/* Error bubble + retry (chat thread) */
+.ck-error-bubble { background: var(--destructive-soft); border: 1px solid #fecdca; border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); padding: 10px 12px; font-size: var(--fs-body); line-height: 1.55; color: #b42318; }
+.ck-error-bubble p { margin: 0 0 8px; }
+.ck-retry { font-size: 12px; font-weight: 500; color: var(--navy); background: #fff; border: 1px solid var(--border-strong); border-radius: 6px; padding: 5px 12px; cursor: pointer; font-family: var(--font-body); }
+.ck-retry:hover { background: #f9fafb; }
+
 /* Citation chip */
 .ck-cite { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 11px; font-weight: 500; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 999px; padding: 4px 10px 4px 8px; cursor: pointer; }
 .ck-cite:hover { background: #e4eafd; }
@@ -516,7 +368,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .ck-hint { font-size: var(--fs-label); color: var(--text-secondary); margin-top: 7px; display: flex; align-items: center; gap: 5px; padding: 0 2px; }
 .lock-icon { width: 9px; height: 9px; border: 1.4px solid var(--text-secondary); border-radius: 2px; position: relative; flex: none; }
 .lock-icon::before { content:""; position:absolute; left:1.5px; top:-3.5px; width:5px; height:5px; border:1.4px solid var(--text-secondary); border-bottom:0; border-radius:3px 3px 0 0; }
-`, "",{"version":3,"sources":["webpack://./src/styles/clausekit.css"],"names":[],"mappings":"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","sourcesContent":["/* ── ClauseKit Task Pane Design System ──\n *\n * Single source of truth for the task-pane UI. Loaded by both the Office\n * entry (src/taskpane/index.tsx) and the browser playground\n * (src/playground/playground.tsx) so the pane looks identical in either host.\n */\n:root {\n  --navy: #0E0E12;\n  --navy-700: #2b2b34;\n  --navy-300: #6c6c77;\n  --amber: #F59E0B;\n  --amber-600: #d4870a;\n  --amber-soft: #FEF3C7;\n  --amber-grad: linear-gradient(180deg, #FCC04A 0%, #F59E0B 52%, #E88B05 100%);\n  --amber-glow: inset 0 1px 0 rgba(255,255,255,.35), 0 2px 10px rgba(245,158,11,.4), 0 1px 2px rgba(160,98,0,.45);\n  --bg: #F8F9FA;\n  --surface: #FFFFFF;\n  --user-bubble: #EEF2FF;\n  --text-primary: #111827;\n  --text-secondary: #6B7280;\n  --border: #E5E7EB;\n  --border-strong: #D1D5DB;\n  --destructive: #EF4444;\n  --destructive-soft: #FEF2F2;\n  --fs-header: 16px;\n  --fs-body: 13px;\n  --fs-label: 11px;\n  --pane-pad: 12px;\n  --shadow-card: 0 1px 2px rgba(17,24,39,.06), 0 1px 3px rgba(17,24,39,.05);\n  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;\n  --font-body: 'Inter', system-ui, sans-serif;\n  --font-mono: 'Roboto Mono', monospace;\n}\n* { box-sizing: border-box; }\nhtml, body { margin: 0; padding: 0; height: 100%; -webkit-font-smoothing: antialiased; }\nbody { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); }\n#container { height: 100%; }\n\n/* Pane shell */\n.ck-pane { height: 100%; display: flex; flex-direction: column; }\n\n/* ── Header ── */\n.ck-header {\n  background: linear-gradient(180deg, #08080b 0%, #131318 55%, #232329 100%);\n  color: #fff; height: 52px; display: flex; align-items: center;\n  padding: 0 var(--pane-pad); gap: 10px;\n  border-bottom: 1px solid rgba(255,255,255,.06); flex-shrink: 0;\n}\n.h-mark { width: 28px; height: 28px; border-radius: 7px; background: rgba(255,255,255,.10); display: grid; place-items: center; flex: none; position: relative; border: 1px solid rgba(255,255,255,.14); }\n.h-mark span { font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 2px; }\n.h-mark::after { content:\"\"; position:absolute; left:6px; right:6px; bottom:6px; height:1.5px; background: var(--amber); border-radius:2px; }\n.h-txt { display: flex; flex-direction: column; line-height: 1.15; }\n.h-name { font-family: var(--font-display); font-size: var(--fs-header); font-weight: 600; letter-spacing: -.01em; }\n.h-status { font-size: var(--fs-label); color: rgba(244,246,251,.66); display: flex; align-items: center; gap: 5px; }\n.h-status .live { width: 6px; height: 6px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 2px rgba(52,211,153,.25); }\n.h-actions { margin-left: auto; display: flex; gap: 2px; }\n.ck-icon-btn { width: 30px; height: 30px; border-radius: 6px; display: grid; place-items: center; color: rgba(255,255,255,.8); cursor: pointer; background: none; border: none; }\n.ck-icon-btn:hover { background: rgba(255,255,255,.12); }\n.kebab { display:flex; flex-direction: column; gap: 2.5px; }\n.kebab b { width: 3px; height: 3px; border-radius: 50%; background: currentColor; display: block; }\n\n/* ── Chat scroll area ── */\n.ck-chat { flex: 1; background: var(--bg); padding: var(--pane-pad); display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }\n.ck-daydiv { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: var(--fs-label); }\n.ck-daydiv::before, .ck-daydiv::after { content:\"\"; height:1px; background: var(--border); flex:1; }\n\n/* Message rows */\n.ck-row { display: flex; gap: 8px; }\n.ck-row.user { justify-content: flex-end; }\n.ck-avatar { width: 24px; height: 24px; border-radius: 6px; background: var(--navy); display: grid; place-items: center; flex: none; margin-top: 2px; }\n.ck-avatar span { font-size: 9px; font-weight: 700; color: #fff; letter-spacing: .02em; }\n.ck-bubble { font-size: var(--fs-body); line-height: 1.55; padding: 10px 12px; border-radius: 12px; max-width: 264px; }\n.ck-bubble.user { background: var(--user-bubble); color: var(--navy); border-radius: 12px 12px 4px 12px; }\n.ck-bubble.ai { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); }\n.ck-bubble p { margin: 0; }\n.ck-bubble p + p { margin-top: 8px; }\n.ck-bubble strong { font-weight: 600; }\n.ck-time { font-size: 10px; color: var(--text-secondary); margin-top: 4px; }\n.ck-row.user .ck-time { text-align: right; }\n\n/* Quote block */\n.ck-quote { background: #fafbfc; border: 1px solid var(--border); border-left: 3px solid var(--navy-300); border-radius: 6px; padding: 9px 11px; margin: 10px 0 4px; }\n.q-meta { font-family: var(--font-mono); font-size: 10px; color: var(--text-secondary); letter-spacing: .02em; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }\n.q-meta::before { content:\"\\201C\"; font-family: Georgia, serif; font-size: 16px; line-height: 0; color: var(--navy-300); position: relative; top: 3px; }\n.q-text { font-size: 12px; line-height: 1.6; color: #374151; font-style: italic; }\n.q-text mark { background: var(--amber-soft); font-style: normal; padding: 0 1px; }\n\n/* Citation chip */\n.ck-cite { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 11px; font-weight: 500; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 999px; padding: 4px 10px 4px 8px; cursor: pointer; }\n.ck-cite:hover { background: #e4eafd; }\n.pin { width: 11px; height: 11px; position: relative; flex: none; }\n.pin::before { content:\"\"; position:absolute; inset:0; border:1.5px solid var(--navy); border-radius:50% 50% 50% 0; transform: rotate(-45deg); }\n.cite-arr { margin-left: 1px; color: var(--navy-300); font-size: 10px; }\n\n/* ── Action card ── */\n.ck-action { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--amber); border-radius: 8px; box-shadow: var(--shadow-card); overflow: hidden; }\n.a-head { padding: 11px 12px 0; display: flex; align-items: flex-start; gap: 8px; flex-direction: column; }\n.a-badge { font-family: var(--font-mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--amber-600); background: var(--amber-soft); border-radius: 4px; padding: 3px 6px; }\n.a-title { font-size: 12.5px; font-weight: 600; line-height: 1.35; color: var(--text-primary); }\n.a-body { padding: 9px 12px 0; }\n.a-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.55; margin: 0; }\n.a-error { font-size: 12px; color: var(--destructive); background: var(--destructive-soft); border: 1px solid #fecdca; border-radius: 6px; padding: 7px 9px; margin: 10px 0 0; line-height: 1.45; }\n\n/* Diff */\n.ck-diff { margin: 10px 0 2px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; font-family: var(--font-mono); font-size: 11px; line-height: 1.55; }\n.d-line { padding: 6px 10px 6px 24px; position: relative; }\n.d-del { background: var(--destructive-soft); color: #b42318; }\n.d-del .t { text-decoration: line-through; text-decoration-color: rgba(180,35,24,.5); }\n.d-add { background: #ecfdf3; color: #067647; border-top: 1px solid #d1fadf; }\n.d-line::before { position: absolute; left: 9px; top: 6px; font-weight: 700; }\n.d-del::before { content: \"−\"; color: #d92d20; }\n.d-add::before { content: \"+\"; color: #079455; }\n\n/* Action footer */\n.a-foot { display: flex; gap: 8px; padding: 12px; align-items: center; }\n.a-foot .spacer { flex: 1; }\n.ck-btn { font-size: 13px; font-weight: 500; border-radius: 6px; padding: 8px 14px; cursor: pointer; border: 1px solid transparent; line-height: 1; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; font-family: var(--font-body); transition: background .12s, border-color .12s; }\n.ck-btn.primary { background: var(--amber-grad); color: #3a2900; font-weight: 600; border-color: rgba(150,92,0,.45); box-shadow: var(--amber-glow); }\n.ck-btn.primary:hover { filter: brightness(1.04); }\n.ck-btn.danger-ghost { background: transparent; color: var(--text-secondary); border-color: transparent; }\n.ck-btn.danger-ghost:hover { background: var(--destructive-soft); color: var(--destructive); }\n.ck-btn.applied { background: #ecfdf3; color: #067647; border-color: #d1fadf; cursor: default; }\n.ck-btn.applied:hover { filter: none; }\n.chk { width: 6px; height: 11px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(40deg) translateY(-1px); display: inline-block; }\n\n/* Thinking dots */\n.ck-thinking { display: flex; gap: 8px; align-items: center; }\n.t-bubble { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); padding: 12px 14px; display: flex; gap: 5px; align-items: center; }\n.t-bubble i { width: 6px; height: 6px; border-radius: 50%; background: var(--navy-300); animation: blink 1.2s infinite ease-in-out; font-style: normal; display: block; }\n.t-bubble i:nth-child(2){ animation-delay: .18s; }\n.t-bubble i:nth-child(3){ animation-delay: .36s; }\n@keyframes blink { 0%,60%,100%{ opacity:.28; transform:translateY(0);} 30%{ opacity:1; transform:translateY(-2px);} }\n\n/* ── Empty state ── */\n.ck-empty { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 36px 22px; gap: 0; flex: 1; }\n.e-mark { width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(180deg,#1d1d24 0%,#101015 100%); display: grid; place-items: center; position: relative; box-shadow: 0 8px 22px rgba(0,0,0,.3); border: 1px solid #2e2e36; margin-bottom: 18px; }\n.e-mark span { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; font-family: var(--font-display); }\n.e-mark::after { content:\"\"; position:absolute; left:13px; right:13px; bottom:11px; height:2.5px; background: var(--amber); border-radius:2px; }\n.ck-empty h3 { font-family: var(--font-display); font-size: 15px; font-weight: 600; margin: 0 0 6px; color: var(--text-primary); }\n.e-sub { font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; margin: 0 0 20px; max-width: 30ch; }\n.ck-suggest { display: flex; flex-direction: column; gap: 8px; width: 100%; }\n.s-btn { text-align: left; font-size: 12.5px; color: var(--navy); background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; cursor: pointer; box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 9px; font-family: var(--font-body); }\n.s-btn:hover { border-color: var(--navy-300); background: #fdfdfe; }\n.s-btn .s-ar { margin-left: auto; color: var(--navy-300); font-size: 13px; flex: none; }\n.s-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); flex: none; }\n\n/* ── Privacy note ── */\n.ck-privacy { background: #fff; border-top: 1px solid var(--border); padding: 9px 12px; display: flex; align-items: center; gap: 9px; flex-shrink: 0; }\n.p-shield { width: 22px; height: 24px; flex: none; position: relative; }\n.p-shield::before { content:\"\"; position:absolute; inset:0; background: #eef2ff; border:1.4px solid #dbe3fb; border-radius: 4px 4px 9px 9px / 4px 4px 14px 14px; }\n.p-shield::after { content:\"\"; position:absolute; left:7px; top:8px; width:5px; height:8px; border-right:1.8px solid var(--navy); border-bottom:1.8px solid var(--navy); transform: rotate(40deg); }\n.p-txt { font-size: var(--fs-label); color: var(--text-secondary); line-height: 1.45; margin: 0; }\n.p-txt b { color: var(--text-primary); font-weight: 600; }\n\n/* ── Input area ── */\n.ck-input-wrap { background: var(--surface); border-top: 1px solid var(--border); padding: 10px var(--pane-pad) 8px; flex-shrink: 0; }\n.ck-input { background: #fff; border: 1px solid var(--border-strong); border-radius: 10px; padding: 9px 10px 9px 12px; display: flex; align-items: flex-end; gap: 8px; transition: border-color .12s, box-shadow .12s; }\n.ck-input:focus-within { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(14,14,18,.08); }\n.ck-input textarea { flex: 1; font-size: var(--fs-body); color: var(--text-primary); line-height: 1.5; padding: 1px 0; border: none; outline: none; resize: none; background: transparent; font-family: var(--font-body); min-height: 20px; max-height: 80px; overflow-y: auto; }\n.ck-input textarea::placeholder { color: var(--text-secondary); }\n.ck-send { width: 32px; height: 32px; border-radius: 8px; background: var(--navy); display: grid; place-items: center; flex: none; cursor: pointer; border: none; transition: background .12s; }\n.ck-send:hover { background: var(--navy-700); }\n.ck-send.disabled { background: #c9ced6; cursor: default; pointer-events: none; }\n.send-arrow { width: 13px; height: 13px; position: relative; display: block; }\n.send-arrow::before { content:\"\"; position:absolute; left:5.5px; top:1px; width:2px; height:11px; background:#fff; border-radius:2px; }\n.send-arrow::after { content:\"\"; position:absolute; left:2.5px; top:1px; width:8px; height:8px; border-top:2px solid #fff; border-left:2px solid #fff; transform: rotate(45deg); border-radius:2px 0 0 0; }\n.ck-hint { font-size: var(--fs-label); color: var(--text-secondary); margin-top: 7px; display: flex; align-items: center; gap: 5px; padding: 0 2px; }\n.lock-icon { width: 9px; height: 9px; border: 1.4px solid var(--text-secondary); border-radius: 2px; position: relative; flex: none; }\n.lock-icon::before { content:\"\"; position:absolute; left:1.5px; top:-3.5px; width:5px; height:5px; border:1.4px solid var(--text-secondary); border-bottom:0; border-radius:3px 3px 0 0; }\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/styles/clausekit.css"],"names":[],"mappings":"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","sourcesContent":["/* ── ClauseKit Task Pane Design System ──\n *\n * Single source of truth for the task-pane UI. Loaded by both the Office\n * entry (src/taskpane/index.tsx) and the browser playground\n * (src/playground/playground.tsx) so the pane looks identical in either host.\n */\n:root {\n  --navy: #0E0E12;\n  --navy-700: #2b2b34;\n  --navy-300: #6c6c77;\n  --amber: #F59E0B;\n  --amber-600: #d4870a;\n  --amber-soft: #FEF3C7;\n  --amber-grad: linear-gradient(180deg, #FCC04A 0%, #F59E0B 52%, #E88B05 100%);\n  --amber-glow: inset 0 1px 0 rgba(255,255,255,.35), 0 2px 10px rgba(245,158,11,.4), 0 1px 2px rgba(160,98,0,.45);\n  --bg: #F8F9FA;\n  --surface: #FFFFFF;\n  --user-bubble: #EEF2FF;\n  --text-primary: #111827;\n  --text-secondary: #6B7280;\n  --border: #E5E7EB;\n  --border-strong: #D1D5DB;\n  --destructive: #EF4444;\n  --destructive-soft: #FEF2F2;\n  --fs-header: 16px;\n  --fs-body: 13px;\n  --fs-label: 11px;\n  --pane-pad: 12px;\n  --shadow-card: 0 1px 2px rgba(17,24,39,.06), 0 1px 3px rgba(17,24,39,.05);\n  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;\n  --font-body: 'Inter', system-ui, sans-serif;\n  --font-mono: 'Roboto Mono', monospace;\n}\n* { box-sizing: border-box; }\nhtml, body { margin: 0; padding: 0; height: 100%; -webkit-font-smoothing: antialiased; }\nbody { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); }\n#container { height: 100%; }\n\n/* Pane shell */\n.ck-pane { height: 100%; display: flex; flex-direction: column; }\n\n/* ── Header ── */\n.ck-header {\n  background: linear-gradient(180deg, #08080b 0%, #131318 55%, #232329 100%);\n  color: #fff; height: 52px; display: flex; align-items: center;\n  padding: 0 var(--pane-pad); gap: 10px;\n  border-bottom: 1px solid rgba(255,255,255,.06); flex-shrink: 0;\n}\n.h-mark { width: 28px; height: 28px; border-radius: 7px; background: rgba(255,255,255,.10); display: grid; place-items: center; flex: none; position: relative; border: 1px solid rgba(255,255,255,.14); }\n.h-mark span { font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 2px; }\n.h-mark::after { content:\"\"; position:absolute; left:6px; right:6px; bottom:6px; height:1.5px; background: var(--amber); border-radius:2px; }\n.h-txt { display: flex; flex-direction: column; line-height: 1.15; }\n.h-name { font-family: var(--font-display); font-size: var(--fs-header); font-weight: 600; letter-spacing: -.01em; }\n.h-status { font-size: var(--fs-label); color: rgba(244,246,251,.66); display: flex; align-items: center; gap: 5px; }\n.h-status .live { width: 6px; height: 6px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 2px rgba(52,211,153,.25); }\n.h-actions { margin-left: auto; display: flex; gap: 2px; }\n.ck-icon-btn { width: 30px; height: 30px; border-radius: 6px; display: grid; place-items: center; color: rgba(255,255,255,.8); cursor: pointer; background: none; border: none; }\n.ck-icon-btn:hover { background: rgba(255,255,255,.12); }\n.kebab { display:flex; flex-direction: column; gap: 2.5px; }\n.kebab b { width: 3px; height: 3px; border-radius: 50%; background: currentColor; display: block; }\n\n/* ── Chat scroll area ── */\n.ck-chat { flex: 1; background: var(--bg); padding: var(--pane-pad); display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }\n.ck-daydiv { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: var(--fs-label); }\n.ck-daydiv::before, .ck-daydiv::after { content:\"\"; height:1px; background: var(--border); flex:1; }\n\n/* Message rows */\n.ck-row { display: flex; gap: 8px; }\n.ck-row.user { justify-content: flex-end; }\n.ck-avatar { width: 24px; height: 24px; border-radius: 6px; background: var(--navy); display: grid; place-items: center; flex: none; margin-top: 2px; }\n.ck-avatar span { font-size: 9px; font-weight: 700; color: #fff; letter-spacing: .02em; }\n.ck-bubble { font-size: var(--fs-body); line-height: 1.55; padding: 10px 12px; border-radius: 12px; max-width: 264px; }\n.ck-bubble.user { background: var(--user-bubble); color: var(--navy); border-radius: 12px 12px 4px 12px; }\n.ck-bubble.ai { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); }\n.ck-bubble p { margin: 0; }\n.ck-bubble p + p { margin-top: 8px; }\n.ck-bubble strong { font-weight: 600; }\n.ck-time { font-size: 10px; color: var(--text-secondary); margin-top: 4px; }\n.ck-row.user .ck-time { text-align: right; }\n\n/* Quote block */\n.ck-quote { background: #fafbfc; border: 1px solid var(--border); border-left: 3px solid var(--navy-300); border-radius: 6px; padding: 9px 11px; margin: 10px 0 4px; }\n.q-meta { font-family: var(--font-mono); font-size: 10px; color: var(--text-secondary); letter-spacing: .02em; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }\n.q-meta::before { content:\"\\201C\"; font-family: Georgia, serif; font-size: 16px; line-height: 0; color: var(--navy-300); position: relative; top: 3px; }\n.q-text { font-size: 12px; line-height: 1.6; color: #374151; font-style: italic; }\n.q-text mark { background: var(--amber-soft); font-style: normal; padding: 0 1px; }\n\n/* Empty lines inside an AI answer (preserves list/paragraph spacing) */\n.ck-bubble.ai .ck-gap { height: 8px; }\n\n/* Error bubble + retry (chat thread) */\n.ck-error-bubble { background: var(--destructive-soft); border: 1px solid #fecdca; border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); padding: 10px 12px; font-size: var(--fs-body); line-height: 1.55; color: #b42318; }\n.ck-error-bubble p { margin: 0 0 8px; }\n.ck-retry { font-size: 12px; font-weight: 500; color: var(--navy); background: #fff; border: 1px solid var(--border-strong); border-radius: 6px; padding: 5px 12px; cursor: pointer; font-family: var(--font-body); }\n.ck-retry:hover { background: #f9fafb; }\n\n/* Citation chip */\n.ck-cite { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 11px; font-weight: 500; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 999px; padding: 4px 10px 4px 8px; cursor: pointer; }\n.ck-cite:hover { background: #e4eafd; }\n.pin { width: 11px; height: 11px; position: relative; flex: none; }\n.pin::before { content:\"\"; position:absolute; inset:0; border:1.5px solid var(--navy); border-radius:50% 50% 50% 0; transform: rotate(-45deg); }\n.cite-arr { margin-left: 1px; color: var(--navy-300); font-size: 10px; }\n\n/* ── Action card ── */\n.ck-action { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--amber); border-radius: 8px; box-shadow: var(--shadow-card); overflow: hidden; }\n.a-head { padding: 11px 12px 0; display: flex; align-items: flex-start; gap: 8px; flex-direction: column; }\n.a-badge { font-family: var(--font-mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--amber-600); background: var(--amber-soft); border-radius: 4px; padding: 3px 6px; }\n.a-title { font-size: 12.5px; font-weight: 600; line-height: 1.35; color: var(--text-primary); }\n.a-body { padding: 9px 12px 0; }\n.a-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.55; margin: 0; }\n.a-error { font-size: 12px; color: var(--destructive); background: var(--destructive-soft); border: 1px solid #fecdca; border-radius: 6px; padding: 7px 9px; margin: 10px 0 0; line-height: 1.45; }\n\n/* Diff */\n.ck-diff { margin: 10px 0 2px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; font-family: var(--font-mono); font-size: 11px; line-height: 1.55; }\n.d-line { padding: 6px 10px 6px 24px; position: relative; }\n.d-del { background: var(--destructive-soft); color: #b42318; }\n.d-del .t { text-decoration: line-through; text-decoration-color: rgba(180,35,24,.5); }\n.d-add { background: #ecfdf3; color: #067647; border-top: 1px solid #d1fadf; }\n.d-line::before { position: absolute; left: 9px; top: 6px; font-weight: 700; }\n.d-del::before { content: \"−\"; color: #d92d20; }\n.d-add::before { content: \"+\"; color: #079455; }\n\n/* Action footer */\n.a-foot { display: flex; gap: 8px; padding: 12px; align-items: center; }\n.a-foot .spacer { flex: 1; }\n.ck-btn { font-size: 13px; font-weight: 500; border-radius: 6px; padding: 8px 14px; cursor: pointer; border: 1px solid transparent; line-height: 1; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; font-family: var(--font-body); transition: background .12s, border-color .12s; }\n.ck-btn.primary { background: var(--amber-grad); color: #3a2900; font-weight: 600; border-color: rgba(150,92,0,.45); box-shadow: var(--amber-glow); }\n.ck-btn.primary:hover { filter: brightness(1.04); }\n.ck-btn.danger-ghost { background: transparent; color: var(--text-secondary); border-color: transparent; }\n.ck-btn.danger-ghost:hover { background: var(--destructive-soft); color: var(--destructive); }\n.ck-btn.applied { background: #ecfdf3; color: #067647; border-color: #d1fadf; cursor: default; }\n.ck-btn.applied:hover { filter: none; }\n.chk { width: 6px; height: 11px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(40deg) translateY(-1px); display: inline-block; }\n\n/* Thinking dots */\n.ck-thinking { display: flex; gap: 8px; align-items: center; }\n.t-bubble { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); padding: 12px 14px; display: flex; gap: 5px; align-items: center; }\n.t-bubble i { width: 6px; height: 6px; border-radius: 50%; background: var(--navy-300); animation: blink 1.2s infinite ease-in-out; font-style: normal; display: block; }\n.t-bubble i:nth-child(2){ animation-delay: .18s; }\n.t-bubble i:nth-child(3){ animation-delay: .36s; }\n@keyframes blink { 0%,60%,100%{ opacity:.28; transform:translateY(0);} 30%{ opacity:1; transform:translateY(-2px);} }\n\n/* ── Empty state ── */\n.ck-empty { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 36px 22px; gap: 0; flex: 1; }\n.e-mark { width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(180deg,#1d1d24 0%,#101015 100%); display: grid; place-items: center; position: relative; box-shadow: 0 8px 22px rgba(0,0,0,.3); border: 1px solid #2e2e36; margin-bottom: 18px; }\n.e-mark span { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; font-family: var(--font-display); }\n.e-mark::after { content:\"\"; position:absolute; left:13px; right:13px; bottom:11px; height:2.5px; background: var(--amber); border-radius:2px; }\n.ck-empty h3 { font-family: var(--font-display); font-size: 15px; font-weight: 600; margin: 0 0 6px; color: var(--text-primary); }\n.e-sub { font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; margin: 0 0 20px; max-width: 30ch; }\n.ck-suggest { display: flex; flex-direction: column; gap: 8px; width: 100%; }\n.s-btn { text-align: left; font-size: 12.5px; color: var(--navy); background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; cursor: pointer; box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 9px; font-family: var(--font-body); }\n.s-btn:hover { border-color: var(--navy-300); background: #fdfdfe; }\n.s-btn .s-ar { margin-left: auto; color: var(--navy-300); font-size: 13px; flex: none; }\n.s-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); flex: none; }\n\n/* ── Privacy note ── */\n.ck-privacy { background: #fff; border-top: 1px solid var(--border); padding: 9px 12px; display: flex; align-items: center; gap: 9px; flex-shrink: 0; }\n.p-shield { width: 22px; height: 24px; flex: none; position: relative; }\n.p-shield::before { content:\"\"; position:absolute; inset:0; background: #eef2ff; border:1.4px solid #dbe3fb; border-radius: 4px 4px 9px 9px / 4px 4px 14px 14px; }\n.p-shield::after { content:\"\"; position:absolute; left:7px; top:8px; width:5px; height:8px; border-right:1.8px solid var(--navy); border-bottom:1.8px solid var(--navy); transform: rotate(40deg); }\n.p-txt { font-size: var(--fs-label); color: var(--text-secondary); line-height: 1.45; margin: 0; }\n.p-txt b { color: var(--text-primary); font-weight: 600; }\n\n/* ── Input area ── */\n.ck-input-wrap { background: var(--surface); border-top: 1px solid var(--border); padding: 10px var(--pane-pad) 8px; flex-shrink: 0; }\n.ck-input { background: #fff; border: 1px solid var(--border-strong); border-radius: 10px; padding: 9px 10px 9px 12px; display: flex; align-items: flex-end; gap: 8px; transition: border-color .12s, box-shadow .12s; }\n.ck-input:focus-within { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(14,14,18,.08); }\n.ck-input textarea { flex: 1; font-size: var(--fs-body); color: var(--text-primary); line-height: 1.5; padding: 1px 0; border: none; outline: none; resize: none; background: transparent; font-family: var(--font-body); min-height: 20px; max-height: 80px; overflow-y: auto; }\n.ck-input textarea::placeholder { color: var(--text-secondary); }\n.ck-send { width: 32px; height: 32px; border-radius: 8px; background: var(--navy); display: grid; place-items: center; flex: none; cursor: pointer; border: none; transition: background .12s; }\n.ck-send:hover { background: var(--navy-700); }\n.ck-send.disabled { background: #c9ced6; cursor: default; pointer-events: none; }\n.send-arrow { width: 13px; height: 13px; position: relative; display: block; }\n.send-arrow::before { content:\"\"; position:absolute; left:5.5px; top:1px; width:2px; height:11px; background:#fff; border-radius:2px; }\n.send-arrow::after { content:\"\"; position:absolute; left:2.5px; top:1px; width:8px; height:8px; border-top:2px solid #fff; border-left:2px solid #fff; transform: rotate(45deg); border-radius:2px 0 0 0; }\n.ck-hint { font-size: var(--fs-label); color: var(--text-secondary); margin-top: 7px; display: flex; align-items: center; gap: 5px; padding: 0 2px; }\n.lock-icon { width: 9px; height: 9px; border: 1.4px solid var(--text-secondary); border-radius: 2px; position: relative; flex: none; }\n.lock-icon::before { content:\"\"; position:absolute; left:1.5px; top:-3.5px; width:5px; height:5px; border:1.4px solid var(--text-secondary); border-bottom:0; border-radius:3px 3px 0 0; }\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2464,77 +2316,6 @@ function useDocumentService() {
 
 /***/ },
 
-/***/ "./src/taskpane/components/ActionCard.tsx"
-/*!************************************************!*\
-  !*** ./src/taskpane/components/ActionCard.tsx ***!
-  \************************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ ActionCard)
-/* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services */ "./src/services/index.ts");
-/* harmony import */ var _fixtures_lease__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../fixtures/lease */ "./src/fixtures/lease/index.ts");
-
-
-
-
-/**
- * Demo edit built from the §5 contested-clause sidecar: lower the 5% compounding
- * escalator (the landlord-opening rung) to the market 3% rung. Replaces the old
- * hardcoded MSA liability content so the card matches the seeded lease.
- */
-const escalation = (0,_fixtures_lease__WEBPACK_IMPORTED_MODULE_3__.getContestedClause)("§5");
-const demoEdit = {
-    clauseRef: "§5",
-    originalText: escalation?.fallbackLadder[0].language ?? "",
-    proposedText: escalation?.fallbackLadder[1].language ?? "",
-    rationale: escalation?.fallbackLadder[1].rationale ?? "",
-    severity: "high",
-};
-function ActionCard() {
-    const service = (0,_services__WEBPACK_IMPORTED_MODULE_2__.useDocumentService)();
-    const [state, setState] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("idle");
-    const [errorMsg, setErrorMsg] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
-    const [dismissed, setDismissed] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
-    if (dismissed)
-        return null;
-    const handleApply = async () => {
-        setState("applying");
-        setErrorMsg("");
-        try {
-            const result = await service.applyTrackedChange(demoEdit);
-            switch (result.status) {
-                case "applied":
-                    setState("applied");
-                    await service.scrollTo({ clauseRef: result.clauseRef ?? demoEdit.clauseRef });
-                    break;
-                case "not-found":
-                    setState("error");
-                    setErrorMsg(`Couldn't find the original text in ${demoEdit.clauseRef} to redline.`);
-                    break;
-                case "ambiguous":
-                    setState("error");
-                    setErrorMsg(`Found ${result.matchCount} matches in ${demoEdit.clauseRef}; can't redline unambiguously.`);
-                    break;
-            }
-        }
-        catch (err) {
-            setState("error");
-            setErrorMsg(err instanceof Error ? err.message : "Failed to apply the change.");
-        }
-    };
-    const applyLabel = state === "applying" ? "Applying…" : state === "error" ? "Retry" : "Apply Change";
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-action", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "a-head", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "a-badge", children: "Suggested edit" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "a-title", children: "Lower the rent escalation to a market 3%" })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "a-body", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "a-desc", children: demoEdit.rationale }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-diff", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "d-line d-del", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "t", children: demoEdit.originalText }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "d-line d-add", children: demoEdit.proposedText })] }), state === "error" && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "a-error", children: errorMsg })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "a-foot", children: [state === "applied" ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", { className: "ck-btn applied", disabled: true, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "chk" }), " Applied to document"] })) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", { className: "ck-btn primary", onClick: handleApply, disabled: state === "applying", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "chk" }), " ", applyLabel] })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "spacer" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: "ck-btn danger-ghost", onClick: () => setDismissed(true), children: "Dismiss" })] })] }));
-}
-
-
-/***/ },
-
 /***/ "./src/taskpane/components/App.tsx"
 /*!*****************************************!*\
   !*** ./src/taskpane/components/App.tsx ***!
@@ -2546,12 +2327,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ App)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _CKHeader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CKHeader */ "./src/taskpane/components/CKHeader.tsx");
-/* harmony import */ var _EmptyState__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./EmptyState */ "./src/taskpane/components/EmptyState.tsx");
-/* harmony import */ var _ChatPane__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ChatPane */ "./src/taskpane/components/ChatPane.tsx");
-/* harmony import */ var _ChatInput__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ChatInput */ "./src/taskpane/components/ChatInput.tsx");
+/* harmony import */ var _CKHeader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CKHeader */ "./src/taskpane/components/CKHeader.tsx");
+/* harmony import */ var _EmptyState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EmptyState */ "./src/taskpane/components/EmptyState.tsx");
+/* harmony import */ var _ChatPane__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ChatPane */ "./src/taskpane/components/ChatPane.tsx");
+/* harmony import */ var _ChatInput__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ChatInput */ "./src/taskpane/components/ChatInput.tsx");
+/* harmony import */ var _useChat__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./useChat */ "./src/taskpane/components/useChat.ts");
 
 
 
@@ -2559,17 +2339,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function App(_props) {
-    const [view, setView] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("empty");
-    const [firstQuery, setFirstQuery] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
-    const handleSend = (query) => {
-        if (!query.trim())
-            return;
-        if (view === "empty") {
-            setFirstQuery(query);
-            setView("chat");
-        }
-    };
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-pane", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CKHeader__WEBPACK_IMPORTED_MODULE_2__["default"], { status: view === "chat" ? "Reviewing MSA · §9" : "Ready to review" }), view === "empty" ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_EmptyState__WEBPACK_IMPORTED_MODULE_3__["default"], { onPrompt: handleSend })) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ChatPane__WEBPACK_IMPORTED_MODULE_4__["default"], { query: firstQuery })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ChatInput__WEBPACK_IMPORTED_MODULE_5__["default"], { onSend: handleSend, chatOpen: view === "chat" })] }));
+    const { messages, loading, error, send, retry } = (0,_useChat__WEBPACK_IMPORTED_MODULE_5__.useChat)();
+    const chatOpen = messages.length > 0;
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-pane", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CKHeader__WEBPACK_IMPORTED_MODULE_1__["default"], { status: chatOpen ? "Reviewing commercial lease" : "Ready to review" }), chatOpen ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ChatPane__WEBPACK_IMPORTED_MODULE_3__["default"], { messages: messages, loading: loading, error: error, onRetry: retry })) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_EmptyState__WEBPACK_IMPORTED_MODULE_2__["default"], { onPrompt: send })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ChatInput__WEBPACK_IMPORTED_MODULE_4__["default"], { onSend: send, chatOpen: chatOpen, disabled: loading })] }));
 }
 
 
@@ -2609,12 +2381,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 
 
-function ChatInput({ onSend, chatOpen }) {
+function ChatInput({ onSend, chatOpen, disabled = false }) {
     const [value, setValue] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
     const textareaRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
     const handleSend = () => {
         const trimmed = value.trim();
-        if (!trimmed)
+        if (!trimmed || disabled)
             return;
         onSend(trimmed);
         setValue("");
@@ -2625,8 +2397,8 @@ function ChatInput({ onSend, chatOpen }) {
             handleSend();
         }
     };
-    const hasText = value.trim().length > 0;
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-privacy", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "p-shield" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", { className: "p-txt", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("b", { children: "Your document stays private." }), " Text is only sent when you ask a question."] })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-input-wrap", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-input", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("textarea", { ref: textareaRef, rows: 1, placeholder: chatOpen ? "Ask a follow-up…" : "Ask about this contract…", value: value, onChange: (e) => setValue(e.target.value), onKeyDown: handleKeyDown }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: `ck-send${hasText ? "" : " disabled"}`, onClick: handleSend, "aria-label": "Send", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "send-arrow" }) })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-hint", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "lock-icon" }), "End-to-end encrypted \u00B7 Your firm's data is never used to train models"] })] })] }));
+    const canSend = value.trim().length > 0 && !disabled;
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-privacy", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "p-shield" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", { className: "p-txt", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("b", { children: "Your document stays private." }), " Text is only sent when you ask a question."] })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-input-wrap", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-input", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("textarea", { ref: textareaRef, rows: 1, placeholder: chatOpen ? "Ask a follow-up…" : "Ask about this contract…", value: value, onChange: (e) => setValue(e.target.value), onKeyDown: handleKeyDown }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: `ck-send${canSend ? "" : " disabled"}`, onClick: handleSend, "aria-label": "Send", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "send-arrow" }) })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-hint", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "lock-icon" }), "Encrypted in transit \u00B7 Your firm's data is never used to train models"] })] })] }));
 }
 
 
@@ -2645,17 +2417,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _ActionCard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ActionCard */ "./src/taskpane/components/ActionCard.tsx");
 
 
-
-function ChatPane({ query }) {
+/** Minimal inline rendering: **bold** spans, with line breaks preserved as
+ *  separate paragraphs so lists in the model's answer stay readable. */
+function renderContent(text) {
+    return text.split("\n").map((line, lineIdx) => {
+        if (line.trim() === "")
+            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-gap" }, lineIdx);
+        const parts = line.split(/(\*\*[^*]+\*\*)/g).filter(Boolean);
+        return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { children: parts.map((part, i) => part.startsWith("**") && part.endsWith("**") ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("strong", { children: part.slice(2, -2) }, i)) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { children: part }, i))) }, lineIdx));
+    });
+}
+function ChatPane({ messages, loading, error, onRetry }) {
     const ref = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
     (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
         if (ref.current)
             ref.current.scrollTop = ref.current.scrollHeight;
-    }, []);
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-chat", ref: ref, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-daydiv", children: "Today" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-row user", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-bubble user", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { children: query }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-time", children: "Just now" })] }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-row", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-avatar", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { children: "CK" }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { style: { flex: 1, minWidth: 0 }, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-bubble ai", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", { children: ["The cap ties total liability to ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("strong", { children: "12 months of fees" }), " - below market for a deal of this value."] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-quote", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "q-meta", children: "\u00A7 9.1 \u00B7 Limitation of Liability" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "q-text", children: ["\u2026shall not exceed the total fees paid by Customer in the", " ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("mark", { children: "twelve (12) months" }), " preceding the claim."] })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", { children: ["Most MSAs at this contract value cap at", " ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("strong", { children: "the greater of 12 months' fees or 2\u00D7" }), ". I can propose a revision."] })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", { className: "ck-cite", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "pin" }), "Jump to \u00A7 9.1", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "cite-arr", children: "\u203A" })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-time", children: "Just now" })] })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-row", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-avatar", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { children: "CK" }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { style: { flex: 1, minWidth: 0 }, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ActionCard__WEBPACK_IMPORTED_MODULE_2__["default"], {}) })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-row user", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-bubble user", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { children: "Can you also carve indemnity and confidentiality out of the cap?" }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-time", children: "Just now" })] }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-row ck-thinking", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-avatar", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { children: "CK" }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "t-bubble", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("i", {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("i", {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("i", {})] })] })] }));
+    }, [messages, loading, error]);
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-chat", ref: ref, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-daydiv", children: "Today" }), messages.map((m, i) => m.role === "user" ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-row user", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-bubble user", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { children: m.content }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-time", children: "Just now" })] }) }, i)) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-row", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-avatar", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { children: "CK" }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { style: { flex: 1, minWidth: 0 }, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-bubble ai", children: renderContent(m.content) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-time", children: "Just now" })] })] }, i))), loading && ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-row ck-thinking", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-avatar", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { children: "CK" }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "t-bubble", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("i", {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("i", {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("i", {})] })] })), error && ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-row", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-avatar", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { children: "CK" }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { style: { flex: 1, minWidth: 0 }, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-error-bubble", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { children: error }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: "ck-retry", onClick: onRetry, children: "Retry" })] }) })] }))] }));
 }
 
 
@@ -2674,9 +2454,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 
 const PROMPTS = [
-    "Is this liability cap standard for an MSA?",
-    "Flag any uncapped indemnity obligations",
-    "Does confidentiality survive termination?",
+    "Is the 5% rent escalation off-market?",
+    "Are the tenant's repair obligations standard?",
+    "Is the personal guaranty unusual?",
 ];
 function EmptyState({ onPrompt }) {
     return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-empty", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "e-mark", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { children: "CK" }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h3", { children: "Review with confidence" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "e-sub", children: "Ask anything about the contract you're in - or pick a starting point below." }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-suggest", children: PROMPTS.map((p) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", { className: "s-btn", onClick: () => onPrompt(p), children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "s-dot" }), p, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "s-ar", children: "\u203A" })] }, p))) })] }));

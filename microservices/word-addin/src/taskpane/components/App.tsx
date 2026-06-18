@@ -1,36 +1,26 @@
-import { useState } from "react";
 import CKHeader from "./CKHeader";
 import EmptyState from "./EmptyState";
 import ChatPane from "./ChatPane";
 import ChatInput from "./ChatInput";
+import { useChat } from "./useChat";
 
 interface AppProps {
   title: string;
 }
 
-type View = "empty" | "chat";
-
 export default function App(_props: AppProps) {
-  const [view, setView] = useState<View>("empty");
-  const [firstQuery, setFirstQuery] = useState("");
-
-  const handleSend = (query: string) => {
-    if (!query.trim()) return;
-    if (view === "empty") {
-      setFirstQuery(query);
-      setView("chat");
-    }
-  };
+  const { messages, loading, error, send, retry } = useChat();
+  const chatOpen = messages.length > 0;
 
   return (
     <div className="ck-pane">
-      <CKHeader status={view === "chat" ? "Reviewing MSA · §9" : "Ready to review"} />
-      {view === "empty" ? (
-        <EmptyState onPrompt={handleSend} />
+      <CKHeader status={chatOpen ? "Reviewing commercial lease" : "Ready to review"} />
+      {chatOpen ? (
+        <ChatPane messages={messages} loading={loading} error={error} onRetry={retry} />
       ) : (
-        <ChatPane query={firstQuery} />
+        <EmptyState onPrompt={send} />
       )}
-      <ChatInput onSend={handleSend} chatOpen={view === "chat"} />
+      <ChatInput onSend={send} chatOpen={chatOpen} disabled={loading} />
     </div>
   );
 }

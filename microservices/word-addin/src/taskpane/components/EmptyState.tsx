@@ -1,7 +1,7 @@
 const PROMPTS = [
-  "Is this liability cap standard for an MSA?",
-  "Flag any uncapped indemnity obligations",
-  "Does confidentiality survive termination?",
+  "Is the 5% rent escalation off-market?",
+  "Are the tenant's repair obligations standard?",
+  "Is the personal guaranty unusual?",
 ];
 
 interface EmptyStateProps {

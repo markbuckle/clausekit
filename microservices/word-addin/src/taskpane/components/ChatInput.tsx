@@ -3,15 +3,16 @@ import { useRef, useState } from "react";
 interface ChatInputProps {
   onSend: (query: string) => void;
   chatOpen: boolean;
+  disabled?: boolean;
 }
 
-export default function ChatInput({ onSend, chatOpen }: ChatInputProps) {
+export default function ChatInput({ onSend, chatOpen, disabled = false }: ChatInputProps) {
   const [value, setValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSend = () => {
     const trimmed = value.trim();
-    if (!trimmed) return;
+    if (!trimmed || disabled) return;
     onSend(trimmed);
     setValue("");
   };
@@ -23,7 +24,7 @@ export default function ChatInput({ onSend, chatOpen }: ChatInputProps) {
     }
   };
 
-  const hasText = value.trim().length > 0;
+  const canSend = value.trim().length > 0 && !disabled;
 
   return (
     <>
@@ -44,7 +45,7 @@ export default function ChatInput({ onSend, chatOpen }: ChatInputProps) {
             onKeyDown={handleKeyDown}
           />
           <button
-            className={`ck-send${hasText ? "" : " disabled"}`}
+            className={`ck-send${canSend ? "" : " disabled"}`}
             onClick={handleSend}
             aria-label="Send"
           >
@@ -53,7 +54,7 @@ export default function ChatInput({ onSend, chatOpen }: ChatInputProps) {
         </div>
         <div className="ck-hint">
           <span className="lock-icon" />
-          End-to-end encrypted · Your firm&apos;s data is never used to train models
+          Encrypted in transit · Your firm&apos;s data is never used to train models
         </div>
       </div>
     </>

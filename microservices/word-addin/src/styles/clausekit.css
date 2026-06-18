@@ -85,6 +85,15 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .q-text { font-size: 12px; line-height: 1.6; color: #374151; font-style: italic; }
 .q-text mark { background: var(--amber-soft); font-style: normal; padding: 0 1px; }
 
+/* Empty lines inside an AI answer (preserves list/paragraph spacing) */
+.ck-bubble.ai .ck-gap { height: 8px; }
+
+/* Error bubble + retry (chat thread) */
+.ck-error-bubble { background: var(--destructive-soft); border: 1px solid #fecdca; border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); padding: 10px 12px; font-size: var(--fs-body); line-height: 1.55; color: #b42318; }
+.ck-error-bubble p { margin: 0 0 8px; }
+.ck-retry { font-size: 12px; font-weight: 500; color: var(--navy); background: #fff; border: 1px solid var(--border-strong); border-radius: 6px; padding: 5px 12px; cursor: pointer; font-family: var(--font-body); }
+.ck-retry:hover { background: #f9fafb; }
+
 /* Citation chip */
 .ck-cite { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 11px; font-weight: 500; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 999px; padding: 4px 10px 4px 8px; cursor: pointer; }
 .ck-cite:hover { background: #e4eafd; }
