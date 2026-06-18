@@ -88,6 +88,30 @@
   margin: 0;
 }
 
+/* ── Tracked-change rendering (Word-style) ── */
+.pg-del {
+  color: #b42318;
+  text-decoration: line-through;
+  text-decoration-color: rgba(180, 35, 24, 0.6);
+}
+.pg-ins {
+  color: #067647;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  margin-left: 3px;
+}
+
+/* Brief highlight when scrollTo targets a clause. */
+.pg-flash {
+  animation: pg-flash 1.2s ease-out;
+  border-radius: 3px;
+}
+@keyframes pg-flash {
+  0% { background: rgba(245, 158, 11, 0); }
+  18% { background: rgba(245, 158, 11, 0.35); }
+  100% { background: rgba(245, 158, 11, 0); }
+}
+
 /* ── Task-pane host (right) ── */
 .pg-pane-host {
   width: 372px;

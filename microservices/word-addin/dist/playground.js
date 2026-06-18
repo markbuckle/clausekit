@@ -277,6 +277,229 @@ function getContestedClause(ref) {
 
 /***/ },
 
+/***/ "./src/services/index.ts"
+/*!*******************************!*\
+  !*** ./src/services/index.ts ***!
+  \*******************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DocumentServiceProvider: () => (/* reexport safe */ _DocumentServiceContext__WEBPACK_IMPORTED_MODULE_0__.DocumentServiceProvider),
+/* harmony export */   useDocumentService: () => (/* reexport safe */ _DocumentServiceContext__WEBPACK_IMPORTED_MODULE_0__.useDocumentService)
+/* harmony export */ });
+/* harmony import */ var _DocumentServiceContext__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DocumentServiceContext */ "./src/services/DocumentServiceContext.tsx");
+
+
+/***/ },
+
+/***/ "./src/services/mock/MockDocumentService.ts"
+/*!**************************************************!*\
+  !*** ./src/services/mock/MockDocumentService.ts ***!
+  \**************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   MockDocumentService: () => (/* binding */ MockDocumentService)
+/* harmony export */ });
+/* harmony import */ var _documentModel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./documentModel */ "./src/services/mock/documentModel.ts");
+
+const FLASH_CLASS = "pg-flash";
+const FLASH_MS = 1200;
+const CONTEXT_CHARS = 40;
+/**
+ * In-browser DocumentService backed by a {@link DocumentModel}. Text operations
+ * delegate to the model; selection and scrolling read/drive the live canvas DOM
+ * (which is appropriate here — this is the mock used by the playground and
+ * tests, not the real Word host).
+ */
+class MockDocumentService {
+  constructor(model) {
+    this.model = model;
+  }
+  async getFullText() {
+    return this.model.getFullText();
+  }
+  async getSelection() {
+    if (typeof window === "undefined") return null;
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || sel.rangeCount === 0) return null;
+    const text = sel.toString();
+    if (!text.trim()) return null;
+    let contextBefore = "";
+    let contextAfter = "";
+    const container = sel.anchorNode?.parentElement?.closest(".pg-clause-text, .pg-recitals, .pg-doc");
+    const full = container?.textContent ?? "";
+    const at = full.indexOf(text);
+    if (at !== -1) {
+      contextBefore = full.slice(Math.max(0, at - CONTEXT_CHARS), at);
+      contextAfter = full.slice(at + text.length, at + text.length + CONTEXT_CHARS);
+    }
+    return {
+      text,
+      contextBefore,
+      contextAfter
+    };
+  }
+  async applyTrackedChange(edit) {
+    return this.model.applyChange(edit);
+  }
+  async scrollTo(target) {
+    if (typeof document === "undefined") return false;
+    const el = "clauseRef" in target ? this.byRef(target.clauseRef) : this.byText(target.text);
+    if (!el) return false;
+    el.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+    el.classList.add(FLASH_CLASS);
+    window.setTimeout(() => el.classList.remove(FLASH_CLASS), FLASH_MS);
+    return true;
+  }
+  byRef(ref) {
+    return document.getElementById((0,_documentModel__WEBPACK_IMPORTED_MODULE_0__.clauseDomId)(ref));
+  }
+  byText(text) {
+    const clauses = Array.from(document.querySelectorAll(".pg-clause"));
+    return clauses.find(c => (c.textContent ?? "").includes(text)) ?? null;
+  }
+}
+
+/***/ },
+
+/***/ "./src/services/mock/documentModel.ts"
+/*!********************************************!*\
+  !*** ./src/services/mock/documentModel.ts ***!
+  \********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DocumentModel: () => (/* binding */ DocumentModel),
+/* harmony export */   clauseDomId: () => (/* binding */ clauseDomId)
+/* harmony export */ });
+/* harmony import */ var _fixtures_lease__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../fixtures/lease */ "./src/fixtures/lease/index.ts");
+
+/**
+ * Stable DOM id for a clause in the canvas. Shared by the canvas renderer and
+ * the mock service's scrollTo so they agree on element ids.
+ */
+function clauseDomId(ref) {
+  return `clause-${ref}`;
+}
+/**
+ * Observable working copy of the lease. Initialized from the immutable fixture
+ * (which is never mutated), it records applied tracked-changes and notifies
+ * subscribers so the canvas can re-render. Pure data + subscriptions — no DOM.
+ */
+class DocumentModel {
+  constructor(source = _fixtures_lease__WEBPACK_IMPORTED_MODULE_0__.leaseClauses) {
+    this.listeners = new Set();
+    /** Subscribe to change notifications; returns an unsubscribe fn. */
+    this.subscribe = listener => {
+      this.listeners.add(listener);
+      return () => {
+        this.listeners.delete(listener);
+      };
+    };
+    /** Current working clauses. Reference changes only when the model mutates. */
+    this.getSnapshot = () => this.clauses;
+    this.clauses = source.map(c => ({
+      ref: c.ref,
+      heading: c.heading,
+      segments: [{
+        kind: "text",
+        text: c.text
+      }]
+    }));
+  }
+  notify() {
+    this.listeners.forEach(l => l());
+  }
+  clauseText(c) {
+    return c.segments.map(s => s.kind === "text" ? s.text : s.proposed).join("");
+  }
+  /** Full document text, reflecting applied changes (proposed text wins). */
+  getFullText() {
+    const body = this.clauses.map(c => `${c.ref}. ${c.heading}\n\n${this.clauseText(c)}`).join("\n\n");
+    return `${_fixtures_lease__WEBPACK_IMPORTED_MODULE_0__.LEASE_TITLE}\n\n${_fixtures_lease__WEBPACK_IMPORTED_MODULE_0__.leaseRecitals}\n\n${body}\n`;
+  }
+  /**
+   * Apply a tracked change. Searches for `edit.originalText` SCOPED to the
+   * clause named by `edit.clauseRef`, and only within still-unchanged text
+   * runs. Exactly one match → records the change and notifies. Zero →
+   * not-found. More than one → ambiguous (never guesses which to edit).
+   */
+  applyChange(edit) {
+    const idx = this.clauses.findIndex(c => c.ref === edit.clauseRef);
+    if (idx === -1) return {
+      status: "not-found",
+      searchedText: edit.originalText
+    };
+    const clause = this.clauses[idx];
+    const hits = [];
+    clause.segments.forEach((seg, si) => {
+      if (seg.kind !== "text" || edit.originalText.length === 0) return;
+      let pos = seg.text.indexOf(edit.originalText);
+      while (pos !== -1) {
+        hits.push({
+          segIndex: si,
+          offset: pos
+        });
+        pos = seg.text.indexOf(edit.originalText, pos + edit.originalText.length);
+      }
+    });
+    if (hits.length === 0) return {
+      status: "not-found",
+      searchedText: edit.originalText
+    };
+    if (hits.length > 1) return {
+      status: "ambiguous",
+      matchCount: hits.length
+    };
+    const {
+      segIndex,
+      offset
+    } = hits[0];
+    const target = clause.segments[segIndex];
+    const before = target.text.slice(0, offset);
+    const after = target.text.slice(offset + edit.originalText.length);
+    const segments = [];
+    clause.segments.forEach((s, si) => {
+      if (si !== segIndex) {
+        segments.push(s);
+        return;
+      }
+      if (before) segments.push({
+        kind: "text",
+        text: before
+      });
+      segments.push({
+        kind: "change",
+        original: edit.originalText,
+        proposed: edit.proposedText
+      });
+      if (after) segments.push({
+        kind: "text",
+        text: after
+      });
+    });
+    const updated = {
+      ...clause,
+      segments
+    };
+    this.clauses = this.clauses.map((c, i) => i === idx ? updated : c);
+    this.notify();
+    return {
+      status: "applied",
+      clauseRef: edit.clauseRef
+    };
+  }
+}
+
+/***/ },
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./src/playground/playground.css"
 /*!*****************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./src/playground/playground.css ***!
@@ -386,6 +609,30 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* ── ClauseKit Playground chrome 
   margin: 0;
 }
 
+/* ── Tracked-change rendering (Word-style) ── */
+.pg-del {
+  color: #b42318;
+  text-decoration: line-through;
+  text-decoration-color: rgba(180, 35, 24, 0.6);
+}
+.pg-ins {
+  color: #067647;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  margin-left: 3px;
+}
+
+/* Brief highlight when scrollTo targets a clause. */
+.pg-flash {
+  animation: pg-flash 1.2s ease-out;
+  border-radius: 3px;
+}
+@keyframes pg-flash {
+  0% { background: rgba(245, 158, 11, 0); }
+  18% { background: rgba(245, 158, 11, 0.35); }
+  100% { background: rgba(245, 158, 11, 0); }
+}
+
 /* ── Task-pane host (right) ── */
 .pg-pane-host {
   width: 372px;
@@ -401,7 +648,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* ── ClauseKit Playground chrome 
 .pg-pane-host .ck-pane {
   height: 100%;
 }
-`, "",{"version":3,"sources":["webpack://./src/playground/playground.css"],"names":[],"mappings":"AAAA;;;;;;EAME;;AAEF;EACE,aAAa;EACb,aAAa;EACb,WAAW;EACX,gBAAgB;EAChB,mBAAmB;AACrB;;AAEA,sCAAsC;AACtC;EACE,OAAO;EACP,YAAY;EACZ,gBAAgB;EAChB,uBAAuB;EACvB,aAAa;EACb,uBAAuB;EACvB;;gEAE8D;EAC9D,uBAAuB;AACzB;;AAEA;EACE,WAAW;EACX,gBAAgB;EAChB,gBAAgB;EAChB,yBAAyB;EACzB,kBAAkB;EAClB,6CAA6C;EAC7C,uBAAuB;EACvB;kEACgE;EAChE,8BAA8B;EAC9B,8EAA8E;EAC9E,8CAA8C;EAC9C,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,eAAe;EACf,gBAAgB;EAChB,sBAAsB;EACtB,yBAAyB;EACzB,gBAAgB;AAClB;;AAEA;EACE,eAAe;EACf,iBAAiB;EACjB,mBAAmB;EACnB,gBAAgB;AAClB;;AAEA;EACE,gBAAgB;EAChB,uBAAuB;AACzB;;AAEA;EACE,iBAAiB;EACjB,gBAAgB;EAChB,eAAe;EACf,aAAa;EACb,QAAQ;EACR,qBAAqB;AACvB;;AAEA;EACE,uDAAuD;EACvD,iBAAiB;EACjB,cAAc;EACd,UAAU;AACZ;;AAEA;EACE,eAAe;EACf,gBAAgB;EAChB,mBAAmB;EACnB,SAAS;AACX;;AAEA,iCAAiC;AACjC;EACE,YAAY;EACZ,UAAU;EACV,aAAa;EACb,8BAA8B;EAC9B,8BAA8B;EAC9B,8CAA8C;EAC9C,gBAAgB;AAClB;;AAEA,gFAAgF;AAChF;EACE,YAAY;AACd","sourcesContent":["/* ── ClauseKit Playground chrome ──\n *\n * Playground-only layout: a two-pane demo surface (lease document on the\n * left, the real task pane docked on the right). This file styles ONLY the\n * playground shell and the rendered document — the task pane itself comes\n * entirely from the shared design system (clausekit.css).\n */\n\n.pg-root {\n  display: flex;\n  height: 100vh;\n  width: 100%;\n  overflow: hidden;\n  background: #eef0f3;\n}\n\n/* ── Document pane (left/center) ── */\n.pg-doc-pane {\n  flex: 1;\n  min-width: 0;\n  overflow-y: auto;\n  padding: 32px 24px 64px;\n  display: flex;\n  justify-content: center;\n  /* Top-align so the page sizes to its content height instead of being\n     stretched to the (viewport-bound) pane height. The pane is the scroll\n     container; gray shows only as the margin around the page. */\n  align-items: flex-start;\n}\n\n.pg-doc {\n  width: 100%;\n  max-width: 760px;\n  background: #fff;\n  border: 1px solid #e3e6ea;\n  border-radius: 4px;\n  box-shadow: 0 4px 24px rgba(17, 24, 39, 0.08);\n  padding: 56px 72px 72px;\n  /* height is auto (grows with content); fill the viewport when the document\n     is short. 96px = the pane's top (32) + bottom (64) padding. */\n  min-height: calc(100vh - 96px);\n  /* A serif gives the document a contractual feel, distinct from the pane UI. */\n  font-family: Georgia, 'Times New Roman', serif;\n  color: #1f2430;\n}\n\n.pg-doc-title {\n  text-align: center;\n  font-size: 19px;\n  font-weight: 700;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  margin: 0 0 28px;\n}\n\n.pg-recitals {\n  font-size: 14px;\n  line-height: 1.75;\n  text-align: justify;\n  margin: 0 0 28px;\n}\n\n.pg-clause {\n  margin: 0 0 22px;\n  scroll-margin-top: 24px;\n}\n\n.pg-clause-head {\n  font-size: 14.5px;\n  font-weight: 700;\n  margin: 0 0 8px;\n  display: flex;\n  gap: 8px;\n  align-items: baseline;\n}\n\n.pg-ref {\n  font-family: var(--font-mono, 'Roboto Mono', monospace);\n  font-size: 12.5px;\n  color: #6b7280;\n  flex: none;\n}\n\n.pg-clause-text {\n  font-size: 14px;\n  line-height: 1.8;\n  text-align: justify;\n  margin: 0;\n}\n\n/* ── Task-pane host (right) ── */\n.pg-pane-host {\n  width: 372px;\n  flex: none;\n  height: 100vh;\n  background: var(--bg, #f8f9fa);\n  border-left: 1px solid #d6dae0;\n  box-shadow: -6px 0 24px rgba(17, 24, 39, 0.08);\n  overflow: hidden;\n}\n\n/* The shared .ck-pane fills the host exactly as it does the Office task pane. */\n.pg-pane-host .ck-pane {\n  height: 100%;\n}\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/playground/playground.css"],"names":[],"mappings":"AAAA;;;;;;EAME;;AAEF;EACE,aAAa;EACb,aAAa;EACb,WAAW;EACX,gBAAgB;EAChB,mBAAmB;AACrB;;AAEA,sCAAsC;AACtC;EACE,OAAO;EACP,YAAY;EACZ,gBAAgB;EAChB,uBAAuB;EACvB,aAAa;EACb,uBAAuB;EACvB;;gEAE8D;EAC9D,uBAAuB;AACzB;;AAEA;EACE,WAAW;EACX,gBAAgB;EAChB,gBAAgB;EAChB,yBAAyB;EACzB,kBAAkB;EAClB,6CAA6C;EAC7C,uBAAuB;EACvB;kEACgE;EAChE,8BAA8B;EAC9B,8EAA8E;EAC9E,8CAA8C;EAC9C,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,eAAe;EACf,gBAAgB;EAChB,sBAAsB;EACtB,yBAAyB;EACzB,gBAAgB;AAClB;;AAEA;EACE,eAAe;EACf,iBAAiB;EACjB,mBAAmB;EACnB,gBAAgB;AAClB;;AAEA;EACE,gBAAgB;EAChB,uBAAuB;AACzB;;AAEA;EACE,iBAAiB;EACjB,gBAAgB;EAChB,eAAe;EACf,aAAa;EACb,QAAQ;EACR,qBAAqB;AACvB;;AAEA;EACE,uDAAuD;EACvD,iBAAiB;EACjB,cAAc;EACd,UAAU;AACZ;;AAEA;EACE,eAAe;EACf,gBAAgB;EAChB,mBAAmB;EACnB,SAAS;AACX;;AAEA,gDAAgD;AAChD;EACE,cAAc;EACd,6BAA6B;EAC7B,6CAA6C;AAC/C;AACA;EACE,cAAc;EACd,0BAA0B;EAC1B,8BAA8B;EAC9B,gBAAgB;AAClB;;AAEA,oDAAoD;AACpD;EACE,iCAAiC;EACjC,kBAAkB;AACpB;AACA;EACE,KAAK,iCAAiC,EAAE;EACxC,MAAM,oCAAoC,EAAE;EAC5C,OAAO,iCAAiC,EAAE;AAC5C;;AAEA,iCAAiC;AACjC;EACE,YAAY;EACZ,UAAU;EACV,aAAa;EACb,8BAA8B;EAC9B,8BAA8B;EAC9B,8CAA8C;EAC9C,gBAAgB;AAClB;;AAEA,gFAAgF;AAChF;EACE,YAAY;AACd","sourcesContent":["/* ── ClauseKit Playground chrome ──\n *\n * Playground-only layout: a two-pane demo surface (lease document on the\n * left, the real task pane docked on the right). This file styles ONLY the\n * playground shell and the rendered document — the task pane itself comes\n * entirely from the shared design system (clausekit.css).\n */\n\n.pg-root {\n  display: flex;\n  height: 100vh;\n  width: 100%;\n  overflow: hidden;\n  background: #eef0f3;\n}\n\n/* ── Document pane (left/center) ── */\n.pg-doc-pane {\n  flex: 1;\n  min-width: 0;\n  overflow-y: auto;\n  padding: 32px 24px 64px;\n  display: flex;\n  justify-content: center;\n  /* Top-align so the page sizes to its content height instead of being\n     stretched to the (viewport-bound) pane height. The pane is the scroll\n     container; gray shows only as the margin around the page. */\n  align-items: flex-start;\n}\n\n.pg-doc {\n  width: 100%;\n  max-width: 760px;\n  background: #fff;\n  border: 1px solid #e3e6ea;\n  border-radius: 4px;\n  box-shadow: 0 4px 24px rgba(17, 24, 39, 0.08);\n  padding: 56px 72px 72px;\n  /* height is auto (grows with content); fill the viewport when the document\n     is short. 96px = the pane's top (32) + bottom (64) padding. */\n  min-height: calc(100vh - 96px);\n  /* A serif gives the document a contractual feel, distinct from the pane UI. */\n  font-family: Georgia, 'Times New Roman', serif;\n  color: #1f2430;\n}\n\n.pg-doc-title {\n  text-align: center;\n  font-size: 19px;\n  font-weight: 700;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  margin: 0 0 28px;\n}\n\n.pg-recitals {\n  font-size: 14px;\n  line-height: 1.75;\n  text-align: justify;\n  margin: 0 0 28px;\n}\n\n.pg-clause {\n  margin: 0 0 22px;\n  scroll-margin-top: 24px;\n}\n\n.pg-clause-head {\n  font-size: 14.5px;\n  font-weight: 700;\n  margin: 0 0 8px;\n  display: flex;\n  gap: 8px;\n  align-items: baseline;\n}\n\n.pg-ref {\n  font-family: var(--font-mono, 'Roboto Mono', monospace);\n  font-size: 12.5px;\n  color: #6b7280;\n  flex: none;\n}\n\n.pg-clause-text {\n  font-size: 14px;\n  line-height: 1.8;\n  text-align: justify;\n  margin: 0;\n}\n\n/* ── Tracked-change rendering (Word-style) ── */\n.pg-del {\n  color: #b42318;\n  text-decoration: line-through;\n  text-decoration-color: rgba(180, 35, 24, 0.6);\n}\n.pg-ins {\n  color: #067647;\n  text-decoration: underline;\n  text-decoration-thickness: 1px;\n  margin-left: 3px;\n}\n\n/* Brief highlight when scrollTo targets a clause. */\n.pg-flash {\n  animation: pg-flash 1.2s ease-out;\n  border-radius: 3px;\n}\n@keyframes pg-flash {\n  0% { background: rgba(245, 158, 11, 0); }\n  18% { background: rgba(245, 158, 11, 0.35); }\n  100% { background: rgba(245, 158, 11, 0); }\n}\n\n/* ── Task-pane host (right) ── */\n.pg-pane-host {\n  width: 372px;\n  flex: none;\n  height: 100vh;\n  background: var(--bg, #f8f9fa);\n  border-left: 1px solid #d6dae0;\n  box-shadow: -6px 0 24px rgba(17, 24, 39, 0.08);\n  overflow: hidden;\n}\n\n/* The shared .ck-pane fills the host exactly as it does the Office task pane. */\n.pg-pane-host .ck-pane {\n  height: 100%;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -528,6 +775,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .a-title { font-size: 12.5px; font-weight: 600; line-height: 1.35; color: var(--text-primary); }
 .a-body { padding: 9px 12px 0; }
 .a-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.55; margin: 0; }
+.a-error { font-size: 12px; color: var(--destructive); background: var(--destructive-soft); border: 1px solid #fecdca; border-radius: 6px; padding: 7px 9px; margin: 10px 0 0; line-height: 1.45; }
 
 /* Diff */
 .ck-diff { margin: 10px 0 2px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; font-family: var(--font-mono); font-size: 11px; line-height: 1.55; }
@@ -595,7 +843,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .ck-hint { font-size: var(--fs-label); color: var(--text-secondary); margin-top: 7px; display: flex; align-items: center; gap: 5px; padding: 0 2px; }
 .lock-icon { width: 9px; height: 9px; border: 1.4px solid var(--text-secondary); border-radius: 2px; position: relative; flex: none; }
 .lock-icon::before { content:""; position:absolute; left:1.5px; top:-3.5px; width:5px; height:5px; border:1.4px solid var(--text-secondary); border-bottom:0; border-radius:3px 3px 0 0; }
-`, "",{"version":3,"sources":["webpack://./src/styles/clausekit.css"],"names":[],"mappings":"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","sourcesContent":["/* ── ClauseKit Task Pane Design System ──\n *\n * Single source of truth for the task-pane UI. Loaded by both the Office\n * entry (src/taskpane/index.tsx) and the browser playground\n * (src/playground/playground.tsx) so the pane looks identical in either host.\n */\n:root {\n  --navy: #0E0E12;\n  --navy-700: #2b2b34;\n  --navy-300: #6c6c77;\n  --amber: #F59E0B;\n  --amber-600: #d4870a;\n  --amber-soft: #FEF3C7;\n  --amber-grad: linear-gradient(180deg, #FCC04A 0%, #F59E0B 52%, #E88B05 100%);\n  --amber-glow: inset 0 1px 0 rgba(255,255,255,.35), 0 2px 10px rgba(245,158,11,.4), 0 1px 2px rgba(160,98,0,.45);\n  --bg: #F8F9FA;\n  --surface: #FFFFFF;\n  --user-bubble: #EEF2FF;\n  --text-primary: #111827;\n  --text-secondary: #6B7280;\n  --border: #E5E7EB;\n  --border-strong: #D1D5DB;\n  --destructive: #EF4444;\n  --destructive-soft: #FEF2F2;\n  --fs-header: 16px;\n  --fs-body: 13px;\n  --fs-label: 11px;\n  --pane-pad: 12px;\n  --shadow-card: 0 1px 2px rgba(17,24,39,.06), 0 1px 3px rgba(17,24,39,.05);\n  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;\n  --font-body: 'Inter', system-ui, sans-serif;\n  --font-mono: 'Roboto Mono', monospace;\n}\n* { box-sizing: border-box; }\nhtml, body { margin: 0; padding: 0; height: 100%; -webkit-font-smoothing: antialiased; }\nbody { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); }\n#container { height: 100%; }\n\n/* Pane shell */\n.ck-pane { height: 100%; display: flex; flex-direction: column; }\n\n/* ── Header ── */\n.ck-header {\n  background: linear-gradient(180deg, #08080b 0%, #131318 55%, #232329 100%);\n  color: #fff; height: 52px; display: flex; align-items: center;\n  padding: 0 var(--pane-pad); gap: 10px;\n  border-bottom: 1px solid rgba(255,255,255,.06); flex-shrink: 0;\n}\n.h-mark { width: 28px; height: 28px; border-radius: 7px; background: rgba(255,255,255,.10); display: grid; place-items: center; flex: none; position: relative; border: 1px solid rgba(255,255,255,.14); }\n.h-mark span { font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 2px; }\n.h-mark::after { content:\"\"; position:absolute; left:6px; right:6px; bottom:6px; height:1.5px; background: var(--amber); border-radius:2px; }\n.h-txt { display: flex; flex-direction: column; line-height: 1.15; }\n.h-name { font-family: var(--font-display); font-size: var(--fs-header); font-weight: 600; letter-spacing: -.01em; }\n.h-status { font-size: var(--fs-label); color: rgba(244,246,251,.66); display: flex; align-items: center; gap: 5px; }\n.h-status .live { width: 6px; height: 6px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 2px rgba(52,211,153,.25); }\n.h-actions { margin-left: auto; display: flex; gap: 2px; }\n.ck-icon-btn { width: 30px; height: 30px; border-radius: 6px; display: grid; place-items: center; color: rgba(255,255,255,.8); cursor: pointer; background: none; border: none; }\n.ck-icon-btn:hover { background: rgba(255,255,255,.12); }\n.kebab { display:flex; flex-direction: column; gap: 2.5px; }\n.kebab b { width: 3px; height: 3px; border-radius: 50%; background: currentColor; display: block; }\n\n/* ── Chat scroll area ── */\n.ck-chat { flex: 1; background: var(--bg); padding: var(--pane-pad); display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }\n.ck-daydiv { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: var(--fs-label); }\n.ck-daydiv::before, .ck-daydiv::after { content:\"\"; height:1px; background: var(--border); flex:1; }\n\n/* Message rows */\n.ck-row { display: flex; gap: 8px; }\n.ck-row.user { justify-content: flex-end; }\n.ck-avatar { width: 24px; height: 24px; border-radius: 6px; background: var(--navy); display: grid; place-items: center; flex: none; margin-top: 2px; }\n.ck-avatar span { font-size: 9px; font-weight: 700; color: #fff; letter-spacing: .02em; }\n.ck-bubble { font-size: var(--fs-body); line-height: 1.55; padding: 10px 12px; border-radius: 12px; max-width: 264px; }\n.ck-bubble.user { background: var(--user-bubble); color: var(--navy); border-radius: 12px 12px 4px 12px; }\n.ck-bubble.ai { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); }\n.ck-bubble p { margin: 0; }\n.ck-bubble p + p { margin-top: 8px; }\n.ck-bubble strong { font-weight: 600; }\n.ck-time { font-size: 10px; color: var(--text-secondary); margin-top: 4px; }\n.ck-row.user .ck-time { text-align: right; }\n\n/* Quote block */\n.ck-quote { background: #fafbfc; border: 1px solid var(--border); border-left: 3px solid var(--navy-300); border-radius: 6px; padding: 9px 11px; margin: 10px 0 4px; }\n.q-meta { font-family: var(--font-mono); font-size: 10px; color: var(--text-secondary); letter-spacing: .02em; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }\n.q-meta::before { content:\"\\201C\"; font-family: Georgia, serif; font-size: 16px; line-height: 0; color: var(--navy-300); position: relative; top: 3px; }\n.q-text { font-size: 12px; line-height: 1.6; color: #374151; font-style: italic; }\n.q-text mark { background: var(--amber-soft); font-style: normal; padding: 0 1px; }\n\n/* Citation chip */\n.ck-cite { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 11px; font-weight: 500; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 999px; padding: 4px 10px 4px 8px; cursor: pointer; }\n.ck-cite:hover { background: #e4eafd; }\n.pin { width: 11px; height: 11px; position: relative; flex: none; }\n.pin::before { content:\"\"; position:absolute; inset:0; border:1.5px solid var(--navy); border-radius:50% 50% 50% 0; transform: rotate(-45deg); }\n.cite-arr { margin-left: 1px; color: var(--navy-300); font-size: 10px; }\n\n/* ── Action card ── */\n.ck-action { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--amber); border-radius: 8px; box-shadow: var(--shadow-card); overflow: hidden; }\n.a-head { padding: 11px 12px 0; display: flex; align-items: flex-start; gap: 8px; flex-direction: column; }\n.a-badge { font-family: var(--font-mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--amber-600); background: var(--amber-soft); border-radius: 4px; padding: 3px 6px; }\n.a-title { font-size: 12.5px; font-weight: 600; line-height: 1.35; color: var(--text-primary); }\n.a-body { padding: 9px 12px 0; }\n.a-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.55; margin: 0; }\n\n/* Diff */\n.ck-diff { margin: 10px 0 2px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; font-family: var(--font-mono); font-size: 11px; line-height: 1.55; }\n.d-line { padding: 6px 10px 6px 24px; position: relative; }\n.d-del { background: var(--destructive-soft); color: #b42318; }\n.d-del .t { text-decoration: line-through; text-decoration-color: rgba(180,35,24,.5); }\n.d-add { background: #ecfdf3; color: #067647; border-top: 1px solid #d1fadf; }\n.d-line::before { position: absolute; left: 9px; top: 6px; font-weight: 700; }\n.d-del::before { content: \"−\"; color: #d92d20; }\n.d-add::before { content: \"+\"; color: #079455; }\n\n/* Action footer */\n.a-foot { display: flex; gap: 8px; padding: 12px; align-items: center; }\n.a-foot .spacer { flex: 1; }\n.ck-btn { font-size: 13px; font-weight: 500; border-radius: 6px; padding: 8px 14px; cursor: pointer; border: 1px solid transparent; line-height: 1; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; font-family: var(--font-body); transition: background .12s, border-color .12s; }\n.ck-btn.primary { background: var(--amber-grad); color: #3a2900; font-weight: 600; border-color: rgba(150,92,0,.45); box-shadow: var(--amber-glow); }\n.ck-btn.primary:hover { filter: brightness(1.04); }\n.ck-btn.danger-ghost { background: transparent; color: var(--text-secondary); border-color: transparent; }\n.ck-btn.danger-ghost:hover { background: var(--destructive-soft); color: var(--destructive); }\n.ck-btn.applied { background: #ecfdf3; color: #067647; border-color: #d1fadf; cursor: default; }\n.ck-btn.applied:hover { filter: none; }\n.chk { width: 6px; height: 11px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(40deg) translateY(-1px); display: inline-block; }\n\n/* Thinking dots */\n.ck-thinking { display: flex; gap: 8px; align-items: center; }\n.t-bubble { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); padding: 12px 14px; display: flex; gap: 5px; align-items: center; }\n.t-bubble i { width: 6px; height: 6px; border-radius: 50%; background: var(--navy-300); animation: blink 1.2s infinite ease-in-out; font-style: normal; display: block; }\n.t-bubble i:nth-child(2){ animation-delay: .18s; }\n.t-bubble i:nth-child(3){ animation-delay: .36s; }\n@keyframes blink { 0%,60%,100%{ opacity:.28; transform:translateY(0);} 30%{ opacity:1; transform:translateY(-2px);} }\n\n/* ── Empty state ── */\n.ck-empty { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 36px 22px; gap: 0; flex: 1; }\n.e-mark { width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(180deg,#1d1d24 0%,#101015 100%); display: grid; place-items: center; position: relative; box-shadow: 0 8px 22px rgba(0,0,0,.3); border: 1px solid #2e2e36; margin-bottom: 18px; }\n.e-mark span { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; font-family: var(--font-display); }\n.e-mark::after { content:\"\"; position:absolute; left:13px; right:13px; bottom:11px; height:2.5px; background: var(--amber); border-radius:2px; }\n.ck-empty h3 { font-family: var(--font-display); font-size: 15px; font-weight: 600; margin: 0 0 6px; color: var(--text-primary); }\n.e-sub { font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; margin: 0 0 20px; max-width: 30ch; }\n.ck-suggest { display: flex; flex-direction: column; gap: 8px; width: 100%; }\n.s-btn { text-align: left; font-size: 12.5px; color: var(--navy); background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; cursor: pointer; box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 9px; font-family: var(--font-body); }\n.s-btn:hover { border-color: var(--navy-300); background: #fdfdfe; }\n.s-btn .s-ar { margin-left: auto; color: var(--navy-300); font-size: 13px; flex: none; }\n.s-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); flex: none; }\n\n/* ── Privacy note ── */\n.ck-privacy { background: #fff; border-top: 1px solid var(--border); padding: 9px 12px; display: flex; align-items: center; gap: 9px; flex-shrink: 0; }\n.p-shield { width: 22px; height: 24px; flex: none; position: relative; }\n.p-shield::before { content:\"\"; position:absolute; inset:0; background: #eef2ff; border:1.4px solid #dbe3fb; border-radius: 4px 4px 9px 9px / 4px 4px 14px 14px; }\n.p-shield::after { content:\"\"; position:absolute; left:7px; top:8px; width:5px; height:8px; border-right:1.8px solid var(--navy); border-bottom:1.8px solid var(--navy); transform: rotate(40deg); }\n.p-txt { font-size: var(--fs-label); color: var(--text-secondary); line-height: 1.45; margin: 0; }\n.p-txt b { color: var(--text-primary); font-weight: 600; }\n\n/* ── Input area ── */\n.ck-input-wrap { background: var(--surface); border-top: 1px solid var(--border); padding: 10px var(--pane-pad) 8px; flex-shrink: 0; }\n.ck-input { background: #fff; border: 1px solid var(--border-strong); border-radius: 10px; padding: 9px 10px 9px 12px; display: flex; align-items: flex-end; gap: 8px; transition: border-color .12s, box-shadow .12s; }\n.ck-input:focus-within { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(14,14,18,.08); }\n.ck-input textarea { flex: 1; font-size: var(--fs-body); color: var(--text-primary); line-height: 1.5; padding: 1px 0; border: none; outline: none; resize: none; background: transparent; font-family: var(--font-body); min-height: 20px; max-height: 80px; overflow-y: auto; }\n.ck-input textarea::placeholder { color: var(--text-secondary); }\n.ck-send { width: 32px; height: 32px; border-radius: 8px; background: var(--navy); display: grid; place-items: center; flex: none; cursor: pointer; border: none; transition: background .12s; }\n.ck-send:hover { background: var(--navy-700); }\n.ck-send.disabled { background: #c9ced6; cursor: default; pointer-events: none; }\n.send-arrow { width: 13px; height: 13px; position: relative; display: block; }\n.send-arrow::before { content:\"\"; position:absolute; left:5.5px; top:1px; width:2px; height:11px; background:#fff; border-radius:2px; }\n.send-arrow::after { content:\"\"; position:absolute; left:2.5px; top:1px; width:8px; height:8px; border-top:2px solid #fff; border-left:2px solid #fff; transform: rotate(45deg); border-radius:2px 0 0 0; }\n.ck-hint { font-size: var(--fs-label); color: var(--text-secondary); margin-top: 7px; display: flex; align-items: center; gap: 5px; padding: 0 2px; }\n.lock-icon { width: 9px; height: 9px; border: 1.4px solid var(--text-secondary); border-radius: 2px; position: relative; flex: none; }\n.lock-icon::before { content:\"\"; position:absolute; left:1.5px; top:-3.5px; width:5px; height:5px; border:1.4px solid var(--text-secondary); border-bottom:0; border-radius:3px 3px 0 0; }\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/styles/clausekit.css"],"names":[],"mappings":"AAAA;;;;;EAKE;AACF;EACE,eAAe;EACf,mBAAmB;EACnB,mBAAmB;EACnB,gBAAgB;EAChB,oBAAoB;EACpB,qBAAqB;EACrB,4EAA4E;EAC5E,+GAA+G;EAC/G,aAAa;EACb,kBAAkB;EAClB,sBAAsB;EACtB,uBAAuB;EACvB,yBAAyB;EACzB,iBAAiB;EACjB,wBAAwB;EACxB,sBAAsB;EACtB,2BAA2B;EAC3B,iBAAiB;EACjB,eAAe;EACf,gBAAgB;EAChB,gBAAgB;EAChB,yEAAyE;EACzE,+DAA+D;EAC/D,2CAA2C;EAC3C,qCAAqC;AACvC;AACA,IAAI,sBAAsB,EAAE;AAC5B,aAAa,SAAS,EAAE,UAAU,EAAE,YAAY,EAAE,mCAAmC,EAAE;AACvF,OAAO,6BAA6B,EAAE,qBAAqB,EAAE,0BAA0B,EAAE;AACzF,aAAa,YAAY,EAAE;;AAE3B,eAAe;AACf,WAAW,YAAY,EAAE,aAAa,EAAE,sBAAsB,EAAE;;AAEhE,iBAAiB;AACjB;EACE,0EAA0E;EAC1E,WAAW,EAAE,YAAY,EAAE,aAAa,EAAE,mBAAmB;EAC7D,0BAA0B,EAAE,SAAS;EACrC,8CAA8C,EAAE,cAAc;AAChE;AACA,UAAU,WAAW,EAAE,YAAY,EAAE,kBAAkB,EAAE,iCAAiC,EAAE,aAAa,EAAE,mBAAmB,EAAE,UAAU,EAAE,kBAAkB,EAAE,uCAAuC,EAAE;AACzM,eAAe,eAAe,EAAE,gBAAgB,EAAE,WAAW,EAAE,kBAAkB,EAAE;AACnF,iBAAiB,UAAU,EAAE,iBAAiB,EAAE,QAAQ,EAAE,SAAS,EAAE,UAAU,EAAE,YAAY,EAAE,wBAAwB,EAAE,iBAAiB,EAAE;AAC5I,SAAS,aAAa,EAAE,sBAAsB,EAAE,iBAAiB,EAAE;AACnE,UAAU,gCAAgC,EAAE,2BAA2B,EAAE,gBAAgB,EAAE,sBAAsB,EAAE;AACnH,YAAY,0BAA0B,EAAE,4BAA4B,EAAE,aAAa,EAAE,mBAAmB,EAAE,QAAQ,EAAE;AACpH,kBAAkB,UAAU,EAAE,WAAW,EAAE,kBAAkB,EAAE,mBAAmB,EAAE,0CAA0C,EAAE;AAChI,aAAa,iBAAiB,EAAE,aAAa,EAAE,QAAQ,EAAE;AACzD,eAAe,WAAW,EAAE,YAAY,EAAE,kBAAkB,EAAE,aAAa,EAAE,mBAAmB,EAAE,2BAA2B,EAAE,eAAe,EAAE,gBAAgB,EAAE,YAAY,EAAE;AAChL,qBAAqB,iCAAiC,EAAE;AACxD,SAAS,YAAY,EAAE,sBAAsB,EAAE,UAAU,EAAE;AAC3D,WAAW,UAAU,EAAE,WAAW,EAAE,kBAAkB,EAAE,wBAAwB,EAAE,cAAc,EAAE;;AAElG,2BAA2B;AAC3B,WAAW,OAAO,EAAE,qBAAqB,EAAE,wBAAwB,EAAE,aAAa,EAAE,sBAAsB,EAAE,SAAS,EAAE,gBAAgB,EAAE;AACzI,aAAa,aAAa,EAAE,mBAAmB,EAAE,SAAS,EAAE,4BAA4B,EAAE,0BAA0B,EAAE;AACtH,wCAAwC,UAAU,EAAE,UAAU,EAAE,yBAAyB,EAAE,MAAM,EAAE;;AAEnG,iBAAiB;AACjB,UAAU,aAAa,EAAE,QAAQ,EAAE;AACnC,eAAe,yBAAyB,EAAE;AAC1C,aAAa,WAAW,EAAE,YAAY,EAAE,kBAAkB,EAAE,uBAAuB,EAAE,aAAa,EAAE,mBAAmB,EAAE,UAAU,EAAE,eAAe,EAAE;AACtJ,kBAAkB,cAAc,EAAE,gBAAgB,EAAE,WAAW,EAAE,qBAAqB,EAAE;AACxF,aAAa,yBAAyB,EAAE,iBAAiB,EAAE,kBAAkB,EAAE,mBAAmB,EAAE,gBAAgB,EAAE;AACtH,kBAAkB,8BAA8B,EAAE,kBAAkB,EAAE,iCAAiC,EAAE;AACzG,gBAAgB,0BAA0B,EAAE,+BAA+B,EAAE,iCAAiC,EAAE,8BAA8B,EAAE;AAChJ,eAAe,SAAS,EAAE;AAC1B,mBAAmB,eAAe,EAAE;AACpC,oBAAoB,gBAAgB,EAAE;AACtC,WAAW,eAAe,EAAE,4BAA4B,EAAE,eAAe,EAAE;AAC3E,wBAAwB,iBAAiB,EAAE;;AAE3C,gBAAgB;AAChB,YAAY,mBAAmB,EAAE,+BAA+B,EAAE,sCAAsC,EAAE,kBAAkB,EAAE,iBAAiB,EAAE,kBAAkB,EAAE;AACrK,UAAU,6BAA6B,EAAE,eAAe,EAAE,4BAA4B,EAAE,qBAAqB,EAAE,kBAAkB,EAAE,aAAa,EAAE,mBAAmB,EAAE,QAAQ,EAAE;AACjL,kBAAkB,eAAe,EAAE,2BAA2B,EAAE,eAAe,EAAE,cAAc,EAAE,sBAAsB,EAAE,kBAAkB,EAAE,QAAQ,EAAE;AACvJ,UAAU,eAAe,EAAE,gBAAgB,EAAE,cAAc,EAAE,kBAAkB,EAAE;AACjF,eAAe,6BAA6B,EAAE,kBAAkB,EAAE,cAAc,EAAE;;AAElF,kBAAkB;AAClB,WAAW,oBAAoB,EAAE,mBAAmB,EAAE,QAAQ,EAAE,eAAe,EAAE,eAAe,EAAE,gBAAgB,EAAE,kBAAkB,EAAE,mBAAmB,EAAE,yBAAyB,EAAE,oBAAoB,EAAE,yBAAyB,EAAE,eAAe,EAAE;AAC1P,iBAAiB,mBAAmB,EAAE;AACtC,OAAO,WAAW,EAAE,YAAY,EAAE,kBAAkB,EAAE,UAAU,EAAE;AAClE,eAAe,UAAU,EAAE,iBAAiB,EAAE,OAAO,EAAE,8BAA8B,EAAE,2BAA2B,EAAE,yBAAyB,EAAE;AAC/I,YAAY,gBAAgB,EAAE,sBAAsB,EAAE,eAAe,EAAE;;AAEvE,sBAAsB;AACtB,aAAa,0BAA0B,EAAE,+BAA+B,EAAE,mCAAmC,EAAE,kBAAkB,EAAE,8BAA8B,EAAE,gBAAgB,EAAE;AACrL,UAAU,oBAAoB,EAAE,aAAa,EAAE,uBAAuB,EAAE,QAAQ,EAAE,sBAAsB,EAAE;AAC1G,WAAW,6BAA6B,EAAE,gBAAgB,EAAE,gBAAgB,EAAE,qBAAqB,EAAE,yBAAyB,EAAE,uBAAuB,EAAE,6BAA6B,EAAE,kBAAkB,EAAE,gBAAgB,EAAE;AAC9N,WAAW,iBAAiB,EAAE,gBAAgB,EAAE,iBAAiB,EAAE,0BAA0B,EAAE;AAC/F,UAAU,mBAAmB,EAAE;AAC/B,UAAU,eAAe,EAAE,4BAA4B,EAAE,iBAAiB,EAAE,SAAS,EAAE;AACvF,WAAW,eAAe,EAAE,yBAAyB,EAAE,mCAAmC,EAAE,yBAAyB,EAAE,kBAAkB,EAAE,gBAAgB,EAAE,gBAAgB,EAAE,iBAAiB,EAAE;;AAElM,SAAS;AACT,WAAW,kBAAkB,EAAE,+BAA+B,EAAE,kBAAkB,EAAE,gBAAgB,EAAE,6BAA6B,EAAE,eAAe,EAAE,iBAAiB,EAAE;AACzK,UAAU,0BAA0B,EAAE,kBAAkB,EAAE;AAC1D,SAAS,mCAAmC,EAAE,cAAc,EAAE;AAC9D,YAAY,6BAA6B,EAAE,yCAAyC,EAAE;AACtF,SAAS,mBAAmB,EAAE,cAAc,EAAE,6BAA6B,EAAE;AAC7E,kBAAkB,kBAAkB,EAAE,SAAS,EAAE,QAAQ,EAAE,gBAAgB,EAAE;AAC7E,iBAAiB,YAAY,EAAE,cAAc,EAAE;AAC/C,iBAAiB,YAAY,EAAE,cAAc,EAAE;;AAE/C,kBAAkB;AAClB,UAAU,aAAa,EAAE,QAAQ,EAAE,aAAa,EAAE,mBAAmB,EAAE;AACvE,kBAAkB,OAAO,EAAE;AAC3B,UAAU,eAAe,EAAE,gBAAgB,EAAE,kBAAkB,EAAE,iBAAiB,EAAE,eAAe,EAAE,6BAA6B,EAAE,cAAc,EAAE,oBAAoB,EAAE,mBAAmB,EAAE,QAAQ,EAAE,mBAAmB,EAAE,6BAA6B,EAAE,8CAA8C,EAAE;AAC7S,kBAAkB,6BAA6B,EAAE,cAAc,EAAE,gBAAgB,EAAE,gCAAgC,EAAE,6BAA6B,EAAE;AACpJ,wBAAwB,wBAAwB,EAAE;AAClD,uBAAuB,uBAAuB,EAAE,4BAA4B,EAAE,yBAAyB,EAAE;AACzG,6BAA6B,mCAAmC,EAAE,yBAAyB,EAAE;AAC7F,kBAAkB,mBAAmB,EAAE,cAAc,EAAE,qBAAqB,EAAE,eAAe,EAAE;AAC/F,wBAAwB,YAAY,EAAE;AACtC,OAAO,UAAU,EAAE,YAAY,EAAE,oCAAoC,EAAE,qCAAqC,EAAE,yCAAyC,EAAE,qBAAqB,EAAE;;AAEhL,kBAAkB;AAClB,eAAe,aAAa,EAAE,QAAQ,EAAE,mBAAmB,EAAE;AAC7D,YAAY,0BAA0B,EAAE,+BAA+B,EAAE,iCAAiC,EAAE,8BAA8B,EAAE,kBAAkB,EAAE,aAAa,EAAE,QAAQ,EAAE,mBAAmB,EAAE;AAC9M,cAAc,UAAU,EAAE,WAAW,EAAE,kBAAkB,EAAE,2BAA2B,EAAE,0CAA0C,EAAE,kBAAkB,EAAE,cAAc,EAAE;AACxK,0BAA0B,qBAAqB,EAAE;AACjD,0BAA0B,qBAAqB,EAAE;AACjD,mBAAmB,aAAa,WAAW,EAAE,uBAAuB,CAAC,EAAE,KAAK,SAAS,EAAE,0BAA0B,CAAC,EAAE;;AAEpH,sBAAsB;AACtB,YAAY,aAAa,EAAE,sBAAsB,EAAE,mBAAmB,EAAE,kBAAkB,EAAE,kBAAkB,EAAE,MAAM,EAAE,OAAO,EAAE;AACjI,UAAU,WAAW,EAAE,YAAY,EAAE,mBAAmB,EAAE,2DAA2D,EAAE,aAAa,EAAE,mBAAmB,EAAE,kBAAkB,EAAE,qCAAqC,EAAE,yBAAyB,EAAE,mBAAmB,EAAE;AACtQ,eAAe,eAAe,EAAE,gBAAgB,EAAE,WAAW,EAAE,kBAAkB,EAAE,gCAAgC,EAAE;AACrH,iBAAiB,UAAU,EAAE,iBAAiB,EAAE,SAAS,EAAE,UAAU,EAAE,WAAW,EAAE,YAAY,EAAE,wBAAwB,EAAE,iBAAiB,EAAE;AAC/I,eAAe,gCAAgC,EAAE,eAAe,EAAE,gBAAgB,EAAE,eAAe,EAAE,0BAA0B,EAAE;AACjI,SAAS,iBAAiB,EAAE,4BAA4B,EAAE,iBAAiB,EAAE,gBAAgB,EAAE,eAAe,EAAE;AAChH,cAAc,aAAa,EAAE,sBAAsB,EAAE,QAAQ,EAAE,WAAW,EAAE;AAC5E,SAAS,gBAAgB,EAAE,iBAAiB,EAAE,kBAAkB,EAAE,gBAAgB,EAAE,+BAA+B,EAAE,kBAAkB,EAAE,kBAAkB,EAAE,eAAe,EAAE,8BAA8B,EAAE,aAAa,EAAE,mBAAmB,EAAE,QAAQ,EAAE,6BAA6B,EAAE;AAC3R,eAAe,6BAA6B,EAAE,mBAAmB,EAAE;AACnE,eAAe,iBAAiB,EAAE,sBAAsB,EAAE,eAAe,EAAE,UAAU,EAAE;AACvF,SAAS,UAAU,EAAE,WAAW,EAAE,kBAAkB,EAAE,wBAAwB,EAAE,UAAU,EAAE;;AAE5F,uBAAuB;AACvB,cAAc,gBAAgB,EAAE,mCAAmC,EAAE,iBAAiB,EAAE,aAAa,EAAE,mBAAmB,EAAE,QAAQ,EAAE,cAAc,EAAE;AACtJ,YAAY,WAAW,EAAE,YAAY,EAAE,UAAU,EAAE,kBAAkB,EAAE;AACvE,oBAAoB,UAAU,EAAE,iBAAiB,EAAE,OAAO,EAAE,mBAAmB,EAAE,0BAA0B,EAAE,kDAAkD,EAAE;AACjK,mBAAmB,UAAU,EAAE,iBAAiB,EAAE,QAAQ,EAAE,OAAO,EAAE,SAAS,EAAE,UAAU,EAAE,oCAAoC,EAAE,qCAAqC,EAAE,wBAAwB,EAAE;AACnM,SAAS,0BAA0B,EAAE,4BAA4B,EAAE,iBAAiB,EAAE,SAAS,EAAE;AACjG,WAAW,0BAA0B,EAAE,gBAAgB,EAAE;;AAEzD,qBAAqB;AACrB,iBAAiB,0BAA0B,EAAE,mCAAmC,EAAE,iCAAiC,EAAE,cAAc,EAAE;AACrI,YAAY,gBAAgB,EAAE,sCAAsC,EAAE,mBAAmB,EAAE,0BAA0B,EAAE,aAAa,EAAE,qBAAqB,EAAE,QAAQ,EAAE,8CAA8C,EAAE;AACvN,yBAAyB,yBAAyB,EAAE,wCAAwC,EAAE;AAC9F,qBAAqB,OAAO,EAAE,yBAAyB,EAAE,0BAA0B,EAAE,gBAAgB,EAAE,cAAc,EAAE,YAAY,EAAE,aAAa,EAAE,YAAY,EAAE,uBAAuB,EAAE,6BAA6B,EAAE,gBAAgB,EAAE,gBAAgB,EAAE,gBAAgB,EAAE;AAChR,kCAAkC,4BAA4B,EAAE;AAChE,WAAW,WAAW,EAAE,YAAY,EAAE,kBAAkB,EAAE,uBAAuB,EAAE,aAAa,EAAE,mBAAmB,EAAE,UAAU,EAAE,eAAe,EAAE,YAAY,EAAE,2BAA2B,EAAE;AAC/L,iBAAiB,2BAA2B,EAAE;AAC9C,oBAAoB,mBAAmB,EAAE,eAAe,EAAE,oBAAoB,EAAE;AAChF,cAAc,WAAW,EAAE,YAAY,EAAE,kBAAkB,EAAE,cAAc,EAAE;AAC7E,sBAAsB,UAAU,EAAE,iBAAiB,EAAE,UAAU,EAAE,OAAO,EAAE,SAAS,EAAE,WAAW,EAAE,eAAe,EAAE,iBAAiB,EAAE;AACtI,qBAAqB,UAAU,EAAE,iBAAiB,EAAE,UAAU,EAAE,OAAO,EAAE,SAAS,EAAE,UAAU,EAAE,yBAAyB,EAAE,0BAA0B,EAAE,wBAAwB,EAAE,uBAAuB,EAAE;AAC1M,WAAW,0BAA0B,EAAE,4BAA4B,EAAE,eAAe,EAAE,aAAa,EAAE,mBAAmB,EAAE,QAAQ,EAAE,cAAc,EAAE;AACpJ,aAAa,UAAU,EAAE,WAAW,EAAE,yCAAyC,EAAE,kBAAkB,EAAE,kBAAkB,EAAE,UAAU,EAAE;AACrI,qBAAqB,UAAU,EAAE,iBAAiB,EAAE,UAAU,EAAE,UAAU,EAAE,SAAS,EAAE,UAAU,EAAE,wCAAwC,EAAE,eAAe,EAAE,yBAAyB,EAAE","sourcesContent":["/* ── ClauseKit Task Pane Design System ──\n *\n * Single source of truth for the task-pane UI. Loaded by both the Office\n * entry (src/taskpane/index.tsx) and the browser playground\n * (src/playground/playground.tsx) so the pane looks identical in either host.\n */\n:root {\n  --navy: #0E0E12;\n  --navy-700: #2b2b34;\n  --navy-300: #6c6c77;\n  --amber: #F59E0B;\n  --amber-600: #d4870a;\n  --amber-soft: #FEF3C7;\n  --amber-grad: linear-gradient(180deg, #FCC04A 0%, #F59E0B 52%, #E88B05 100%);\n  --amber-glow: inset 0 1px 0 rgba(255,255,255,.35), 0 2px 10px rgba(245,158,11,.4), 0 1px 2px rgba(160,98,0,.45);\n  --bg: #F8F9FA;\n  --surface: #FFFFFF;\n  --user-bubble: #EEF2FF;\n  --text-primary: #111827;\n  --text-secondary: #6B7280;\n  --border: #E5E7EB;\n  --border-strong: #D1D5DB;\n  --destructive: #EF4444;\n  --destructive-soft: #FEF2F2;\n  --fs-header: 16px;\n  --fs-body: 13px;\n  --fs-label: 11px;\n  --pane-pad: 12px;\n  --shadow-card: 0 1px 2px rgba(17,24,39,.06), 0 1px 3px rgba(17,24,39,.05);\n  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;\n  --font-body: 'Inter', system-ui, sans-serif;\n  --font-mono: 'Roboto Mono', monospace;\n}\n* { box-sizing: border-box; }\nhtml, body { margin: 0; padding: 0; height: 100%; -webkit-font-smoothing: antialiased; }\nbody { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); }\n#container { height: 100%; }\n\n/* Pane shell */\n.ck-pane { height: 100%; display: flex; flex-direction: column; }\n\n/* ── Header ── */\n.ck-header {\n  background: linear-gradient(180deg, #08080b 0%, #131318 55%, #232329 100%);\n  color: #fff; height: 52px; display: flex; align-items: center;\n  padding: 0 var(--pane-pad); gap: 10px;\n  border-bottom: 1px solid rgba(255,255,255,.06); flex-shrink: 0;\n}\n.h-mark { width: 28px; height: 28px; border-radius: 7px; background: rgba(255,255,255,.10); display: grid; place-items: center; flex: none; position: relative; border: 1px solid rgba(255,255,255,.14); }\n.h-mark span { font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 2px; }\n.h-mark::after { content:\"\"; position:absolute; left:6px; right:6px; bottom:6px; height:1.5px; background: var(--amber); border-radius:2px; }\n.h-txt { display: flex; flex-direction: column; line-height: 1.15; }\n.h-name { font-family: var(--font-display); font-size: var(--fs-header); font-weight: 600; letter-spacing: -.01em; }\n.h-status { font-size: var(--fs-label); color: rgba(244,246,251,.66); display: flex; align-items: center; gap: 5px; }\n.h-status .live { width: 6px; height: 6px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 2px rgba(52,211,153,.25); }\n.h-actions { margin-left: auto; display: flex; gap: 2px; }\n.ck-icon-btn { width: 30px; height: 30px; border-radius: 6px; display: grid; place-items: center; color: rgba(255,255,255,.8); cursor: pointer; background: none; border: none; }\n.ck-icon-btn:hover { background: rgba(255,255,255,.12); }\n.kebab { display:flex; flex-direction: column; gap: 2.5px; }\n.kebab b { width: 3px; height: 3px; border-radius: 50%; background: currentColor; display: block; }\n\n/* ── Chat scroll area ── */\n.ck-chat { flex: 1; background: var(--bg); padding: var(--pane-pad); display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }\n.ck-daydiv { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: var(--fs-label); }\n.ck-daydiv::before, .ck-daydiv::after { content:\"\"; height:1px; background: var(--border); flex:1; }\n\n/* Message rows */\n.ck-row { display: flex; gap: 8px; }\n.ck-row.user { justify-content: flex-end; }\n.ck-avatar { width: 24px; height: 24px; border-radius: 6px; background: var(--navy); display: grid; place-items: center; flex: none; margin-top: 2px; }\n.ck-avatar span { font-size: 9px; font-weight: 700; color: #fff; letter-spacing: .02em; }\n.ck-bubble { font-size: var(--fs-body); line-height: 1.55; padding: 10px 12px; border-radius: 12px; max-width: 264px; }\n.ck-bubble.user { background: var(--user-bubble); color: var(--navy); border-radius: 12px 12px 4px 12px; }\n.ck-bubble.ai { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); }\n.ck-bubble p { margin: 0; }\n.ck-bubble p + p { margin-top: 8px; }\n.ck-bubble strong { font-weight: 600; }\n.ck-time { font-size: 10px; color: var(--text-secondary); margin-top: 4px; }\n.ck-row.user .ck-time { text-align: right; }\n\n/* Quote block */\n.ck-quote { background: #fafbfc; border: 1px solid var(--border); border-left: 3px solid var(--navy-300); border-radius: 6px; padding: 9px 11px; margin: 10px 0 4px; }\n.q-meta { font-family: var(--font-mono); font-size: 10px; color: var(--text-secondary); letter-spacing: .02em; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }\n.q-meta::before { content:\"\\201C\"; font-family: Georgia, serif; font-size: 16px; line-height: 0; color: var(--navy-300); position: relative; top: 3px; }\n.q-text { font-size: 12px; line-height: 1.6; color: #374151; font-style: italic; }\n.q-text mark { background: var(--amber-soft); font-style: normal; padding: 0 1px; }\n\n/* Citation chip */\n.ck-cite { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 11px; font-weight: 500; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 999px; padding: 4px 10px 4px 8px; cursor: pointer; }\n.ck-cite:hover { background: #e4eafd; }\n.pin { width: 11px; height: 11px; position: relative; flex: none; }\n.pin::before { content:\"\"; position:absolute; inset:0; border:1.5px solid var(--navy); border-radius:50% 50% 50% 0; transform: rotate(-45deg); }\n.cite-arr { margin-left: 1px; color: var(--navy-300); font-size: 10px; }\n\n/* ── Action card ── */\n.ck-action { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--amber); border-radius: 8px; box-shadow: var(--shadow-card); overflow: hidden; }\n.a-head { padding: 11px 12px 0; display: flex; align-items: flex-start; gap: 8px; flex-direction: column; }\n.a-badge { font-family: var(--font-mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--amber-600); background: var(--amber-soft); border-radius: 4px; padding: 3px 6px; }\n.a-title { font-size: 12.5px; font-weight: 600; line-height: 1.35; color: var(--text-primary); }\n.a-body { padding: 9px 12px 0; }\n.a-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.55; margin: 0; }\n.a-error { font-size: 12px; color: var(--destructive); background: var(--destructive-soft); border: 1px solid #fecdca; border-radius: 6px; padding: 7px 9px; margin: 10px 0 0; line-height: 1.45; }\n\n/* Diff */\n.ck-diff { margin: 10px 0 2px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; font-family: var(--font-mono); font-size: 11px; line-height: 1.55; }\n.d-line { padding: 6px 10px 6px 24px; position: relative; }\n.d-del { background: var(--destructive-soft); color: #b42318; }\n.d-del .t { text-decoration: line-through; text-decoration-color: rgba(180,35,24,.5); }\n.d-add { background: #ecfdf3; color: #067647; border-top: 1px solid #d1fadf; }\n.d-line::before { position: absolute; left: 9px; top: 6px; font-weight: 700; }\n.d-del::before { content: \"−\"; color: #d92d20; }\n.d-add::before { content: \"+\"; color: #079455; }\n\n/* Action footer */\n.a-foot { display: flex; gap: 8px; padding: 12px; align-items: center; }\n.a-foot .spacer { flex: 1; }\n.ck-btn { font-size: 13px; font-weight: 500; border-radius: 6px; padding: 8px 14px; cursor: pointer; border: 1px solid transparent; line-height: 1; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; font-family: var(--font-body); transition: background .12s, border-color .12s; }\n.ck-btn.primary { background: var(--amber-grad); color: #3a2900; font-weight: 600; border-color: rgba(150,92,0,.45); box-shadow: var(--amber-glow); }\n.ck-btn.primary:hover { filter: brightness(1.04); }\n.ck-btn.danger-ghost { background: transparent; color: var(--text-secondary); border-color: transparent; }\n.ck-btn.danger-ghost:hover { background: var(--destructive-soft); color: var(--destructive); }\n.ck-btn.applied { background: #ecfdf3; color: #067647; border-color: #d1fadf; cursor: default; }\n.ck-btn.applied:hover { filter: none; }\n.chk { width: 6px; height: 11px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(40deg) translateY(-1px); display: inline-block; }\n\n/* Thinking dots */\n.ck-thinking { display: flex; gap: 8px; align-items: center; }\n.t-bubble { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); padding: 12px 14px; display: flex; gap: 5px; align-items: center; }\n.t-bubble i { width: 6px; height: 6px; border-radius: 50%; background: var(--navy-300); animation: blink 1.2s infinite ease-in-out; font-style: normal; display: block; }\n.t-bubble i:nth-child(2){ animation-delay: .18s; }\n.t-bubble i:nth-child(3){ animation-delay: .36s; }\n@keyframes blink { 0%,60%,100%{ opacity:.28; transform:translateY(0);} 30%{ opacity:1; transform:translateY(-2px);} }\n\n/* ── Empty state ── */\n.ck-empty { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 36px 22px; gap: 0; flex: 1; }\n.e-mark { width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(180deg,#1d1d24 0%,#101015 100%); display: grid; place-items: center; position: relative; box-shadow: 0 8px 22px rgba(0,0,0,.3); border: 1px solid #2e2e36; margin-bottom: 18px; }\n.e-mark span { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; font-family: var(--font-display); }\n.e-mark::after { content:\"\"; position:absolute; left:13px; right:13px; bottom:11px; height:2.5px; background: var(--amber); border-radius:2px; }\n.ck-empty h3 { font-family: var(--font-display); font-size: 15px; font-weight: 600; margin: 0 0 6px; color: var(--text-primary); }\n.e-sub { font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; margin: 0 0 20px; max-width: 30ch; }\n.ck-suggest { display: flex; flex-direction: column; gap: 8px; width: 100%; }\n.s-btn { text-align: left; font-size: 12.5px; color: var(--navy); background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; cursor: pointer; box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 9px; font-family: var(--font-body); }\n.s-btn:hover { border-color: var(--navy-300); background: #fdfdfe; }\n.s-btn .s-ar { margin-left: auto; color: var(--navy-300); font-size: 13px; flex: none; }\n.s-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); flex: none; }\n\n/* ── Privacy note ── */\n.ck-privacy { background: #fff; border-top: 1px solid var(--border); padding: 9px 12px; display: flex; align-items: center; gap: 9px; flex-shrink: 0; }\n.p-shield { width: 22px; height: 24px; flex: none; position: relative; }\n.p-shield::before { content:\"\"; position:absolute; inset:0; background: #eef2ff; border:1.4px solid #dbe3fb; border-radius: 4px 4px 9px 9px / 4px 4px 14px 14px; }\n.p-shield::after { content:\"\"; position:absolute; left:7px; top:8px; width:5px; height:8px; border-right:1.8px solid var(--navy); border-bottom:1.8px solid var(--navy); transform: rotate(40deg); }\n.p-txt { font-size: var(--fs-label); color: var(--text-secondary); line-height: 1.45; margin: 0; }\n.p-txt b { color: var(--text-primary); font-weight: 600; }\n\n/* ── Input area ── */\n.ck-input-wrap { background: var(--surface); border-top: 1px solid var(--border); padding: 10px var(--pane-pad) 8px; flex-shrink: 0; }\n.ck-input { background: #fff; border: 1px solid var(--border-strong); border-radius: 10px; padding: 9px 10px 9px 12px; display: flex; align-items: flex-end; gap: 8px; transition: border-color .12s, box-shadow .12s; }\n.ck-input:focus-within { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(14,14,18,.08); }\n.ck-input textarea { flex: 1; font-size: var(--fs-body); color: var(--text-primary); line-height: 1.5; padding: 1px 0; border: none; outline: none; resize: none; background: transparent; font-family: var(--font-body); min-height: 20px; max-height: 80px; overflow-y: auto; }\n.ck-input textarea::placeholder { color: var(--text-secondary); }\n.ck-send { width: 32px; height: 32px; border-radius: 8px; background: var(--navy); display: grid; place-items: center; flex: none; cursor: pointer; border: none; transition: background .12s; }\n.ck-send:hover { background: var(--navy-700); }\n.ck-send.disabled { background: #c9ced6; cursor: default; pointer-events: none; }\n.send-arrow { width: 13px; height: 13px; position: relative; display: block; }\n.send-arrow::before { content:\"\"; position:absolute; left:5.5px; top:1px; width:2px; height:11px; background:#fff; border-radius:2px; }\n.send-arrow::after { content:\"\"; position:absolute; left:2.5px; top:1px; width:8px; height:8px; border-top:2px solid #fff; border-left:2px solid #fff; transform: rotate(45deg); border-radius:2px 0 0 0; }\n.ck-hint { font-size: var(--fs-label); color: var(--text-secondary); margin-top: 7px; display: flex; align-items: center; gap: 5px; padding: 0 2px; }\n.lock-icon { width: 9px; height: 9px; border: 1.4px solid var(--text-secondary); border-radius: 2px; position: relative; flex: none; }\n.lock-icon::before { content:\"\"; position:absolute; left:1.5px; top:-3.5px; width:5px; height:5px; border:1.4px solid var(--text-secondary); border-bottom:0; border-radius:3px 3px 0 0; }\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2530,11 +2778,20 @@ module.exports = styleTagTransform;
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
-/* harmony import */ var _taskpane_components_App__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../taskpane/components/App */ "./src/taskpane/components/App.tsx");
-/* harmony import */ var _fixtures_lease__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../fixtures/lease */ "./src/fixtures/lease/index.ts");
-/* harmony import */ var _styles_clausekit_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../styles/clausekit.css */ "./src/styles/clausekit.css");
-/* harmony import */ var _playground_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./playground.css */ "./src/playground/playground.css");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
+/* harmony import */ var _taskpane_components_App__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../taskpane/components/App */ "./src/taskpane/components/App.tsx");
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../services */ "./src/services/index.ts");
+/* harmony import */ var _services_mock_documentModel__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../services/mock/documentModel */ "./src/services/mock/documentModel.ts");
+/* harmony import */ var _services_mock_MockDocumentService__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../services/mock/MockDocumentService */ "./src/services/mock/MockDocumentService.ts");
+/* harmony import */ var _fixtures_lease__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../fixtures/lease */ "./src/fixtures/lease/index.ts");
+/* harmony import */ var _styles_clausekit_css__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../styles/clausekit.css */ "./src/styles/clausekit.css");
+/* harmony import */ var _playground_css__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./playground.css */ "./src/playground/playground.css");
+
+
+
+
 
 
 
@@ -2544,19 +2801,70 @@ __webpack_require__.r(__webpack_exports__);
 /* global document */
 /**
  * Browser playground: the real task pane (reused, not reimplemented) running
- * next to the seeded lease rendered as a document. No Office host — this entry
- * mounts React directly rather than waiting on Office.onReady. Wiring the pane
- * to a DocumentService is step 4b; here it stays in its current mocked state.
+ * next to the seeded lease, now wired to a live MockDocumentService. Applying a
+ * redline from the pane mutates the shared model; the canvas subscribes and
+ * re-renders the tracked change. No Office host — React mounts directly.
  */
+const model = new _services_mock_documentModel__WEBPACK_IMPORTED_MODULE_5__.DocumentModel();
+const documentService = new _services_mock_MockDocumentService__WEBPACK_IMPORTED_MODULE_6__.MockDocumentService(model);
+function useWorkingClauses() {
+    return (0,react__WEBPACK_IMPORTED_MODULE_1__.useSyncExternalStore)(model.subscribe, model.getSnapshot, model.getSnapshot);
+}
 function LeaseDocument() {
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("article", { className: "pg-doc", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", { className: "pg-doc-title", children: _fixtures_lease__WEBPACK_IMPORTED_MODULE_3__.LEASE_TITLE }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "pg-recitals", children: _fixtures_lease__WEBPACK_IMPORTED_MODULE_3__.leaseRecitals }), _fixtures_lease__WEBPACK_IMPORTED_MODULE_3__.leaseClauses.map((clause) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("section", { className: "pg-clause", id: `clause-${clause.ref}`, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", { className: "pg-clause-head", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "pg-ref", children: clause.ref }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { children: clause.heading })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "pg-clause-text", children: clause.text })] }, clause.ref)))] }));
+    const clauses = useWorkingClauses();
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("article", { className: "pg-doc", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", { className: "pg-doc-title", children: _fixtures_lease__WEBPACK_IMPORTED_MODULE_7__.LEASE_TITLE }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "pg-recitals", children: _fixtures_lease__WEBPACK_IMPORTED_MODULE_7__.leaseRecitals }), clauses.map((clause) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("section", { className: "pg-clause", id: (0,_services_mock_documentModel__WEBPACK_IMPORTED_MODULE_5__.clauseDomId)(clause.ref), children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", { className: "pg-clause-head", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "pg-ref", children: clause.ref }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { children: clause.heading })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "pg-clause-text", children: clause.segments.map((seg, i) => seg.kind === "text" ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { children: seg.text }, i)) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("del", { className: "pg-del", children: seg.original }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("ins", { className: "pg-ins", children: seg.proposed })] }, i))) })] }, clause.ref)))] }));
 }
 function Playground() {
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "pg-root", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "pg-doc-pane", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(LeaseDocument, {}) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "pg-pane-host", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_taskpane_components_App__WEBPACK_IMPORTED_MODULE_2__["default"], { title: "ClauseKit" }) })] }));
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "pg-root", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "pg-doc-pane", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(LeaseDocument, {}) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "pg-pane-host", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_services__WEBPACK_IMPORTED_MODULE_4__.DocumentServiceProvider, { service: documentService, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_taskpane_components_App__WEBPACK_IMPORTED_MODULE_3__["default"], { title: "ClauseKit" }) }) })] }));
 }
 const rootElement = document.getElementById("root");
 if (rootElement) {
-    (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(rootElement).render((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(Playground, {}));
+    (0,react_dom_client__WEBPACK_IMPORTED_MODULE_2__.createRoot)(rootElement).render((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(Playground, {}));
+}
+
+
+/***/ },
+
+/***/ "./src/services/DocumentServiceContext.tsx"
+/*!*************************************************!*\
+  !*** ./src/services/DocumentServiceContext.tsx ***!
+  \*************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DocumentServiceProvider: () => (/* binding */ DocumentServiceProvider),
+/* harmony export */   useDocumentService: () => (/* binding */ useDocumentService)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+
+
+/**
+ * React context carrying the active {@link DocumentService}. Defaults to `null`
+ * so {@link useDocumentService} can detect use outside a provider. The concrete
+ * implementation (mock or real Word) is injected by whoever mounts the tree —
+ * the playground supplies the mock, the add-in supplies the Word one.
+ */
+const DocumentServiceContext = (0,react__WEBPACK_IMPORTED_MODULE_1__.createContext)(null);
+/** Provides a {@link DocumentService} to everything beneath it. */
+function DocumentServiceProvider({ service, children }) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(DocumentServiceContext.Provider, { value: service, children: children });
+}
+/**
+ * Consumes the injected {@link DocumentService}.
+ *
+ * @throws if called outside a {@link DocumentServiceProvider}, so a missing
+ * implementation fails loudly at the point of use rather than silently no-op'ing.
+ */
+function useDocumentService() {
+    const service = (0,react__WEBPACK_IMPORTED_MODULE_1__.useContext)(DocumentServiceContext);
+    if (!service) {
+        throw new Error("useDocumentService must be used within a <DocumentServiceProvider>. " +
+            "Wrap the app in a provider with a mock or Word DocumentService.");
+    }
+    return service;
 }
 
 
@@ -2575,14 +2883,59 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services */ "./src/services/index.ts");
+/* harmony import */ var _fixtures_lease__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../fixtures/lease */ "./src/fixtures/lease/index.ts");
 
 
+
+
+/**
+ * Demo edit built from the §5 contested-clause sidecar: lower the 5% compounding
+ * escalator (the landlord-opening rung) to the market 3% rung. Replaces the old
+ * hardcoded MSA liability content so the card matches the seeded lease.
+ */
+const escalation = (0,_fixtures_lease__WEBPACK_IMPORTED_MODULE_3__.getContestedClause)("§5");
+const demoEdit = {
+    clauseRef: "§5",
+    originalText: escalation?.fallbackLadder[0].language ?? "",
+    proposedText: escalation?.fallbackLadder[1].language ?? "",
+    rationale: escalation?.fallbackLadder[1].rationale ?? "",
+    severity: "high",
+};
 function ActionCard() {
-    const [applied, setApplied] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+    const service = (0,_services__WEBPACK_IMPORTED_MODULE_2__.useDocumentService)();
+    const [state, setState] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("idle");
+    const [errorMsg, setErrorMsg] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
     const [dismissed, setDismissed] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
     if (dismissed)
         return null;
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-action", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "a-head", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "a-badge", children: "Suggested edit" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "a-title", children: "Raise the liability cap to a market-standard floor" })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "a-body", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "a-desc", children: "Adds a 2\u00D7 fee floor so a low-revenue year doesn't artificially compress your exposure ceiling." }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-diff", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "d-line d-del", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "t", children: "\u2026shall not exceed the total fees paid in the twelve (12) months preceding the claim." }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "d-line d-add", children: "\u2026shall not exceed the greater of (a) fees paid in the twelve (12) months, or (b) two times (2\u00D7) such fees\u2026" })] })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "a-foot", children: [applied ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", { className: "ck-btn applied", disabled: true, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "chk" }), " Applied to document"] })) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", { className: "ck-btn primary", onClick: () => setApplied(true), children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "chk" }), " Apply Change"] })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "spacer" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: "ck-btn danger-ghost", onClick: () => setDismissed(true), children: "Dismiss" })] })] }));
+    const handleApply = async () => {
+        setState("applying");
+        setErrorMsg("");
+        try {
+            const result = await service.applyTrackedChange(demoEdit);
+            switch (result.status) {
+                case "applied":
+                    setState("applied");
+                    await service.scrollTo({ clauseRef: result.clauseRef ?? demoEdit.clauseRef });
+                    break;
+                case "not-found":
+                    setState("error");
+                    setErrorMsg(`Couldn't find the original text in ${demoEdit.clauseRef} to redline.`);
+                    break;
+                case "ambiguous":
+                    setState("error");
+                    setErrorMsg(`Found ${result.matchCount} matches in ${demoEdit.clauseRef}; can't redline unambiguously.`);
+                    break;
+            }
+        }
+        catch (err) {
+            setState("error");
+            setErrorMsg(err instanceof Error ? err.message : "Failed to apply the change.");
+        }
+    };
+    const applyLabel = state === "applying" ? "Applying…" : state === "error" ? "Retry" : "Apply Change";
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-action", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "a-head", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "a-badge", children: "Suggested edit" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "a-title", children: "Lower the rent escalation to a market 3%" })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "a-body", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "a-desc", children: demoEdit.rationale }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-diff", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "d-line d-del", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "t", children: demoEdit.originalText }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "d-line d-add", children: demoEdit.proposedText })] }), state === "error" && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "a-error", children: errorMsg })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "a-foot", children: [state === "applied" ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", { className: "ck-btn applied", disabled: true, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "chk" }), " Applied to document"] })) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", { className: "ck-btn primary", onClick: handleApply, disabled: state === "applying", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "chk" }), " ", applyLabel] })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "spacer" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: "ck-btn danger-ghost", onClick: () => setDismissed(true), children: "Dismiss" })] })] }));
 }
 
 
