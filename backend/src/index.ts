@@ -21,7 +21,7 @@ import Anthropic from "@anthropic-ai/sdk";
  */
 
 const PORT = Number(process.env.PORT) || 4000;
-const MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-6";
+const MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-4-5";
 const MAX_TOKENS = 600;
 
 if (!process.env.ANTHROPIC_API_KEY) {
