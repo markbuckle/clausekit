@@ -37,37 +37,191 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ },
 
-/***/ "./src/services/office/StubDocumentService.ts"
-/*!****************************************************!*\
-  !*** ./src/services/office/StubDocumentService.ts ***!
-  \****************************************************/
+/***/ "./src/services/office/OfficeDocumentService.ts"
+/*!******************************************************!*\
+  !*** ./src/services/office/OfficeDocumentService.ts ***!
+  \******************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   StubDocumentService: () => (/* binding */ StubDocumentService)
+/* harmony export */   OfficeDocumentService: () => (/* binding */ OfficeDocumentService)
 /* harmony export */ });
-const NOT_IMPLEMENTED = "ClauseKit can't read or edit the Word document yet — the live Word integration arrives in step 7.";
+/* global Word */
 /**
- * Placeholder DocumentService so the task pane still mounts inside real Word
- * before the Word-backed implementation exists. Read-of-nothing methods are
- * safe no-ops; the mutating/locating methods fail loudly so the UI's error
- * path is exercised rather than silently doing nothing. Replaced by
- * OfficeDocumentService in step 7.
+ * Real Word implementation of the DocumentService seam, via Word.run / Office.js.
+ * Only the Office entry injects this; the playground keeps the mock. Edits land
+ * as NATIVE Word tracked changes.
  */
-class StubDocumentService {
+// Word's body.search caps the query at ~255 chars and is finicky with some
+// punctuation. Above this (or when search unexpectedly finds nothing) we fall
+// back to locating the span in the document's actual text.
+const SEARCH_MAX = 255;
+const ANCHOR_MAX = 200;
+const CONTEXT_CHARS = 40;
+const SEARCH_OPTS = {
+  matchCase: true,
+  ignorePunct: false
+};
+class OfficeDocumentService {
   async getFullText() {
-    throw new Error(NOT_IMPLEMENTED);
+    return Word.run(async context => {
+      const body = context.document.body;
+      body.load("text");
+      await context.sync();
+      return body.text;
+    });
   }
   async getSelection() {
-    return null;
+    return Word.run(async context => {
+      const selection = context.document.getSelection();
+      selection.load("text");
+      const paragraphs = selection.paragraphs;
+      paragraphs.load("items/text");
+      await context.sync();
+      const text = selection.text ?? "";
+      if (!text.trim()) return null;
+      // Pull surrounding context from the paragraph(s) the selection sits in.
+      let contextBefore = "";
+      let contextAfter = "";
+      const paraText = paragraphs.items.map(p => p.text).join(" ");
+      const at = paraText.indexOf(text);
+      if (at !== -1) {
+        contextBefore = paraText.slice(Math.max(0, at - CONTEXT_CHARS), at);
+        contextAfter = paraText.slice(at + text.length, at + text.length + CONTEXT_CHARS);
+      }
+      return {
+        text,
+        contextBefore,
+        contextAfter
+      };
+    });
   }
-  async applyTrackedChange(_edit) {
-    throw new Error(NOT_IMPLEMENTED);
+  async applyTrackedChange(edit) {
+    return Word.run(async context => {
+      // Make the replacement a real, reviewable tracked change.
+      context.document.changeTrackingMode = Word.ChangeTrackingMode.trackAll;
+      const located = await locate(context, edit.originalText);
+      if (located.status === "none") {
+        return {
+          status: "not-found",
+          searchedText: edit.originalText
+        };
+      }
+      if (located.status === "many") {
+        return {
+          status: "ambiguous",
+          matchCount: located.count
+        };
+      }
+      located.range.insertText(edit.proposedText, Word.InsertLocation.replace);
+      await context.sync();
+      return {
+        status: "applied",
+        clauseRef: edit.clauseRef
+      };
+    });
   }
-  async scrollTo(_target) {
-    return false;
+  async scrollTo(target) {
+    return Word.run(async context => {
+      // For a clause ref, target the heading ("§5."); for text, the span itself.
+      const query = "clauseRef" in target ? `${target.clauseRef}.` : target.text;
+      const range = await findFirst(context, query);
+      if (!range) return false;
+      // Selecting a range brings it into view.
+      range.select();
+      await context.sync();
+      return true;
+    });
   }
+}
+/**
+ * Locate `needle` and report whether it matches exactly once. Primary path is
+ * body.search (gives a real range cheaply); falls back to the document's actual
+ * text for spans over the search cap or that search can't match.
+ */
+async function locate(context, needle) {
+  const body = context.document.body;
+  if (needle.length <= SEARCH_MAX) {
+    const results = body.search(needle, SEARCH_OPTS);
+    results.load("items");
+    await context.sync();
+    if (results.items.length === 1) return {
+      status: "one",
+      range: results.items[0]
+    };
+    if (results.items.length > 1) return {
+      status: "many",
+      count: results.items.length
+    };
+    // 0 results — could be a punctuation quirk; fall through to text-based locate.
+  }
+  body.load("text");
+  await context.sync();
+  const text = body.text;
+  const first = text.indexOf(needle);
+  if (first === -1) return {
+    status: "none"
+  };
+  // Count occurrences to detect ambiguity from the real text (no search quirks).
+  let count = 0;
+  for (let i = first; i !== -1; i = text.indexOf(needle, i + needle.length)) count++;
+  if (count > 1) return {
+    status: "many",
+    count
+  };
+  // Exactly one occurrence: resolve it to a Range via prefix/suffix anchors that
+  // are short enough for body.search, then expand between them.
+  const range = await resolveByAnchors(context, needle);
+  // If we can't safely resolve a range, treat as not-found rather than risk
+  // editing the wrong span.
+  return range ? {
+    status: "one",
+    range
+  } : {
+    status: "none"
+  };
+}
+/** First match range for `needle` (uniqueness not required) — used for scrolling. */
+async function findFirst(context, needle) {
+  const body = context.document.body;
+  const query = needle.length <= SEARCH_MAX ? needle : clampAnchor(needle, "start");
+  const results = body.search(query, SEARCH_OPTS);
+  results.load("items");
+  await context.sync();
+  return results.items.length > 0 ? results.items[0] : null;
+}
+/**
+ * Build a Range spanning `needle` by searching for its start and end anchors
+ * (each within the search cap) and expanding between them. Verifies the expanded
+ * range's text matches before returning, so a mismatch resolves to null.
+ */
+async function resolveByAnchors(context, needle) {
+  const body = context.document.body;
+  const prefix = clampAnchor(needle, "start");
+  const suffix = clampAnchor(needle, "end");
+  const pre = body.search(prefix, SEARCH_OPTS);
+  const suf = body.search(suffix, SEARCH_OPTS);
+  pre.load("items");
+  suf.load("items");
+  await context.sync();
+  if (pre.items.length !== 1 || suf.items.length !== 1) return null;
+  const full = pre.items[0].expandTo(suf.items[0]);
+  full.load("text");
+  await context.sync();
+  return full.text === needle ? full : null;
+}
+/** A start/end slice of `s` no longer than ANCHOR_MAX, cut at a word boundary. */
+function clampAnchor(s, which) {
+  if (s.length <= ANCHOR_MAX) return s;
+  if (which === "start") {
+    let cut = s.lastIndexOf(" ", ANCHOR_MAX);
+    if (cut < ANCHOR_MAX / 2) cut = ANCHOR_MAX;
+    return s.slice(0, cut);
+  }
+  let cut = s.indexOf(" ", s.length - ANCHOR_MAX);
+  if (cut === -1 || cut > s.length - ANCHOR_MAX / 2) cut = s.length - ANCHOR_MAX;
+  return s.slice(cut + 1);
 }
 
 /***/ },
@@ -2561,7 +2715,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 /* harmony import */ var _components_App__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/App */ "./src/taskpane/components/App.tsx");
 /* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services */ "./src/services/index.ts");
-/* harmony import */ var _services_office_StubDocumentService__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../services/office/StubDocumentService */ "./src/services/office/StubDocumentService.ts");
+/* harmony import */ var _services_office_OfficeDocumentService__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../services/office/OfficeDocumentService */ "./src/services/office/OfficeDocumentService.ts");
 /* harmony import */ var _styles_clausekit_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../styles/clausekit.css */ "./src/styles/clausekit.css");
 
 
@@ -2571,9 +2725,9 @@ __webpack_require__.r(__webpack_exports__);
 
 /* global document, Office, module, require, HTMLElement */
 const title = "ClauseKit";
-// The Word-backed DocumentService arrives in step 7; until then a stub keeps the
-// pane mountable (useDocumentService throws without a provider).
-const documentService = new _services_office_StubDocumentService__WEBPACK_IMPORTED_MODULE_4__.StubDocumentService();
+// Real Word integration: read/edit the live document via Word.run. The playground
+// injects the mock instead; the StubDocumentService remains for pane-only testing.
+const documentService = new _services_office_OfficeDocumentService__WEBPACK_IMPORTED_MODULE_4__.OfficeDocumentService();
 const rootElement = document.getElementById("container");
 const root = rootElement ? (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(rootElement) : undefined;
 Office.onReady(() => {

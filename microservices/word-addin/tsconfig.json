@@ -24,6 +24,7 @@
   "exclude": [
     "node_modules",
     "dist",
+    "scripts",
     "webpack.config.js",
     "babel.config.json"
   ]

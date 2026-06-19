@@ -1,16 +1,16 @@
 import { createRoot } from "react-dom/client";
 import App from "./components/App";
 import { DocumentServiceProvider } from "../services";
-import { StubDocumentService } from "../services/office/StubDocumentService";
+import { OfficeDocumentService } from "../services/office/OfficeDocumentService";
 import "../styles/clausekit.css";
 
 /* global document, Office, module, require, HTMLElement */
 
 const title = "ClauseKit";
 
-// The Word-backed DocumentService arrives in step 7; until then a stub keeps the
-// pane mountable (useDocumentService throws without a provider).
-const documentService = new StubDocumentService();
+// Real Word integration: read/edit the live document via Word.run. The playground
+// injects the mock instead; the StubDocumentService remains for pane-only testing.
+const documentService = new OfficeDocumentService();
 
 const rootElement: HTMLElement | null = document.getElementById("container");
 const root = rootElement ? createRoot(rootElement) : undefined;
