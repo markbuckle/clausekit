@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
+import { useDocumentService } from "../../services";
 import type { ChatMessage } from "./useChat";
+import ActionCard from "./ActionCard";
 
 interface ChatPaneProps {
   messages: ChatMessage[];
@@ -30,10 +32,16 @@ function renderContent(text: string) {
 
 export default function ChatPane({ messages, loading, error, onRetry }: ChatPaneProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const service = useDocumentService();
 
   useEffect(() => {
     if (ref.current) ref.current.scrollTop = ref.current.scrollHeight;
   }, [messages, loading, error]);
+
+  // Jump to a cited clause; no-op gracefully if it can't be located.
+  const handleJump = (clauseRef: string) => {
+    void service.scrollTo({ clauseRef });
+  };
 
   return (
     <div className="ck-chat" ref={ref}>
@@ -56,6 +64,22 @@ export default function ChatPane({ messages, loading, error, onRetry }: ChatPane
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div className="ck-bubble ai">{renderContent(m.content)}</div>
+              {m.citations && m.citations.length > 0 && (
+                <div className="ck-cites">
+                  {m.citations.map((ref) => (
+                    <button key={ref} className="ck-cite" onClick={() => handleJump(ref)}>
+                      <span className="pin" />
+                      Jump to {ref}
+                      <span className="cite-arr">›</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+              {m.edit && (
+                <div className="ck-action-wrap">
+                  <ActionCard edit={m.edit} />
+                </div>
+              )}
               <div className="ck-time">Just now</div>
             </div>
           </div>

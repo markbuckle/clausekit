@@ -1,10 +1,15 @@
 import { useCallback, useState } from "react";
 import { useDocumentService } from "../../services";
+import type { SuggestedEdit } from "../../services";
 import { API_BASE_URL } from "../../config";
 
 export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
+  /** § refs the answer relies on (assistant turns only). */
+  citations?: string[];
+  /** A concrete redline, present only when the model proposed one. */
+  edit?: SuggestedEdit;
 }
 
 /**
@@ -25,7 +30,7 @@ export interface UseChat {
 /**
  * Owns the live chat: the message list, loading/error state, and the call to
  * the backend's /api/ask, grounded in the document via the DocumentService seam.
- * Prose Q&A only — structured edit cards are step 6.
+ * Assistant turns carry the structured citations and optional redline edit.
  */
 export function useChat(): UseChat {
   const service = useDocumentService();
@@ -51,11 +56,20 @@ export function useChat(): UseChat {
         if (!res.ok) {
           throw new Error(`The assistant is unavailable (error ${res.status}).`);
         }
-        const data = (await res.json()) as { answer?: string };
+        const data = (await res.json()) as {
+          answer?: string;
+          citations?: string[];
+          edit?: SuggestedEdit;
+        };
         const answer = (data.answer ?? "").trim();
         setMessages((prev) => [
           ...prev,
-          { role: "assistant", content: answer || "(The assistant returned an empty answer.)" },
+          {
+            role: "assistant",
+            content: answer || "(The assistant returned an empty answer.)",
+            citations: data.citations,
+            edit: data.edit,
+          },
         ]);
       } catch (e) {
         setError(e instanceof Error ? e.message : "Couldn't reach the assistant.");
