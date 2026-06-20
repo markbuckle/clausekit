@@ -33,6 +33,13 @@ const PORT = Number(process.env.PORT) || 4000;
 const MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-4-5";
 const MAX_TOKENS = 1024;
 
+// Negotiation Simulator runs on Sonnet — the sharpest-reasoning task in the
+// product (multi-perspective role-play + verbatim anchors), and where prompt
+// caching re-engages. Swappable via env (bump to claude-opus-4-8 if quality needs it).
+const NEGOTIATE_MODEL = process.env.NEGOTIATE_MODEL || "claude-sonnet-4-6";
+const NEGOTIATE_MAX_TOKENS = 8000;
+const MAX_TERMS = 6;
+
 if (!process.env.ANTHROPIC_API_KEY) {
   console.error("Missing ANTHROPIC_API_KEY. Set it in backend/.env (see .env.example).");
   process.exit(1);
@@ -48,6 +55,30 @@ interface SuggestedEdit {
   proposedText: string;
   rationale: string;
   severity: Severity;
+}
+
+type Side = "tenant" | "landlord";
+
+/** One position on the user's fallback ladder (ideal → market → floor). */
+interface LadderRung {
+  tier: string;
+  proposedText: string;
+  rationale: string;
+}
+
+/** The opposing-counsel simulation for a term. */
+interface Counterparty {
+  predictedCounter: string;
+  argument: string;
+}
+
+/** One off-market term analyzed for the negotiation brief. */
+interface AnalyzedTerm {
+  clauseRef: string;
+  currentText: string;
+  favoredParty: string;
+  yourLadder: LadderRung[];
+  counterparty: Counterparty;
 }
 
 // Stable system prompt — no dynamic content, so it stays part of the cached prefix.
@@ -110,6 +141,84 @@ const REVIEW_TOOL: Anthropic.Tool = {
   },
 };
 
+// Stable system prompt for the Negotiation Simulator — no dynamic content (the
+// side rides in the user message), so it stays part of the cached prefix.
+const NEGOTIATE_SYSTEM_PROMPT = `You are ClauseKit's negotiation strategist. You represent ONE side of a commercial contract negotiation — the side is given in the user's message — and you prepare a negotiation brief.
+
+Your job: identify the terms in the contract that are off-market or one-sided AGAINST the side you represent, and for each, build a negotiation plan. Identify the off-market terms yourself from the contract — do not assume a fixed list. Focus on the most material ones; include at most ${MAX_TERMS}.
+
+For each term provide:
+- clauseRef: the section reference (e.g. "§5").
+- currentText: the EXACT off-market language from the contract, copied verbatim character-for-character (including punctuation) — the minimal contiguous span a redline would replace. It MUST appear verbatim in the contract.
+- favoredParty: which side the current language favors (usually the side you do NOT represent).
+- yourLadder: three positions ordered from your side — (1) tier "ideal": your aggressive but defensible opening ask; (2) tier "market": the reasonable, market-standard middle; (3) tier "floor": your walk-away minimum you can still live with. Each rung's proposedText is redline language that cleanly and grammatically replaces currentText (a drop-in substitute). rationale is one line.
+- counterparty: simulate opposing counsel. predictedCounter is how the other side most likely responds to your redline; argument is the reasoning they would give.
+
+Judge what is off-market and what is market-standard using your general knowledge of commercial and legal norms. Keep comparisons qualitative (e.g. "escalations are typically 2–3%"); do not fabricate statistics, datasets, or named sources.
+
+Respond by calling the provide_negotiation_brief tool.`;
+
+const NEGOTIATE_TOOL: Anthropic.Tool = {
+  name: "provide_negotiation_brief",
+  description:
+    "Return a negotiation brief: the off-market terms, a fallback ladder from the represented side, and predicted opposing-counsel pushback for each.",
+  input_schema: {
+    type: "object",
+    properties: {
+      terms: {
+        type: "array",
+        description: `The off-market or one-sided terms to negotiate, most material first. At most ${MAX_TERMS}.`,
+        items: {
+          type: "object",
+          properties: {
+            clauseRef: { type: "string", description: 'Section reference, e.g. "§5".' },
+            currentText: {
+              type: "string",
+              description:
+                "EXACT verbatim substring from the contract — the off-market language a redline will replace. Minimal contiguous span, character-for-character.",
+            },
+            favoredParty: {
+              type: "string",
+              enum: ["tenant", "landlord"],
+              description: "Which side the current language favors.",
+            },
+            yourLadder: {
+              type: "array",
+              description: "Ordered positions from the represented side: ideal ask, market middle, walk-away floor.",
+              items: {
+                type: "object",
+                properties: {
+                  tier: { type: "string", enum: ["ideal", "market", "floor"] },
+                  proposedText: {
+                    type: "string",
+                    description: "Redline language that cleanly replaces currentText (drop-in, grammatically consistent).",
+                  },
+                  rationale: { type: "string", description: "One line on why this position." },
+                },
+                required: ["tier", "proposedText", "rationale"],
+              },
+            },
+            counterparty: {
+              type: "object",
+              description: "Opposing-counsel simulation.",
+              properties: {
+                predictedCounter: {
+                  type: "string",
+                  description: "How the other side most likely responds to the redline.",
+                },
+                argument: { type: "string", description: "The reasoning the other side would give." },
+              },
+              required: ["predictedCounter", "argument"],
+            },
+          },
+          required: ["clauseRef", "currentText", "favoredParty", "yourLadder", "counterparty"],
+        },
+      },
+    },
+    required: ["terms"],
+  },
+};
+
 /** The real section refs present in the document, e.g. {"§1",…,"§20"}. */
 function documentRefs(documentText: string): Set<string> {
   const refs = new Set<string>();
@@ -141,6 +250,70 @@ function validateEdit(raw: unknown, documentText: string): SuggestedEdit | null 
     return null;
   }
   return { clauseRef, originalText, proposedText, rationale, severity };
+}
+
+function isString(v: unknown): v is string {
+  return typeof v === "string";
+}
+
+/** Validate a fallback ladder; keeps only well-formed rungs. */
+function validateLadder(raw: unknown): LadderRung[] {
+  if (!Array.isArray(raw)) return [];
+  const rungs: LadderRung[] = [];
+  for (const entry of raw) {
+    if (!entry || typeof entry !== "object") continue;
+    const r = entry as Record<string, unknown>;
+    if (isString(r.tier) && isString(r.proposedText) && r.proposedText.length > 0 && isString(r.rationale)) {
+      rungs.push({ tier: r.tier, proposedText: r.proposedText, rationale: r.rationale });
+    }
+  }
+  return rungs;
+}
+
+function validateCounterparty(raw: unknown): Counterparty | null {
+  if (!raw || typeof raw !== "object") return null;
+  const c = raw as Record<string, unknown>;
+  if (isString(c.predictedCounter) && isString(c.argument)) {
+    return { predictedCounter: c.predictedCounter, argument: c.argument };
+  }
+  return null;
+}
+
+/**
+ * Validate the negotiation terms. Same verbatim guarantee as 6a: a term's
+ * currentText must be an EXACT substring of the document, else it's dropped, so
+ * a rung can always locate what it replaces. Also requires a non-empty ladder
+ * and a counterparty. Caps at MAX_TERMS.
+ */
+function validateTerms(raw: unknown, documentText: string): AnalyzedTerm[] {
+  if (!Array.isArray(raw)) return [];
+  const terms: AnalyzedTerm[] = [];
+  for (const entry of raw) {
+    if (!entry || typeof entry !== "object") continue;
+    const t = entry as Record<string, unknown>;
+    if (!isString(t.clauseRef) || !isString(t.currentText)) continue;
+
+    if (t.currentText.length === 0 || !documentText.includes(t.currentText)) {
+      console.log(`[negotiate] dropped term: currentText is not a verbatim substring (clauseRef=${t.clauseRef})`);
+      continue;
+    }
+
+    const yourLadder = validateLadder(t.yourLadder);
+    if (yourLadder.length === 0) continue;
+
+    const counterparty = validateCounterparty(t.counterparty);
+    if (!counterparty) continue;
+
+    terms.push({
+      clauseRef: t.clauseRef,
+      currentText: t.currentText,
+      favoredParty: isString(t.favoredParty) ? t.favoredParty : "",
+      yourLadder,
+      counterparty,
+    });
+    if (terms.length >= MAX_TERMS) break;
+  }
+  return terms;
 }
 
 type HistoryTurn = { role: "user" | "assistant"; content: string };
@@ -257,6 +430,68 @@ app.post("/api/ask", async (req, res) => {
     const status = err instanceof Anthropic.APIError ? err.status ?? 502 : 500;
     console.error("[ask] error:", err instanceof Error ? err.message : err);
     return res.status(status).json({ error: "Failed to get an answer from the model." });
+  }
+});
+
+app.post("/api/negotiate", async (req, res) => {
+  const body = (req.body ?? {}) as { documentText?: unknown; side?: unknown };
+
+  if (typeof body.documentText !== "string" || !body.documentText.trim()) {
+    return res.status(400).json({ error: "documentText is required" });
+  }
+  if (body.side !== "tenant" && body.side !== "landlord") {
+    return res.status(400).json({ error: 'side must be "tenant" or "landlord"' });
+  }
+  const documentText = body.documentText;
+  const side: Side = body.side;
+
+  try {
+    const response = await anthropic.messages.create({
+      model: NEGOTIATE_MODEL,
+      max_tokens: NEGOTIATE_MAX_TOKENS,
+      // Tool definition + system prompt + contract form the cacheable prefix
+      // (caching re-engages on Sonnet); only the per-request side rides in the
+      // message below, after the breakpoint.
+      tools: [NEGOTIATE_TOOL],
+      tool_choice: { type: "tool", name: NEGOTIATE_TOOL.name },
+      system: [
+        { type: "text", text: NEGOTIATE_SYSTEM_PROMPT },
+        {
+          type: "text",
+          text: `Contract under review:\n\n${documentText}`,
+          cache_control: { type: "ephemeral" },
+        },
+      ],
+      messages: [
+        {
+          role: "user",
+          content: `Represent the ${side}. Identify the terms in the contract above that are off-market or one-sided against the ${side}, and produce the negotiation brief.`,
+        },
+      ],
+    });
+
+    const toolUse = response.content.find(
+      (b): b is Anthropic.ToolUseBlock => b.type === "tool_use" && b.name === NEGOTIATE_TOOL.name
+    );
+
+    let terms: AnalyzedTerm[] = [];
+    if (toolUse && toolUse.input && typeof toolUse.input === "object") {
+      terms = validateTerms((toolUse.input as Record<string, unknown>).terms, documentText);
+    }
+
+    const u = response.usage;
+    console.log(
+      `[negotiate] model=${NEGOTIATE_MODEL} side=${side} input=${u.input_tokens} ` +
+        `cache_creation=${u.cache_creation_input_tokens ?? 0} ` +
+        `cache_read=${u.cache_read_input_tokens ?? 0} output=${u.output_tokens} ` +
+        `terms=${terms.length}`
+    );
+
+    return res.json({ side, terms });
+  } catch (err) {
+    const status = err instanceof Anthropic.APIError ? err.status ?? 502 : 500;
+    console.error("[negotiate] error:", err instanceof Error ? err.message : err);
+    return res.status(status).json({ error: "Failed to build the negotiation brief." });
   }
 });
 
