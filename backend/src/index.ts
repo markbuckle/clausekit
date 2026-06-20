@@ -36,7 +36,8 @@ const MAX_TOKENS = 1024;
 // Negotiation Simulator runs on Sonnet — the sharpest-reasoning task in the
 // product (multi-perspective role-play + verbatim anchors), and where prompt
 // caching re-engages. Swappable via env (bump to claude-opus-4-8 if quality needs it).
-const NEGOTIATE_MODEL = process.env.NEGOTIATE_MODEL || "claude-sonnet-4-6";
+// const NEGOTIATE_MODEL = process.env.NEGOTIATE_MODEL || "claude-sonnet-4-6";
+const NEGOTIATE_MODEL = process.env.NEGOTIATE_MODEL || "claude-haiku-4-5";
 const NEGOTIATE_MAX_TOKENS = 8000;
 const MAX_TERMS = 6;
 
