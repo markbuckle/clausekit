@@ -78,11 +78,6 @@ module.exports = async (env, options) => {
         template: "./src/playground/playground.html",
         chunks: ["polyfill", "playground", "react"],
       }),
-      new HtmlWebpackPlugin({
-        filename: "commands.html",
-        template: "./src/commands/commands.html",
-        chunks: [],
-      }),
       new CopyWebpackPlugin({
         patterns: [
           {

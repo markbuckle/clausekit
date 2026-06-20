@@ -15,12 +15,22 @@ const documentService = new OfficeDocumentService();
 const rootElement: HTMLElement | null = document.getElementById("container");
 const root = rootElement ? createRoot(rootElement) : undefined;
 
-Office.onReady(() => {
+Office.onReady((info) => {
   root?.render(
     <DocumentServiceProvider service={documentService}>
       <App title={title} />
     </DocumentServiceProvider>
   );
+
+  // After the user opens ClauseKit once, keep it open on this document — it
+  // re-opens automatically on subsequent opens. Requires the shared runtime
+  // (declared in the manifest); guarded to Word and to API availability so it's
+  // a safe no-op elsewhere (e.g. if the shared runtime isn't present).
+  if (info.host === Office.HostType.Word && Office.addin?.setStartupBehavior) {
+    Office.addin.setStartupBehavior(Office.StartupBehavior.load).catch(() => {
+      /* shared runtime unavailable — ignore */
+    });
+  }
 });
 
 if ((module as any).hot) {

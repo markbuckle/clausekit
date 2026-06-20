@@ -19,8 +19,11 @@
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
     <Hosts>
       <Host xsi:type="Document">
+        <Runtimes>
+          <Runtime resid="Taskpane.Url" lifetime="long"/>
+        </Runtimes>
         <DesktopFormFactor>
-          <FunctionFile resid="Commands.Url"/>
+          <FunctionFile resid="Taskpane.Url"/>
           <ExtensionPoint xsi:type="PrimaryCommandSurface">
             <OfficeTab id="TabHome">
               <Group id="ClauseKit.Group">
@@ -59,12 +62,11 @@
         <bt:Image id="Icon.80x80" DefaultValue="https://localhost:3000/assets/icon-80.png"/>
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="Commands.Url" DefaultValue="https://localhost:3000/commands.html"/>
         <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="ClauseKit.GroupLabel" DefaultValue="ClauseKit"/>
-        <bt:String id="ClauseKit.ButtonLabel" DefaultValue="Review contract"/>
+        <bt:String id="ClauseKit.ButtonLabel" DefaultValue="ClauseKit"/>
       </bt:ShortStrings>
       <bt:LongStrings>
         <bt:String id="ClauseKit.ButtonTip" DefaultValue="Open the ClauseKit contract-review pane."/>

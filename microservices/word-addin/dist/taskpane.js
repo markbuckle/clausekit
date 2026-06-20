@@ -2730,8 +2730,17 @@ const title = "ClauseKit";
 const documentService = new _services_office_OfficeDocumentService__WEBPACK_IMPORTED_MODULE_4__.OfficeDocumentService();
 const rootElement = document.getElementById("container");
 const root = rootElement ? (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(rootElement) : undefined;
-Office.onReady(() => {
+Office.onReady((info) => {
     root?.render((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_services__WEBPACK_IMPORTED_MODULE_3__.DocumentServiceProvider, { service: documentService, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_App__WEBPACK_IMPORTED_MODULE_2__["default"], { title: title }) }));
+    // After the user opens ClauseKit once, keep it open on this document — it
+    // re-opens automatically on subsequent opens. Requires the shared runtime
+    // (declared in the manifest); guarded to Word and to API availability so it's
+    // a safe no-op elsewhere (e.g. if the shared runtime isn't present).
+    if (info.host === Office.HostType.Word && Office.addin?.setStartupBehavior) {
+        Office.addin.setStartupBehavior(Office.StartupBehavior.load).catch(() => {
+            /* shared runtime unavailable — ignore */
+        });
+    }
 });
 if (false) // removed by dead control flow
 {}
