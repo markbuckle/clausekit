@@ -189,3 +189,66 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .ck-hint { font-size: var(--fs-label); color: var(--text-secondary); margin-top: 7px; display: flex; align-items: center; gap: 5px; padding: 0 2px; }
 .lock-icon { width: 9px; height: 9px; border: 1.4px solid var(--text-secondary); border-radius: 2px; position: relative; flex: none; }
 .lock-icon::before { content:""; position:absolute; left:1.5px; top:-3.5px; width:5px; height:5px; border:1.4px solid var(--text-secondary); border-bottom:0; border-radius:3px 3px 0 0; }
+
+/* ── Mode tabs ── */
+.ck-tabs { display: flex; gap: 4px; padding: 6px var(--pane-pad) 0; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.ck-tab { flex: 1; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); background: none; border: none; padding: 9px 0 10px; cursor: pointer; border-bottom: 2px solid transparent; font-family: var(--font-body); }
+.ck-tab:hover { color: var(--text-primary); }
+.ck-tab.on { color: var(--navy); border-bottom-color: var(--amber); }
+
+/* ── Negotiation Simulator ── */
+.ck-sim { flex: 1; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; gap: 14px; padding: var(--pane-pad); }
+
+.sim-setup { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-card); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.sim-title { font-family: var(--font-display); font-size: 14px; font-weight: 600; margin: 0; color: var(--text-primary); }
+.sim-sub { font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin: 5px 0 0; }
+.sim-side { display: flex; align-items: center; gap: 10px; }
+.sim-side-label { font-size: 12px; color: var(--text-secondary); }
+.sim-toggle { display: inline-flex; background: #eef0f3; border-radius: 8px; padding: 3px; gap: 2px; }
+.sim-seg { font-size: 12.5px; font-weight: 600; color: var(--text-secondary); background: none; border: none; border-radius: 6px; padding: 6px 16px; cursor: pointer; font-family: var(--font-body); }
+.sim-seg.on { background: #fff; color: var(--navy); box-shadow: var(--shadow-card); }
+.sim-run { justify-content: center; }
+
+.sim-loading { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: 12.5px; padding: 4px 2px; }
+.sim-error { border-radius: 8px; }
+.sim-empty { text-align: center; color: var(--text-secondary); font-size: 12.5px; line-height: 1.55; padding: 20px 18px; }
+.sim-placeholder { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; color: var(--text-secondary); font-size: 12.5px; line-height: 1.55; padding: 30px 22px; }
+.sim-ph-mark { width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(180deg,#1d1d24,#101015); display: grid; place-items: center; color: var(--amber); font-size: 22px; }
+.sim-count { font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--text-secondary); margin: 2px 2px 0; }
+
+/* Term card */
+.sim-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-card); overflow: hidden; }
+.sim-card-head { display: flex; align-items: center; gap: 8px; padding: 12px; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
+.sim-ref { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 5px; padding: 2px 7px; }
+.sim-heading { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.sim-favors { margin-left: auto; font-size: 9.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; border-radius: 4px; padding: 3px 7px; background: var(--amber-soft); color: var(--amber-600); }
+.sim-favors.tenant { background: #e0f2fe; color: #0369a1; }
+.sim-favors.landlord { background: var(--amber-soft); color: var(--amber-600); }
+
+.sim-current { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+.sim-current summary { font-size: 11.5px; font-weight: 500; color: var(--text-secondary); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px; }
+.sim-current summary::-webkit-details-marker { display: none; }
+.sim-current summary::before { content: "›"; transition: transform .15s; display: inline-block; }
+.sim-current[open] summary::before { transform: rotate(90deg); }
+.sim-current-text { font-size: 12px; line-height: 1.6; color: #374151; font-style: italic; background: #fafbfc; border-left: 3px solid var(--navy-300); border-radius: 0 6px 6px 0; padding: 9px 11px; margin: 9px 0 2px; }
+
+.sim-ladder { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.sim-ladder-label { font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--text-secondary); }
+.sim-rung { border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 8px; padding: 10px 11px; }
+.sim-rung.tier-ideal { border-left-color: #16a34a; }
+.sim-rung.tier-market { border-left-color: var(--amber); }
+.sim-rung.tier-floor { border-left-color: var(--navy-300); }
+.sim-rung.applied { background: #f0fdf4; border-color: #bbf7d0; }
+.sim-tier { font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--text-secondary); }
+.sim-rung.tier-ideal .sim-tier { color: #16a34a; }
+.sim-rung.tier-market .sim-tier { color: var(--amber-600); }
+.sim-rung-text { font-size: 12.5px; line-height: 1.55; color: var(--text-primary); margin: 6px 0 0; }
+.sim-rung-rat { font-size: 11.5px; line-height: 1.5; color: var(--text-secondary); margin: 6px 0 0; }
+.sim-apply { margin-top: 10px; font-size: 12px; padding: 6px 12px; }
+
+/* Counterparty callout — the differentiator */
+.sim-counter { margin: 0 12px 12px; background: linear-gradient(180deg,#15151b,#1f1f27); border-radius: 9px; padding: 12px; }
+.sim-counter-head { display: flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.sim-counter-icon { width: 13px; height: 13px; flex: none; background: var(--amber); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.sim-counter-pred { font-size: 12.5px; line-height: 1.55; margin: 0; color: #eef0f5; }
+.sim-counter-arg { font-size: 12px; line-height: 1.55; margin: 8px 0 0; color: #b9bdca; font-style: italic; border-left: 2px solid rgba(245,158,11,.5); padding-left: 9px; }
