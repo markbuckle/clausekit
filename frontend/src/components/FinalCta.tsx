@@ -1,3 +1,5 @@
+import { PLAYGROUND_URL } from '../config';
+
 export default function FinalCta() {
   return (
     <section className="section" id="demo">
@@ -9,9 +11,11 @@ export default function FinalCta() {
             the panel where your work already happens.
           </p>
           <div className="cta-btns">
-            <a className="btn primary lg" href="#book">Book a demo</a>
-            <a className="btn dark lg" href="#trial">
-              Start 7-day free trial <span className="arr">→</span>
+            <a className="btn primary lg" href={PLAYGROUND_URL} target="_blank" rel="noopener noreferrer">
+              Try the demo
+            </a>
+            <a className="btn dark lg" href="#run-in-word">
+              Run it in real Word <span className="arr">→</span>
             </a>
           </div>
         </div>

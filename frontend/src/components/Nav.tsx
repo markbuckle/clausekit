@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import gavelBooks from '../../assets/gavel-books.svg';
+import { PLAYGROUND_URL } from '../config';
 
 export default function Nav() {
   const [hidden, setHidden] = useState(false);
@@ -30,8 +31,10 @@ export default function Nav() {
           {/* <a href="#resources">Resources <span className="car" /></a> */}
         </nav>
         <div className="nav-cta">
-          <a className="login" href="#login">Log in</a>
-          <a className="btn primary" href="#signup">Sign up</a>
+          <a className="login" href="#run-in-word">Run in Word</a>
+          <a className="btn primary" href={PLAYGROUND_URL} target="_blank" rel="noopener noreferrer">
+            Try the demo
+          </a>
         </div>
       </div>
     </header>

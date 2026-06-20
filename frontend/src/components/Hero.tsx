@@ -1,3 +1,5 @@
+import { PLAYGROUND_URL } from '../config';
+
 export default function Hero() {
   return (
     <section className="hero">
@@ -16,9 +18,11 @@ export default function Hero() {
           <b>right inside the Microsoft Word task pane.</b> No uploads. No new tab. No copy-paste.
         </p>
         <div className="hero-cta reveal">
-          <a className="btn primary lg" href="#demo">Book a demo</a>
-          <a className="btn dark lg" href="#trial">
-            Start 7-day free trial <span className="arr">→</span>
+          <a className="btn primary lg" href={PLAYGROUND_URL} target="_blank" rel="noopener noreferrer">
+            Try the demo
+          </a>
+          <a className="btn dark lg" href="#run-in-word">
+            Run it in real Word <span className="arr">→</span>
           </a>
         </div>
         <div className="proof reveal">

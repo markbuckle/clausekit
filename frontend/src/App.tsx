@@ -9,6 +9,7 @@ import RiskFlags from './components/RiskFlags';
 import Security from './components/Security';
 import Stats from './components/Stats';
 import Testimonial from './components/Testimonial';
+import RunInWord from './components/RunInWord';
 import FinalCta from './components/FinalCta';
 import FooterWordmark from './components/FooterWordmark';
 import Footer from './components/Footer';
@@ -65,6 +66,7 @@ export default function App() {
         <Security />
         <Stats />
         <Testimonial />
+        <RunInWord />
         <FinalCta />
       </main>
       <FooterWordmark />
