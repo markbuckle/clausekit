@@ -103,7 +103,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 .mark.lg::after { left: 11px; right: 11px; bottom: 9px; height: 2.4px; }
 .mark.logo {
   width: 32px; height: 32px; background: transparent; border: none; box-shadow: none;
-  position: relative; top: 5px;
+  position: relative; top: 7px;
 }
 .mark.logo::after { content: none; }
 .mark.logo img { width: 32px; height: 32px; }

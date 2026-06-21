@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import gavelBooks from '../../assets/gavel-books.svg';
+import ckMark from '../../assets/ck-mark.svg';
 import { PLAYGROUND_URL } from '../config';
 
 export default function Nav() {
@@ -20,7 +20,7 @@ export default function Nav() {
     <header className={`nav${hidden ? ' nav-hidden' : ''}`}>
       <div className="wrap nav-inner">
         <a className="brand" href="#top">
-          <span className="mark logo"><img src={gavelBooks} alt="ClauseKit" /></span>
+          <span className="mark logo"><img src={ckMark} alt="ClauseKit" /></span>
           <span className="wordmark">Clause<b>Kit</b></span>
         </a>
         <nav className="nav-links">
