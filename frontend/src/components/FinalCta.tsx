@@ -12,10 +12,10 @@ export default function FinalCta() {
           </p>
           <div className="cta-btns">
             <a className="btn primary lg" href={PLAYGROUND_URL} target="_blank" rel="noopener noreferrer">
-              Try the demo
+              Run in browser
             </a>
             <a className="btn dark lg" href="#run-in-word">
-              Run it in real Word <span className="arr">→</span>
+              Run in Word <span className="arr">→</span>
             </a>
           </div>
         </div>

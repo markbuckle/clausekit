@@ -1,3 +1,6 @@
+import ckMark from '../../assets/ck-mark.svg';
+import soc2 from '../../assets/soc2-horizontal.svg';
+
 export default function Footer() {
   return (
     <footer className="foot" id="resources">
@@ -5,10 +8,10 @@ export default function Footer() {
         <div className="foot-grid">
           <div className="fbrand">
             <a className="brand" href="#top">
-              <span className="mark"><span>CK</span></span>
-              <span className="wordmark">Clause<b>Kit</b></span>
+              <span className="mark logo"><img src={ckMark} alt="ClauseKit" /></span>
+              <span className="wordmark"><b>ClauseKit</b></span>
             </a>
-            <p>The AI legal assistant that reviews contracts beside the lawyer - inside Microsoft Word.</p>
+            {/* <p>The AI legal assistant that reviews contracts beside the lawyer - inside Microsoft Word.</p> */}
           </div>
           <div className="fcol">
             <h5>Product</h5>
@@ -41,7 +44,7 @@ export default function Footer() {
         </div>
         <div className="foot-base">
           <span>&copy; 2026 ClauseKit, Inc. All rights reserved.</span>
-          <span className="soc"><span className="shield" />SOC 2 TYPE II</span>
+          <span className="soc"><img src={soc2} alt="SOC 2 Type II" /></span>
         </div>
       </div>
     </footer>

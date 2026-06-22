@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 64" width="230" height="64">
+  <rect x="0.5" y="0.5" width="229" height="63" rx="12" fill="#141417" stroke="#29292F"></rect>
+  <g transform="translate(16,13.5) scale(1.5)" fill="none" stroke="#F59E0B" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M12 2 20 5v6c0 5-3.5 8.5-8 10C7.5 19.5 4 16 4 11V5z"></path>
+    <path d="M8.5 11.7l2.4 2.4L15.6 9" stroke-width="1.9"></path>
+  </g>
+  <line x1="68" y1="17" x2="68" y2="47" stroke="#29292F"></line>
+  <text x="82" y="30" font-family="Inter, sans-serif" font-size="15" font-weight="700" fill="#F5F5F6">SOC 2</text>
+  <text x="82" y="45" font-family="&#39;Roboto Mono&#39;, monospace" font-size="10" letter-spacing="1.5" fill="#9A9AA4">TYPE II · <tspan fill="#F59E0B">CERTIFIED</tspan></text>
+</svg>

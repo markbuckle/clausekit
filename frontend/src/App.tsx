@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import Nav from './components/Nav';
 import Hero from './components/Hero';
+import ProductShot from './components/ProductShot';
 import TrustedBy from './components/TrustedBy';
 import Pillars from './components/Pillars';
 import SpotlightApply from './components/SpotlightApply';
@@ -63,8 +64,9 @@ export default function App() {
         <SpotlightApply />
         <SpotlightGrounded />
         <RiskFlags />
+        <ProductShot />
         <Security />
-        <Stats />
+        {/* <Stats /> */}
         <Testimonial />
         {/* <RunInWord /> */}
         <FinalCta />

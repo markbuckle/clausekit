@@ -12,11 +12,13 @@ export default function Pillars() {
           <p className="sub">
 ClauseKit takes the tedious work off your plate,<br></br>so your time goes to the judgment calls that matter.          </p>
         </div>
-        <div className="pillars">
+        {/* <div className="pillars">
 
           <div className="pcard reveal">
-            <div className="pico"><img src={shieldIcon} alt="" /></div>
-            <div className="pnum">01 - Review</div>
+            <div className="phead">
+              <div className="pico"><img src={shieldIcon} alt="" /></div>
+              <div className="pnum">Review</div>
+            </div>
             <h3>Catch what a tired read misses.</h3>
             <p>
               Surface risk the moment you open a draft - uncapped indemnities, off-market terms, and
@@ -30,8 +32,10 @@ ClauseKit takes the tedious work off your plate,<br></br>so your time goes to th
           </div>
 
           <div className="pcard reveal">
-            <div className="pico"><img src={penIcon} alt="" /></div>
-            <div className="pnum">02 - Draft</div>
+            <div className="phead">
+              <div className="pico"><img src={penIcon} alt="" /></div>
+              <div className="pnum">Draft</div>
+            </div>
             <h3>Redline to your standards.</h3>
             <p>
               ClauseKit proposes precise edits in your firm&apos;s voice and playbook. Review the
@@ -45,8 +49,10 @@ ClauseKit takes the tedious work off your plate,<br></br>so your time goes to th
           </div>
 
           <div className="pcard reveal">
-            <div className="pico"><img src={searchIcon} alt="" /></div>
-            <div className="pnum">03 - Ask</div>
+            <div className="phead">
+              <div className="pico"><img src={searchIcon} alt="" /></div>
+              <div className="pnum">Ask</div>
+            </div>
             <h3>Ask the document anything.</h3>
             <p>
               Plain-language answers about what you&apos;re signing - grounded in the contract and cited
@@ -59,7 +65,7 @@ ClauseKit takes the tedious work off your plate,<br></br>so your time goes to th
             </ul>
           </div>
 
-        </div>
+        </div> */}
       </div>
     </section>
   );
