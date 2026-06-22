@@ -47,9 +47,19 @@ export default function ChatInput({ onSend, chatOpen, disabled = false }: ChatIn
           <button
             className={`ck-send${canSend ? "" : " disabled"}`}
             onClick={handleSend}
+            disabled={!canSend}
             aria-label="Send"
           >
-            <span className="send-arrow" />
+            <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true">
+              <path
+                d="M12 19V6M12 6l-6 6M12 6l6 6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </button>
         </div>
         <div className="ck-hint">

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="15 13 70 83" fill="none">
+  <defs>
+    
+    <linearGradient id="gh" gradientUnits="userSpaceOnUse" x1="0" y1="-15" x2="0" y2="15">
+      <stop offset="0" stop-color="#FFD27A"></stop>
+      <stop offset="0.45" stop-color="#F59E0B"></stop>
+      <stop offset="1" stop-color="#92400E"></stop>
+    </linearGradient>
+    
+    <linearGradient id="ghnd" gradientUnits="userSpaceOnUse" x1="0" y1="-4.5" x2="0" y2="4.5">
+      <stop offset="0" stop-color="#FFD27A"></stop>
+      <stop offset="0.45" stop-color="#F59E0B"></stop>
+      <stop offset="1" stop-color="#92400E"></stop>
+    </linearGradient>
+    
+    <linearGradient id="bk1" gradientUnits="userSpaceOnUse" x1="0" y1="51" x2="0" y2="61">
+      <stop offset="0" stop-color="#FFD27A"></stop>
+      <stop offset="0.45" stop-color="#F59E0B"></stop>
+      <stop offset="1" stop-color="#92400E"></stop>
+    </linearGradient>
+    <linearGradient id="bk2" gradientUnits="userSpaceOnUse" x1="0" y1="64" x2="0" y2="74">
+      <stop offset="0" stop-color="#FFD27A"></stop>
+      <stop offset="0.45" stop-color="#F59E0B"></stop>
+      <stop offset="1" stop-color="#92400E"></stop>
+    </linearGradient>
+    <linearGradient id="bk3" gradientUnits="userSpaceOnUse" x1="0" y1="77" x2="0" y2="87">
+      <stop offset="0" stop-color="#FFD27A"></stop>
+      <stop offset="0.45" stop-color="#F59E0B"></stop>
+      <stop offset="1" stop-color="#92400E"></stop>
+    </linearGradient>
+  </defs>
+
+  
+  <g transform="translate(32 29) rotate(18)">
+    
+    <rect x="4" y="-4.5" width="40" height="9" rx="4.5" fill="url(#ghnd)"></rect>
+    
+    <rect x="-8" y="-15" width="16" height="30" rx="5" fill="url(#gh)"></rect>
+  </g>
+
+  
+  <rect x="20" y="51" width="60" height="10" rx="2" fill="url(#bk1)"></rect>
+  <rect x="20" y="64" width="60" height="10" rx="2" fill="url(#bk2)"></rect>
+  <rect x="20" y="77" width="60" height="10" rx="2" fill="url(#bk3)"></rect>
+</svg>

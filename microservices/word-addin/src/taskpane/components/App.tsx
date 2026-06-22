@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CKHeader from "./CKHeader";
+import CKHeader, { type Theme } from "./CKHeader";
 import EmptyState from "./EmptyState";
 import ChatPane from "./ChatPane";
 import ChatInput from "./ChatInput";
@@ -15,22 +15,17 @@ type Mode = "ask" | "simulator";
 
 export default function App(_props: AppProps) {
   const [mode, setMode] = useState<Mode>("ask");
+  const [theme, setTheme] = useState<Theme>("light");
   const chat = useChat();
   const negotiate = useNegotiate();
   const chatOpen = chat.messages.length > 0;
 
-  const status =
-    mode === "simulator"
-      ? negotiate.terms
-        ? `Simulating · ${negotiate.ranSide}`
-        : "Negotiation Simulator"
-      : chatOpen
-        ? "Reviewing commercial lease"
-        : "Ready to review";
-
   return (
-    <div className="ck-pane">
-      <CKHeader status={status} />
+    <div className="ck-pane" data-theme={theme}>
+      <CKHeader
+        theme={theme}
+        onToggleTheme={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
+      />
       <div className="ck-tabs">
         <button className={`ck-tab${mode === "ask" ? " on" : ""}`} onClick={() => setMode("ask")}>
           Ask

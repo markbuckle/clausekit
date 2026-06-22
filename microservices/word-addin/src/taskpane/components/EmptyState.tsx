@@ -12,7 +12,7 @@ export default function EmptyState({ onPrompt }: EmptyStateProps) {
   return (
     <div className="ck-empty">
       <div className="e-mark">
-        <span>CK</span>
+        <img src="assets/gavel-books.svg" alt="" />
       </div>
       <h3>Review with confidence</h3>
       <p className="e-sub">
@@ -21,8 +21,7 @@ export default function EmptyState({ onPrompt }: EmptyStateProps) {
       <div className="ck-suggest">
         {PROMPTS.map((p) => (
           <button key={p} className="s-btn" onClick={() => onPrompt(p)}>
-            <span className="s-dot" />
-            {p}
+            <span className="s-txt">{p}</span>
             <span className="s-ar">›</span>
           </button>
         ))}
