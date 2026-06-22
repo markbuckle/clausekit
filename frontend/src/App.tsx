@@ -58,7 +58,7 @@ export default function App() {
       <Nav />
       <main id="top">
         <Hero />
-        <TrustedBy />
+        {/* <TrustedBy /> */}
         <Pillars />
         <SpotlightApply />
         <SpotlightGrounded />
@@ -66,7 +66,7 @@ export default function App() {
         <Security />
         <Stats />
         <Testimonial />
-        <RunInWord />
+        {/* <RunInWord /> */}
         <FinalCta />
       </main>
       <FooterWordmark />

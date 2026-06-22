@@ -19,9 +19,9 @@ export default function Hero() {
           <a className="btn primary lg" href={PLAYGROUND_URL} target="_blank" rel="noopener noreferrer">
             Try the demo
           </a>
-          <a className="btn dark lg" href="#run-in-word">
+          {/* <a className="btn dark lg" href="#run-in-word">
             Run it in real Word <span className="arr">→</span>
-          </a>
+          </a> */}
         </div>
         <div className="proof reveal">
           {/* <span><b>Trusted by 4,500+ legal teams</b></span>
