@@ -8,11 +8,9 @@ export default function Pillars() {
       <div className="wrap">
         <div className="eyebrow-row">
           <span className="kicker">Review · Draft · Ask</span>
-          <h2 className="serif-grad">A sharper first read on every contract.</h2>
+          <h2 className="serif-grad">A sharper first read<br></br> on every contract.</h2>
           <p className="sub">
-            ClauseKit works the way lawyers already do - in the document, clause by clause - and does
-            the slow parts in seconds.
-          </p>
+ClauseKit takes the tedious work off your plate,<br></br>so your time goes to the judgment calls that matter.          </p>
         </div>
         <div className="pillars">
 
