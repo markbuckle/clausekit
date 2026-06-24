@@ -58,10 +58,9 @@ export default function Security() {
       <div className="wrap">
         <div className="eyebrow-row">
           <span className="kicker"></span>
-          <h2 className="serif-grad">Security your clients would approve.</h2>
+          <h2 className="serif-grad">Your clients privacy,<br></br>our priority</h2>
           <p className="sub">
-            ClauseKit is designed for documents under privilege. Your contracts stay yours - they&apos;re
-            never used to train anyone&apos;s model.
+            ClauseKit is designed for documents under privilege<br></br>Your contracts stay yours
           </p>
         </div>
         <div className="seccards">

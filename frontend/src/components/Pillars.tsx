@@ -7,7 +7,7 @@ export default function Pillars() {
     <section className="section" id="features">
       <div className="wrap">
         <div className="eyebrow-row">
-          <span className="kicker">Review · Draft · Ask</span>
+          <span className="kicker">Review · Draft · Ask · Negotiates</span>
           <h2 className="serif-grad">A sharper first read<br></br></h2>
           <p className="sub">
 ClauseKit takes the tedious work off your plate<br></br>so your time goes to the judgment calls that matter          </p>

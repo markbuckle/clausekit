@@ -10,11 +10,10 @@ export default function Hero() {
         <p className="lede reveal">
           Review and redline contracts then simulate the negotiation
         </p>
-        <a className="pill" href="#playbook">
+        <div className="pill">
           <span className="tag">New</span>
-          {' '}ClauseKit now has a negotiation simulator{' '}
-          <span className="arr">›</span>
-        </a>
+          {' '}ClauseKit now has a negotiation simulator
+        </div>
         <div className="hero-cta reveal">
           <a className="btn demo lg" href="#demo">
             Try the demo

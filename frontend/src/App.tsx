@@ -67,7 +67,7 @@ export default function App() {
         <ProductShot />
         <Security />
         {/* <Stats /> */}
-        <Testimonial />
+        {/* <Testimonial /> */}
         {/* <RunInWord /> */}
         <FinalCta />
       </main>

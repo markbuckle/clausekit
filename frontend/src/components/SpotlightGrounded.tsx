@@ -6,8 +6,8 @@ export default function SpotlightGrounded() {
       <div className="wrap">
         <div className="split rev">
           <div className="copy">
-            <span className="kicker">Grounded answers</span>
-            <h2 className="serif-grad">Grounded in the clause, never a guess.</h2>
+            <span className="kicker">Accurate answers</span>
+            <h2 className="serif-grad">Grounded in the clause</h2>
             <p>
               Ask anything - what triggers indemnity, where the governing law sits, whether the cap
               survives termination. ClauseKit answers from the document in front of you and links you
@@ -18,21 +18,21 @@ export default function SpotlightGrounded() {
                 <img className="ic" src={checkLogo} alt="" />
                 <span className="ft">
                   <b>Reads the whole agreement</b>
-                  <span>Context from every page, not just the paragraph you selected.</span>
+                  <span>Context from every page - not just the paragraph you selected</span>
                 </span>
               </li>
               <li>
                 <img className="ic" src={checkLogo} alt="" />
                 <span className="ft">
                   <b>Cites its sources</b>
-                  <span>Every claim points back to a numbered clause you can open.</span>
+                  <span>Every claim points back to a numbered clause you can open</span>
                 </span>
               </li>
               <li>
                 <img className="ic" src={checkLogo} alt="" />
                 <span className="ft">
                   <b>Says when it&apos;s unsure</b>
-                  <span>If the contract is silent, it tells you - instead of inventing.</span>
+                  <span>If the contract is silent ClauseKit will tell you - instead of inventing</span>
                 </span>
               </li>
             </ul>

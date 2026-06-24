@@ -21,10 +21,9 @@ export default function RiskFlags() {
       <div className="wrap">
         <div className="eyebrow-row">
           <span className="kicker">Risk review</span>
-          <h2 className="serif-grad">A second set of eyes on every page.</h2>
+          <h2 className="serif-grad">A second set of eyes<br></br>on every page</h2>
           <p className="sub">
-            Open a draft and ClauseKit reads it end to end - ranking issues by severity so you spend
-            your attention where it counts.
+            ClauseKit ranks issues by severity<br></br> so you can tackle the most important items first
           </p>
         </div>
         <div className="riskwrap reveal">
@@ -35,7 +34,10 @@ export default function RiskFlags() {
                 <b>{f.title}</b>
                 <span>{f.desc}</span>
               </div>
-              <span className="rloc">{f.loc}</span>
+              <span className="rloc">
+                <span className="sct">{f.loc.split(' ')[0]}</span>
+                <span className="num">{f.loc.split(' ').slice(1).join(' ')}</span>
+              </span>
             </div>
           ))}
         </div>
