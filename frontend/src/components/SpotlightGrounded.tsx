@@ -1,3 +1,5 @@
+import checkLogo from '../../assets/check-logo-small.svg';
+
 export default function SpotlightGrounded() {
   return (
     <section className="section tight">
@@ -13,21 +15,21 @@ export default function SpotlightGrounded() {
             </p>
             <ul className="feat">
               <li>
-                <span className="ic"><span className="chk" /></span>
+                <img className="ic" src={checkLogo} alt="" />
                 <span className="ft">
                   <b>Reads the whole agreement</b>
                   <span>Context from every page, not just the paragraph you selected.</span>
                 </span>
               </li>
               <li>
-                <span className="ic"><span className="chk" /></span>
+                <img className="ic" src={checkLogo} alt="" />
                 <span className="ft">
                   <b>Cites its sources</b>
                   <span>Every claim points back to a numbered clause you can open.</span>
                 </span>
               </li>
               <li>
-                <span className="ic"><span className="chk" /></span>
+                <img className="ic" src={checkLogo} alt="" />
                 <span className="ft">
                   <b>Says when it&apos;s unsure</b>
                   <span>If the contract is silent, it tells you - instead of inventing.</span>

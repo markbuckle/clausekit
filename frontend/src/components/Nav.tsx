@@ -30,7 +30,7 @@ export default function Nav() {
           {/* <a href="#resources">Resources <span className="car" /></a> */}
         </nav>
         <div className="nav-cta">
-          <a className="btn primary" href={PLAYGROUND_URL} target="_blank" rel="noopener noreferrer">
+          <a className="btn demo" href="#demo">
             Try the demo
           </a>
         </div>

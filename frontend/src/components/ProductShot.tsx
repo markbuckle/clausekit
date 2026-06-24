@@ -2,6 +2,10 @@ export default function ProductShot() {
   return (
     <section className="hero">
       <div className="wrap">
+        <div className="shot-head reveal">
+          <span className="kicker">In good company</span>
+          <h2 className="serif-grad">The silver standard behind Spellbook in AI contract review</h2>
+        </div>
         <div className="shot reveal" id="product">
           <div className="host">
             {/* Title bar */}

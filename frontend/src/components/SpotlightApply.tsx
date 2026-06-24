@@ -1,3 +1,5 @@
+import checkLogo from '../../assets/check-logo-small.svg';
+
 export default function SpotlightApply() {
   return (
     <section className="section tight">
@@ -5,31 +7,31 @@ export default function SpotlightApply() {
         <div className="split">
           <div className="copy">
             <span className="kicker">One-click apply</span>
-            <h2 className="serif-grad">From suggestion to redline, without leaving the page.</h2>
+            <h2 className="serif-grad">From suggestion to redline without leaving the page</h2>
             <p>
               ClauseKit proposes the exact language, shows you the redline in context, and writes it
               into the document as a tracked change. You stay in control of every word.
             </p>
             <ul className="feat">
               <li>
-                <span className="ic"><span className="chk" /></span>
+                <img className="ic" src={checkLogo} alt="" />
                 <span className="ft">
                   <b>See the diff first</b>
-                  <span>Old and new text, side by side, before anything changes.</span>
+                  <span>Old and new text, side by side, before anything changes</span>
                 </span>
               </li>
               <li>
-                <span className="ic"><span className="chk" /></span>
+                <img className="ic" src={checkLogo} alt="" />
                 <span className="ft">
                   <b>Applies as tracked changes</b>
-                  <span>Every edit is reviewable and reversible in Word.</span>
+                  <span>Every edit is reviewable and reversible in Word</span>
                 </span>
               </li>
               <li>
-                <span className="ic"><span className="chk" /></span>
+                <img className="ic" src={checkLogo} alt="" />
                 <span className="ft">
                   <b>Edit before you accept</b>
-                  <span>Tweak the wording inline - it&apos;s your signature on the page.</span>
+                  <span>Tweak the wording inline</span>
                 </span>
               </li>
             </ul>

@@ -11,11 +11,11 @@ export default function FinalCta() {
             the panel where your work already happens.
           </p>
           <div className="cta-btns">
-            <a className="btn primary lg" href={PLAYGROUND_URL} target="_blank" rel="noopener noreferrer">
+            <a className="btn demo lg" href={PLAYGROUND_URL} target="_blank" rel="noopener noreferrer">
               Run in browser
             </a>
-            <a className="btn dark lg" href="#run-in-word">
-              Run in Word <span className="arr">→</span>
+            <a className="btn demo lg" href="#run-in-word">
+              Run in Word
             </a>
           </div>
         </div>

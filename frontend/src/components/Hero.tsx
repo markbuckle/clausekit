@@ -4,19 +4,19 @@ export default function Hero() {
   return (
     <section className="hero">
       <div className="wrap">
-        <a className="pill" href="#playbook">
-          <span className="tag">New</span>
-          {' '}ClauseKit now has a negotiation simulator{' '}
-          <span className="arr">›</span>
-        </a>
         <h1 className="serif-grad reveal">
           Your contract partner
         </h1>
         <p className="lede reveal">
           Review and redline contracts then simulate the negotiation
         </p>
+        <a className="pill" href="#playbook">
+          <span className="tag">New</span>
+          {' '}ClauseKit now has a negotiation simulator{' '}
+          <span className="arr">›</span>
+        </a>
         <div className="hero-cta reveal">
-          <a className="btn primary lg" href={PLAYGROUND_URL} target="_blank" rel="noopener noreferrer">
+          <a className="btn demo lg" href="#demo">
             Try the demo
           </a>
           {/* <a className="btn dark lg" href="#run-in-word">
