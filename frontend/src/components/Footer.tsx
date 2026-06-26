@@ -1,4 +1,5 @@
 import ckMark from '../../assets/clause-diamond.svg';
+import fingerHeart from '../../assets/finger-heart.svg';
 import soc2 from '../../assets/soc2-horizontal.svg';
 
 export default function Footer() {
@@ -16,6 +17,7 @@ export default function Footer() {
           <span>&copy; 2026 ClauseKit, Inc.</span>
           <span className="soc"><img src={soc2} alt="SOC 2 Type II" /></span>
         </div>
+        <img className="foot-heart" src={fingerHeart} alt="" />
       </div>
     </footer>
   );

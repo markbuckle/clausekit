@@ -33,7 +33,7 @@ export default function FooterWordmark() {
           <clipPath id="wordmark-clip">
             <text
               x="1600"
-              y="390"
+              y="395"
               textAnchor="middle"
               fontFamily="Inter, ui-sans-serif, system-ui, -apple-system, sans-serif"
               fontWeight="900"
@@ -50,7 +50,7 @@ export default function FooterWordmark() {
         </defs>
         <text
           x="1600"
-          y="390"
+          y="395"
           textAnchor="middle"
           fontFamily="Inter, ui-sans-serif, system-ui, -apple-system, sans-serif"
           fontWeight="900"
