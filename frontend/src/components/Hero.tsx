@@ -1,4 +1,5 @@
 import { PLAYGROUND_URL } from '../config';
+import ckCustom from '../../assets/ck-custom.svg';
 
 export default function Hero() {
   return (
@@ -10,10 +11,7 @@ export default function Hero() {
         <p className="lede reveal">
           Review and redline contracts then simulate the negotiation
         </p>
-        <div className="pill">
-          <span className="tag">New</span>
-          {' '}ClauseKit now has a negotiation simulator
-        </div>
+        <img className="pill-img" src={ckCustom} alt="ClauseKit now has a negotiation simulator" />
         <div className="hero-cta reveal">
           <a className="btn demo lg" href="#demo">
             Try the demo
