@@ -17,8 +17,7 @@ export default function Simulator({
         <div>
           <p className="sim-title">Negotiation Simulator</p>
           <p className="sim-sub">
-            Pick your side and war-game the lease — fallback positions for every off-market term, plus
-            how the other side fights back.
+            Pick your side:
           </p>
         </div>
         <div className="sim-side">
@@ -82,9 +81,9 @@ export default function Simulator({
 
       {!loading && !error && !terms && (
         <div className="sim-placeholder">
-          <div className="sim-ph-mark">
+          {/* <div className="sim-ph-mark">
             <span>⚔</span>
-          </div>
+          </div> */}
           <p>Run the war-game to see your fallback ladders and the counterparty&apos;s likely pushback.</p>
         </div>
       )}

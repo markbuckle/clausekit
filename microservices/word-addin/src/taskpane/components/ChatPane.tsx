@@ -60,7 +60,7 @@ export default function ChatPane({ messages, loading, error, onRetry }: ChatPane
         ) : (
           <div className="ck-row" key={i}>
             <div className="ck-avatar">
-              <span>CK</span>
+              <img src="assets/ck-mark.svg" alt="ClauseKit" />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div className="ck-bubble ai">{renderContent(m.content)}</div>
@@ -89,7 +89,7 @@ export default function ChatPane({ messages, loading, error, onRetry }: ChatPane
       {loading && (
         <div className="ck-row ck-thinking">
           <div className="ck-avatar">
-            <span>CK</span>
+            <img src="assets/ck-mark.svg" alt="ClauseKit" />
           </div>
           <div className="t-bubble">
             <i />
@@ -102,7 +102,7 @@ export default function ChatPane({ messages, loading, error, onRetry }: ChatPane
       {error && (
         <div className="ck-row">
           <div className="ck-avatar">
-            <span>CK</span>
+            <img src="assets/ck-mark.svg" alt="ClauseKit" />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div className="ck-error-bubble">

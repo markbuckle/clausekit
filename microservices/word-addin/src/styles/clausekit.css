@@ -13,6 +13,9 @@
   --amber-soft: #FEF3C7;
   --amber-grad: linear-gradient(180deg, #FCC04A 0%, #F59E0B 52%, #E88B05 100%);
   --amber-glow: inset 0 1px 0 rgba(255,255,255,.35), 0 2px 10px rgba(245,158,11,.4), 0 1px 2px rgba(160,98,0,.45);
+  --grey-grad: linear-gradient(180deg, #5b5b66 0%, #3d3d47 52%, #2b2b34 100%);
+  --grey-grad-hover: linear-gradient(180deg, #66666f 0%, #46464f 52%, #33333b 100%);
+  --grey-glow: inset 0 1px 0 rgba(255,255,255,.14), 0 2px 8px rgba(17,24,39,.20), 0 1px 2px rgba(17,24,39,.28);
   --bg: #F8F9FA;
   --surface: #FFFFFF;
   --user-bubble: #EEF2FF;
@@ -42,7 +45,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 /* ── Header ── */
 .ck-header {
   background: linear-gradient(180deg, #08080b 0%, #131318 55%, #232329 100%);
-  color: #fff; height: 52px; display: flex; align-items: center;
+  color: #fff; height: 36px; display: flex; align-items: center;
   padding: 0 var(--pane-pad); gap: 10px;
   border-bottom: 1px solid rgba(255,255,255,.06); flex-shrink: 0;
 }
@@ -51,7 +54,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .h-txt { display: flex; flex-direction: column; justify-content: center; line-height: 1.15; }
 .h-name { font-family: var(--font-display); font-size: var(--fs-header); font-weight: 600; letter-spacing: -.01em; }
 .h-actions { margin-left: auto; display: flex; gap: 2px; }
-.ck-theme-btn { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; color: rgba(255,255,255,.78); cursor: pointer; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10); transition: background .14s, color .14s, border-color .14s; }
+.ck-theme-btn { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; color: rgba(255,255,255,.78); cursor: pointer; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10); transition: background .14s, color .14s, border-color .14s; }
 .ck-theme-btn:hover { background: rgba(255,255,255,.14); color: #fff; border-color: rgba(255,255,255,.18); }
 .ck-theme-btn:active { transform: translateY(.5px); }
 .ck-theme-btn svg { display: block; }
@@ -64,8 +67,9 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 /* Message rows */
 .ck-row { display: flex; gap: 8px; }
 .ck-row.user { justify-content: flex-end; }
-.ck-avatar { width: 24px; height: 24px; border-radius: 6px; background: var(--navy); display: grid; place-items: center; flex: none; margin-top: 2px; }
+.ck-avatar { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; flex: none; margin-top: 2px; }
 .ck-avatar span { font-size: 9px; font-weight: 700; color: #fff; letter-spacing: .02em; }
+.ck-avatar img { width: 22px; height: 22px; object-fit: contain; display: block; }
 .ck-bubble { font-size: var(--fs-body); line-height: 1.55; padding: 10px 12px; border-radius: 12px; max-width: 264px; }
 .ck-bubble.user { background: var(--user-bubble); color: var(--navy); border-radius: 12px 12px 4px 12px; }
 .ck-bubble.ai { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); }
@@ -134,8 +138,8 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .a-foot { display: flex; gap: 8px; padding: 12px; align-items: center; }
 .a-foot .spacer { flex: 1; }
 .ck-btn { font-size: 13px; font-weight: 500; border-radius: 6px; padding: 8px 14px; cursor: pointer; border: 1px solid transparent; line-height: 1; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; font-family: var(--font-body); transition: background .12s, border-color .12s; }
-.ck-btn.primary { background: var(--amber-grad); color: #3a2900; font-weight: 600; border-color: rgba(150,92,0,.45); box-shadow: var(--amber-glow); }
-.ck-btn.primary:hover { filter: brightness(1.04); }
+.ck-btn.primary { background: var(--grey-grad); color: #fff; font-weight: 600; border-color: rgba(17,24,39,.35); box-shadow: var(--grey-glow); }
+.ck-btn.primary:hover { background: var(--grey-grad-hover); }
 .ck-btn.danger-ghost { background: transparent; color: var(--text-secondary); border-color: transparent; }
 .ck-btn.danger-ghost:hover { background: var(--destructive-soft); color: var(--destructive); }
 .ck-btn.applied { background: #ecfdf3; color: #067647; border-color: #d1fadf; cursor: default; }
@@ -155,16 +159,16 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .e-mark { width: 60px; height: 60px; border-radius: 16px; background: linear-gradient(180deg,#1d1d24 0%,#101015 100%); display: grid; place-items: center; position: relative; box-shadow: 0 10px 26px rgba(0,0,0,.28); border: 1px solid #2e2e36; margin-bottom: 18px; }
 .e-mark img { width: 34px; height: 34px; object-fit: contain; display: block; }
 .ck-empty h3 { font-family: var(--font-display); font-size: 15px; font-weight: 600; margin: 0 0 6px; color: var(--text-primary); }
-.e-sub { font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; margin: 0 0 20px; max-width: 30ch; }
+.e-sub { font-family: var(--font-display); font-size: 14px; font-weight: 500; color: var(--text-primary); line-height: 1.6; letter-spacing: -.01em; margin: 0 0 22px; max-width: 28ch; }
 .ck-suggest { display: flex; flex-direction: column; gap: 9px; width: 100%; }
 .s-btn { position: relative; text-align: left; font-size: 12.5px; color: var(--navy); background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 12px 13px; cursor: pointer; box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 9px; font-family: var(--font-body); overflow: hidden; transition: border-color .15s, box-shadow .15s, transform .15s, background .15s; }
-.s-btn::before { content:""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--amber-grad); opacity: 0; transition: opacity .15s; }
-.s-btn:hover { border-color: rgba(245,158,11,.55); background: #fffdf8; box-shadow: 0 4px 12px rgba(245,158,11,.12); transform: translateY(-1px); }
+.s-btn::before { content:""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--grey-grad); opacity: 0; transition: opacity .15s; }
+.s-btn:hover { border-color: var(--border-strong); background: #fafafb; box-shadow: 0 4px 12px rgba(17,24,39,.08); transform: translateY(-1px); }
 .s-btn:hover::before { opacity: 1; }
 .s-btn:active { transform: translateY(0); }
 .s-txt { flex: 1; line-height: 1.4; }
 .s-btn .s-ar { margin-left: auto; color: var(--navy-300); font-size: 15px; flex: none; transition: color .15s, transform .15s; }
-.s-btn:hover .s-ar { color: var(--amber-600); transform: translateX(2px); }
+.s-btn:hover .s-ar { color: var(--navy); transform: translateX(2px); }
 
 /* ── Privacy note ── */
 .ck-privacy { background: #fff; border-top: 1px solid var(--border); padding: 9px 12px; display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
@@ -175,13 +179,16 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .p-txt b { color: var(--text-primary); font-weight: 600; }
 
 /* ── Input area ── */
-.ck-input-wrap { background: var(--surface); border-top: 1px solid var(--border); padding: 10px var(--pane-pad) 8px; flex-shrink: 0; }
+.ck-input-wrap { background: var(--surface); border-top: 1px solid var(--border); padding: 0 var(--pane-pad) 8px; flex-shrink: 0; }
+.ck-input-resize { height: 14px; display: flex; align-items: center; justify-content: center; cursor: ns-resize; touch-action: none; }
+.ck-input-grip { width: 28px; height: 4px; border-radius: 999px; background: var(--border-strong); transition: background .12s; }
+.ck-input-resize:hover .ck-input-grip { background: var(--navy-300); }
 .ck-input { background: #fff; border: 1px solid var(--border-strong); border-radius: 12px; padding: 7px 7px 7px 13px; display: flex; align-items: flex-end; gap: 8px; transition: border-color .12s, box-shadow .12s; }
 .ck-input:focus-within { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(14,14,18,.08); }
-.ck-input textarea { flex: 1; font-size: var(--fs-body); color: var(--text-primary); line-height: 1.5; padding: 7px 0; border: none; outline: none; resize: none; background: transparent; font-family: var(--font-body); min-height: 20px; max-height: 80px; overflow-y: auto; }
+.ck-input textarea { flex: 1; font-size: var(--fs-body); color: var(--text-primary); line-height: 1.5; padding: 7px 0; border: none; outline: none; resize: none; background: transparent; font-family: var(--font-body); overflow-y: auto; }
 .ck-input textarea::placeholder { color: var(--text-secondary); }
-.ck-send { width: 34px; height: 34px; border-radius: 10px; background: var(--amber-grad); color: #3a2900; display: grid; place-items: center; flex: none; cursor: pointer; border: 1px solid rgba(150,92,0,.45); box-shadow: var(--amber-glow); transition: filter .12s, transform .12s, box-shadow .12s, background .12s; }
-.ck-send:hover { filter: brightness(1.05); }
+.ck-send { width: 34px; height: 34px; border-radius: 10px; background: var(--grey-grad); color: #fff; display: grid; place-items: center; flex: none; cursor: pointer; border: 1px solid rgba(17,24,39,.35); box-shadow: var(--grey-glow); transition: filter .12s, transform .12s, box-shadow .12s, background .12s; }
+.ck-send:hover { background: var(--grey-grad-hover); }
 .ck-send:active { transform: translateY(.5px); }
 .ck-send svg { display: block; }
 .ck-send.disabled { background: #eceef1; color: #aab1bb; border-color: var(--border); box-shadow: none; cursor: default; pointer-events: none; filter: none; }
@@ -190,10 +197,10 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .lock-icon::before { content:""; position:absolute; left:1.5px; top:-3.5px; width:5px; height:5px; border:1.4px solid var(--text-secondary); border-bottom:0; border-radius:3px 3px 0 0; }
 
 /* ── Mode tabs ── */
-.ck-tabs { display: flex; gap: 4px; padding: 6px var(--pane-pad) 0; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.ck-tab { flex: 1; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); background: none; border: none; padding: 9px 0 10px; cursor: pointer; border-bottom: 2px solid transparent; font-family: var(--font-body); }
+.ck-tabs { display: flex; gap: 4px; padding: 3px var(--pane-pad) 0; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.ck-tab { flex: 1; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); background: none; border: none; padding: 6px 0 7px; cursor: pointer; border-bottom: 2px solid transparent; font-family: var(--font-body); }
 .ck-tab:hover { color: var(--text-primary); }
-.ck-tab.on { color: var(--navy); border-bottom-color: var(--amber); }
+.ck-tab.on { color: var(--navy); border-bottom-color: var(--navy); }
 
 /* ── Negotiation Simulator ── */
 .ck-sim { flex: 1; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; gap: 14px; padding: var(--pane-pad); }
@@ -211,7 +218,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .sim-loading { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: 12.5px; padding: 4px 2px; }
 .sim-error { border-radius: 8px; }
 .sim-empty { text-align: center; color: var(--text-secondary); font-size: 12.5px; line-height: 1.55; padding: 20px 18px; }
-.sim-placeholder { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; color: var(--text-secondary); font-size: 12.5px; line-height: 1.55; padding: 30px 22px; }
+.sim-placeholder { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; color: var(--text-secondary); font-size: 12.5px; line-height: 1.55; padding: 0px 22px; }
 .sim-ph-mark { width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(180deg,#1d1d24,#101015); display: grid; place-items: center; color: var(--amber); font-size: 22px; }
 .sim-count { font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--text-secondary); margin: 2px 2px 0; }
 
@@ -250,4 +257,26 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .sim-counter-head { display: flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 700; color: #fff; margin-bottom: 8px; }
 .sim-counter-icon { width: 13px; height: 13px; flex: none; background: var(--amber); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
 .sim-counter-pred { font-size: 12.5px; line-height: 1.55; margin: 0; color: #eef0f5; }
+
+/* ── Scrollbars ──
+ * Modern, slim black/grey track + thumb. Applies to the pane scrollbar and
+ * every inner scroll area (chat, simulator). WebKit/Chromium hosts use the
+ * ::-webkit-scrollbar pseudo-elements; Firefox uses scrollbar-* properties.
+ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #4b4b55 transparent;
+}
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: #3a3a44;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background .15s;
+}
+*::-webkit-scrollbar-thumb:hover { background: #56565f; background-clip: padding-box; }
+*::-webkit-scrollbar-thumb:active { background: #6c6c77; background-clip: padding-box; }
+*::-webkit-scrollbar-corner { background: transparent; }
 .sim-counter-arg { font-size: 12px; line-height: 1.55; margin: 8px 0 0; color: #b9bdca; font-style: italic; border-left: 2px solid rgba(245,158,11,.5); padding-left: 9px; }

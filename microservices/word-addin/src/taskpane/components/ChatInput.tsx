@@ -6,8 +6,13 @@ interface ChatInputProps {
   disabled?: boolean;
 }
 
+const MIN_HEIGHT = 40;
+const MAX_HEIGHT = 240;
+const DEFAULT_HEIGHT = 40;
+
 export default function ChatInput({ onSend, chatOpen, disabled = false }: ChatInputProps) {
   const [value, setValue] = useState("");
+  const [height, setHeight] = useState(DEFAULT_HEIGHT);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSend = () => {
@@ -24,25 +29,50 @@ export default function ChatInput({ onSend, chatOpen, disabled = false }: ChatIn
     }
   };
 
+  const handleResizeStart = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const startY = e.clientY;
+    const startHeight = height;
+    const handle = e.currentTarget;
+    handle.setPointerCapture(e.pointerId);
+
+    const onMove = (ev: PointerEvent) => {
+      // Drag up grows the box, drag down shrinks it.
+      const next = startHeight + (startY - ev.clientY);
+      setHeight(Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, next)));
+    };
+    const onUp = (ev: PointerEvent) => {
+      handle.releasePointerCapture(ev.pointerId);
+      handle.removeEventListener("pointermove", onMove);
+      handle.removeEventListener("pointerup", onUp);
+    };
+    handle.addEventListener("pointermove", onMove);
+    handle.addEventListener("pointerup", onUp);
+  };
+
   const canSend = value.trim().length > 0 && !disabled;
 
   return (
     <>
-      <div className="ck-privacy">
-        <div className="p-shield" />
-        <p className="p-txt">
-          <b>Your document stays private.</b> Text is only sent when you ask a question.
-        </p>
-      </div>
       <div className="ck-input-wrap">
+        <div
+          className="ck-input-resize"
+          onPointerDown={handleResizeStart}
+          role="separator"
+          aria-orientation="horizontal"
+          aria-label="Resize input"
+          title="Drag to resize"
+        >
+          <span className="ck-input-grip" />
+        </div>
         <div className="ck-input">
           <textarea
             ref={textareaRef}
-            rows={1}
             placeholder={chatOpen ? "Ask a follow-up…" : "Ask about this contract…"}
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
+            style={{ height }}
           />
           <button
             className={`ck-send${canSend ? "" : " disabled"}`}
@@ -61,10 +91,6 @@ export default function ChatInput({ onSend, chatOpen, disabled = false }: ChatIn
               />
             </svg>
           </button>
-        </div>
-        <div className="ck-hint">
-          <span className="lock-icon" />
-          Encrypted in transit · Your firm&apos;s data is never used to train models
         </div>
       </div>
     </>
