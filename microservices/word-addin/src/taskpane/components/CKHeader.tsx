@@ -18,6 +18,7 @@ export default function CKHeader({ theme, onToggleTheme }: CKHeaderProps) {
           onClick={onToggleTheme}
           aria-label={`Switch to ${nextTheme} mode`}
           title={`Switch to ${nextTheme} mode`}
+          style={{ display: "none" }}
         >
           {theme === "light" ? (
             // Moon — click to go dark

@@ -108,9 +108,9 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 
 /* ── Action card ── */
 .ck-action-wrap { margin-top: 10px; }
-.ck-action { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--amber); border-radius: 8px; box-shadow: var(--shadow-card); overflow: hidden; }
+.ck-action { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--navy-300); border-radius: 8px; box-shadow: var(--shadow-card); overflow: hidden; }
 .ck-action.sev-high { border-left-color: var(--destructive); }
-.ck-action.sev-medium { border-left-color: var(--amber); }
+.ck-action.sev-medium { border-left-color: var(--navy-300); }
 .ck-action.sev-low { border-left-color: var(--navy-300); }
 .a-head { padding: 11px 12px 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .a-badge { font-family: var(--font-mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--amber-600); background: var(--amber-soft); border-radius: 4px; padding: 3px 6px; }
@@ -197,7 +197,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .lock-icon::before { content:""; position:absolute; left:1.5px; top:-3.5px; width:5px; height:5px; border:1.4px solid var(--text-secondary); border-bottom:0; border-radius:3px 3px 0 0; }
 
 /* ── Mode tabs ── */
-.ck-tabs { display: flex; gap: 4px; padding: 3px var(--pane-pad) 0; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.ck-tabs { display: flex; gap: 0; padding: 3px 0 0; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }
 .ck-tab { flex: 1; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); background: none; border: none; padding: 6px 0 7px; cursor: pointer; border-bottom: 2px solid transparent; font-family: var(--font-body); }
 .ck-tab:hover { color: var(--text-primary); }
 .ck-tab.on { color: var(--navy); border-bottom-color: var(--navy); }
