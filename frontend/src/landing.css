@@ -227,17 +227,6 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
   filter: blur(40px); z-index: 0; pointer-events: none;
 }
 .shot .host { position: relative; z-index: 1; }
-.shot-fade {
-  position: absolute; left: 0; right: 0; bottom: -1px; height: 88px; z-index: 2; pointer-events: none;
-  background: linear-gradient(180deg,
-    rgba(8,8,10,0) 0%,
-    rgba(8,8,10,0.03) 22%,
-    rgba(8,8,10,0.12) 40%,
-    rgba(8,8,10,0.3) 56%,
-    rgba(8,8,10,0.56) 70%,
-    rgba(8,8,10,0.82) 84%,
-    rgba(8,8,10,1) 100%);
-}
 
 /* ============================================================
    WORD HOST MOCK
@@ -255,10 +244,6 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 .host-tb .sep { width:1px; height:22px; background:#ececef; margin:0 4px; }
 .host-tb .tb { width:30px; height:30px; border-radius:5px; display:grid; place-items:center; font-size:13px; color:#5a6068; font-family: var(--font-body); }
 .host-tb .tb.b{ font-weight:700; } .host-tb .tb.i{ font-style:italic; font-family:Georgia,serif; } .host-tb .tb.u{ text-decoration:underline; }
-.host-tb .addin { margin-left:auto; display:flex; align-items:center; gap:7px; font-size:12px; font-weight:600; color:#1f1f24; background:#f3f3f4; border:1px solid #e2e2e6; border-radius:6px; padding:5px 10px 5px 8px; font-family: var(--font-body); }
-.host-tb .addin .m { width:16px; height:16px; border-radius:4px; background: var(--ink-grad); display:grid; place-items:center; position: relative; }
-.host-tb .addin .m span { font-size:8px; font-weight:700; color:#fff; }
-
 .host-body { display: flex; height: 520px; }
 .host-doc { flex: 1; background:#edeef1; overflow: hidden; position: relative; padding: 26px 0; }
 .doc-page { width: 90%; max-width: 520px; margin: 0 auto; background:#fff; border-radius:2px; box-shadow: 0 1px 4px rgba(0,0,0,.10); padding: 40px 48px; height: 100%; overflow: hidden; }
@@ -271,10 +256,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 /* Docked pane */
 .pane { width: 350px; flex: none; border-left: 1px solid var(--p-border); background: var(--pane-bg); display: flex; flex-direction: column; font-family: var(--font-body); color: var(--p-text); }
 
-.ph { background: linear-gradient(180deg, #08080b 0%, #131318 55%, #232329 100%); color:#fff; height: 50px; display:flex; align-items:center; padding: 0 12px; gap: 10px; }
-.ph .hm { width:26px; height:26px; border-radius:7px; background: rgba(255,255,255,.10); display:grid; place-items:center; position:relative; border:1px solid rgba(255,255,255,.14); flex:none; }
-.ph .hm span { font-size:11px; font-weight:700; color:#fff; margin-bottom:2px; }
-.ph .hm::after { content:""; position:absolute; left:6px; right:6px; bottom:5px; height:1.5px; background: var(--amber); border-radius:2px; }
+.ph { background: linear-gradient(180deg, #08080b 0%, #131318 55%, #232329 100%); color:#fff; height: 50px; display:flex; align-items:center; justify-content:flex-start; text-align:left; padding: 0 14px; gap: 10px; }
 .ph .hn { font-size: 14px; font-weight: 600; letter-spacing:-.01em; }
 .ph .hs { font-size: 10px; color: rgba(244,246,251,.62); display:flex; align-items:center; gap:5px; }
 .ph .hs .live { width:6px; height:6px; border-radius:50%; background:#34d399; box-shadow:0 0 0 2px rgba(52,211,153,.25); }
@@ -282,8 +264,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 .pchat { flex:1; background: var(--pane-bg); padding: 12px; display:flex; flex-direction:column; gap: 12px; overflow: hidden; }
 .row { display:flex; gap:8px; }
 .row.user { justify-content: flex-end; }
-.av { width:24px; height:24px; border-radius:6px; background: var(--navy); display:grid; place-items:center; flex:none; margin-top:2px; }
-.av span { font-size:9px; font-weight:700; color:#fff; }
+.av { width:24px; height:24px; border-radius:6px; display:grid; place-items:center; flex:none; margin-top:2px; }
+.av img { width:22px; height:22px; object-fit:contain; display:block; }
 .bub { font-size:12.5px; line-height:1.5; padding:10px 12px; border-radius:12px; max-width: 262px; }
 .bub.user { background: var(--user-bubble); color: var(--navy); border-radius:12px 12px 4px 12px; }
 .bub.ai { background: var(--surface); border:1px solid var(--p-border); border-radius:4px 12px 12px 12px; box-shadow: 0 1px 2px rgba(17,24,39,.05); }
@@ -313,11 +295,9 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 
 .pinput { background: var(--surface); border-top:1px solid var(--p-border); padding: 10px 12px; }
 .pinput .box { background:#fff; border:1px solid var(--p-border-2); border-radius:10px; padding:9px 10px 9px 12px; display:flex; align-items:center; gap:8px; }
-.pinput .ph2 { flex:1; font-size:12.5px; color: var(--p-text-2); }
-.send { width:32px; height:32px; border-radius:8px; background: var(--navy); display:grid; place-items:center; flex:none; }
-.send .a { width:12px; height:12px; position:relative; }
-.send .a::before { content:""; position:absolute; left:5px; top:1px; width:2px; height:11px; background:#fff; border-radius:2px; }
-.send .a::after { content:""; position:absolute; left:2px; top:1px; width:8px; height:8px; border-top:2px solid #fff; border-left:2px solid #fff; transform: rotate(45deg); border-radius:2px 0 0 0; }
+.pinput .ph2 { flex:1; font-size:12.5px; color: var(--p-text-2); text-align:left; }
+.send { width:32px; height:32px; border-radius:8px; background:#3a3a44; display:grid; place-items:center; flex:none; }
+.send svg { display:block; }
 
 /* ============================================================
    SECTIONS
@@ -372,6 +352,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 /* Mini pane card (for spotlights) */
 .minipane { width: 100%; max-width: 360px; margin: 0 auto; background: var(--pane-bg); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: 0 30px 70px rgba(0,0,0,.5); font-family: var(--font-body); color: var(--p-text); }
 .minipane .pchat { padding: 14px; gap: 12px; }
+.minipane .action { border-left-color:#3a3a44; }
+.minipane .pbtn.primary { background:radial-gradient(120% 140% at 50% 50%, #5e5e68 0%, #55555f 45%, #43434c 100%); color:#fff; border-color:rgba(0,0,0,.25); box-shadow:0 1px 2px rgba(17,24,39,.18); }
 
 /* Risk flags list */
 @property --risk-ang { syntax: "<angle>"; inherits: false; initial-value: 0deg; }

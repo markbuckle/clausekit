@@ -1,3 +1,5 @@
+import ckMark from '../../assets/ck-mark-dark.svg';
+
 export default function ProductShot() {
   return (
     <section className="hero">
@@ -23,9 +25,6 @@ export default function ProductShot() {
               <span className="tb b">B</span>
               <span className="tb i">I</span>
               <span className="tb u">U</span>
-              <span className="addin">
-                <span className="m"><span>CK</span></span>ClauseKit
-              </span>
             </div>
             {/* Body */}
             <div className="host-body">
@@ -61,7 +60,6 @@ export default function ProductShot() {
               {/* Docked pane */}
               <div className="pane">
                 <div className="ph">
-                  <span className="hm"><span>CK</span></span>
                   <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
                     <span className="hn">ClauseKit</span>
                     <span className="hs"><span className="live" />Reviewing MSA · 14 pages</span>
@@ -74,7 +72,7 @@ export default function ProductShot() {
                     </div>
                   </div>
                   <div className="row">
-                    <div className="av"><span>CK</span></div>
+                    <div className="av"><img src={ckMark} alt="ClauseKit" /></div>
                     <div className="bub ai">
                       <p>
                         The cap ties total liability to <strong>12 months of fees</strong> - below
@@ -94,7 +92,7 @@ export default function ProductShot() {
                     </div>
                   </div>
                   <div className="row">
-                    <div className="av"><span>CK</span></div>
+                    <div className="av"><img src={ckMark} alt="ClauseKit" /></div>
                     <div style={{ flex: 1 }}>
                       <div className="action">
                         <div className="ah">
@@ -123,13 +121,23 @@ export default function ProductShot() {
                 <div className="pinput">
                   <div className="box">
                     <span className="ph2">Ask about this contract…</span>
-                    <span className="send"><span className="a" /></span>
+                    <span className="send">
+                      <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+                        <path
+                          d="M12 19V5M12 5l-6 6M12 5l6 6"
+                          fill="none"
+                          stroke="#fff"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="shot-fade" />
         </div>
       </div>
     </section>

@@ -1,4 +1,5 @@
 import checkLogo from '../../assets/check-logo-small.svg';
+import ckMark from '../../assets/ck-mark-dark.svg';
 
 export default function SpotlightGrounded() {
   return (
@@ -40,7 +41,6 @@ export default function SpotlightGrounded() {
           <div className="viz">
             <div className="minipane reveal">
               <div className="ph">
-                <span className="hm"><span>CK</span></span>
                 <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
                   <span className="hn">ClauseKit</span>
                   <span className="hs"><span className="live" />Whole-document context</span>
@@ -53,7 +53,7 @@ export default function SpotlightGrounded() {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="av"><span>CK</span></div>
+                  <div className="av"><img src={ckMark} alt="ClauseKit" /></div>
                   <div className="bub ai">
                     <p>Yes - for <strong>three years</strong> after termination, and indefinitely for trade secrets.</p>
                     <div className="quote">

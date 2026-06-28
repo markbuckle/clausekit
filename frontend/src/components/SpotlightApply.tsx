@@ -1,4 +1,5 @@
 import checkLogo from '../../assets/check-logo-small.svg';
+import ckMark from '../../assets/ck-mark-dark.svg';
 
 export default function SpotlightApply() {
   return (
@@ -39,7 +40,6 @@ export default function SpotlightApply() {
           <div className="viz">
             <div className="minipane reveal">
               <div className="ph">
-                <span className="hm"><span>CK</span></span>
                 <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
                   <span className="hn">ClauseKit</span>
                   <span className="hs"><span className="live" />§ 12 · Term &amp; Termination</span>
@@ -50,7 +50,7 @@ export default function SpotlightApply() {
                   <div className="bub user"><p>This auto-renews. Add a notice window.</p></div>
                 </div>
                 <div className="row">
-                  <div className="av"><span>CK</span></div>
+                  <div className="av"><img src={ckMark} alt="ClauseKit" /></div>
                   <div style={{ flex: 1 }}>
                     <div className="action">
                       <div className="ah">

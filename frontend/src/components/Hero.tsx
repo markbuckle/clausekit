@@ -11,7 +11,7 @@ export default function Hero() {
         <p className="lede reveal">
           Review and redline contracts then simulate the negotiation
         </p>
-        <img className="pill-img" src={ckCustom} alt="ClauseKit now has a negotiation simulator" />
+        <img className="pill-img" src={ckCustom} />
         <div className="hero-cta reveal">
           <a className="btn demo lg" href="#demo">
             Try the demo
