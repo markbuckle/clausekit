@@ -246,8 +246,10 @@ export default function App() {
             (e.g. Stats count-up cascade, Testimonial fade, RunInWord steps). */}
         {/* <Stats /> */}
         {/* <Testimonial /> */}
-        {/* <RunInWord /> */}
         <FinalCta />
+        {/* RunInWord section retired: the "Run in Word" CTA in FinalCta now
+            downloads the sample lease (.docx) directly instead of scrolling here. */}
+        {/* <RunInWord /> */}
       </main>
       <FooterWordmark />
       <Footer />

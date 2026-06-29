@@ -1,4 +1,4 @@
-import { PLAYGROUND_URL } from '../config';
+import { PLAYGROUND_URL, LEASE_DOCX_URL } from '../config';
 
 export default function FinalCta() {
   return (
@@ -13,7 +13,7 @@ export default function FinalCta() {
             <a className="btn demo lg" href={PLAYGROUND_URL} target="_blank" rel="noopener noreferrer">
               Run in browser
             </a>
-            <a className="btn demo lg blue" href="#run-in-word">
+            <a className="btn demo lg blue" href={LEASE_DOCX_URL} download>
               Run in Word
             </a>
           </div>
