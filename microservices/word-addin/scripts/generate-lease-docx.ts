@@ -1,42 +1,97 @@
 /*
- * Generates demo/lease.docx from the seeded fixture — same clauses, headings,
- * and text as getLeaseFullText(), preserving exact punctuation (curly quotes, §,
+ * Generates lease.docx from the seeded fixture — same clauses, headings, and
+ * text as getLeaseFullText(), preserving exact punctuation (curly quotes, §,
  * em-dashes) so model-proposed originalText spans match what Word.run reads back.
  *
- * This is both the test document and the file to open in the "run in real Word"
- * demo. Run with: npm run gen:docx
+ * This is the test document, the file the add-in opens in the "run in real Word"
+ * demo, and the file the landing page offers for download — written to all
+ * consumers at once (see OUT_PATHS). Run with: npm run gen:docx
  */
 import { mkdirSync, writeFileSync } from "fs";
-import { Document, HeadingLevel, Packer, Paragraph, TextRun } from "docx";
+import { dirname } from "path";
+import { AlignmentType, Document, LineRuleType, Packer, Paragraph, TextRun } from "docx";
 import { LEASE_TITLE, leaseRecitals, leaseClauses } from "../src/fixtures/lease";
 
-const OUT_PATH = "demo/lease.docx";
+// Written to both consumers so the copies can't drift: the add-in's demo dir
+// (the file Word sideloads) and the landing page's public dir (served by the
+// "Run in Word" download button). Paths are relative to this package's root,
+// which is the cwd when run via `npm run gen:docx`.
+const OUT_PATHS = ["demo/lease.docx", "../../frontend/public/lease.docx"];
+
+/*
+ * Formatting mirrors the browser playground's document pane (playground.css) so
+ * the real-Word demo reads identically to "Run in Browser": a Georgia serif
+ * body, a centered uppercase title, justified prose, and clause headings whose
+ * §-ref sits in gray monospace beside a bold heading.
+ *
+ * CSS px are converted to Word units: pt = px * 0.75 (96dpi); docx font `size`
+ * is in half-points, paragraph `spacing` (before/after) in twips (pt * 20), and
+ * line `spacing.line` in 240ths of a line (line-height * 240, AUTO rule).
+ */
+const SERIF = "Georgia";
+const MONO = "Consolas";
+const INK = "1F2430"; // playground body color
+const REF_GRAY = "6B7280"; // .pg-ref color
 
 async function main() {
   const children: Paragraph[] = [
+    // .pg-doc-title — centered, bold, uppercase, 19px, 28px gap below.
     new Paragraph({
-      heading: HeadingLevel.TITLE,
-      children: [new TextRun({ text: LEASE_TITLE, bold: true })],
+      alignment: AlignmentType.CENTER,
+      spacing: { after: 420 },
+      children: [
+        new TextRun({
+          text: LEASE_TITLE,
+          bold: true,
+          allCaps: true,
+          size: 28, // 14pt ≈ 19px
+          characterSpacing: 11, // ~0.04em letter-spacing
+          color: INK,
+          font: SERIF,
+        }),
+      ],
     }),
-    new Paragraph({ children: [new TextRun(leaseRecitals)] }),
+    // .pg-recitals — justified, 14px, line-height 1.75, 28px gap below.
+    new Paragraph({
+      alignment: AlignmentType.JUSTIFIED,
+      spacing: { after: 420, line: 420, lineRule: LineRuleType.AUTO },
+      children: [new TextRun({ text: leaseRecitals, size: 21, color: INK, font: SERIF })],
+    }),
   ];
 
   for (const clause of leaseClauses) {
+    // .pg-clause-head — gray monospace ref + bold serif heading, 8px gap below.
+    // The ref keeps its trailing period ("§5.") so OfficeDocumentService.scrollTo,
+    // which searches for `${clauseRef}.`, can still locate the heading in real Word.
     children.push(
       new Paragraph({
-        heading: HeadingLevel.HEADING_2,
-        children: [new TextRun({ text: `${clause.ref}. ${clause.heading}`, bold: true })],
+        spacing: { after: 120 },
+        children: [
+          new TextRun({ text: `${clause.ref}.`, size: 19, color: REF_GRAY, font: MONO }),
+          new TextRun({ text: `  ${clause.heading}`, bold: true, size: 22, color: INK, font: SERIF }),
+        ],
       })
     );
-    children.push(new Paragraph({ children: [new TextRun(clause.text)] }));
+    // .pg-clause-text — justified, 14px, line-height 1.8, 22px gap below.
+    children.push(
+      new Paragraph({
+        alignment: AlignmentType.JUSTIFIED,
+        spacing: { after: 330, line: 432, lineRule: LineRuleType.AUTO },
+        children: [new TextRun({ text: clause.text, size: 21, color: INK, font: SERIF })],
+      })
+    );
   }
 
   const doc = new Document({ sections: [{ children }] });
   const buffer = await Packer.toBuffer(doc);
 
-  mkdirSync("demo", { recursive: true });
-  writeFileSync(OUT_PATH, buffer);
-  console.log(`Wrote ${OUT_PATH} (${buffer.length} bytes, ${leaseClauses.length} clauses)`);
+  for (const out of OUT_PATHS) {
+    mkdirSync(dirname(out), { recursive: true });
+    writeFileSync(out, buffer);
+  }
+  console.log(
+    `Wrote ${buffer.length} bytes (${leaseClauses.length} clauses) to: ${OUT_PATHS.join(", ")}`
+  );
 }
 
 main().catch((err) => {
