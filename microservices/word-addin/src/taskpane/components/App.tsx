@@ -9,11 +9,17 @@ import { useNegotiate } from "./useNegotiate";
 
 interface AppProps {
   title: string;
+  /**
+   * Render the app's own branded header. Defaults to true (the browser
+   * playground). Hidden inside the Office task pane, whose host chrome already
+   * shows the add-in name — so Word doesn't stack two "ClauseKit" headers.
+   */
+  showHeader?: boolean;
 }
 
 type Mode = "ask" | "simulator";
 
-export default function App(_props: AppProps) {
+export default function App({ showHeader = true }: AppProps) {
   const [mode, setMode] = useState<Mode>("ask");
   const [theme, setTheme] = useState<Theme>("light");
   const chat = useChat();
@@ -22,10 +28,12 @@ export default function App(_props: AppProps) {
 
   return (
     <div className="ck-pane" data-theme={theme}>
-      <CKHeader
-        theme={theme}
-        onToggleTheme={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
-      />
+      {showHeader && (
+        <CKHeader
+          theme={theme}
+          onToggleTheme={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
+        />
+      )}
       <div className="ck-tabs">
         <button className={`ck-tab${mode === "ask" ? " on" : ""}`} onClick={() => setMode("ask")}>
           Ask

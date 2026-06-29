@@ -18,7 +18,7 @@ const root = rootElement ? createRoot(rootElement) : undefined;
 Office.onReady((info) => {
   root?.render(
     <DocumentServiceProvider service={documentService}>
-      <App title={title} />
+      <App title={title} showHeader={false} />
     </DocumentServiceProvider>
   );
 
@@ -38,7 +38,7 @@ if ((module as any).hot) {
     const NextApp = require("./components/App").default;
     root?.render(
       <DocumentServiceProvider service={documentService}>
-        <NextApp title={title} />
+        <NextApp title={title} showHeader={false} />
       </DocumentServiceProvider>
     );
   });
