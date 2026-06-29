@@ -26,7 +26,7 @@
     "signin": "office-addin-dev-settings m365-account login",
     "signout": "office-addin-dev-settings m365-account logout",
     "prestart": "node scripts/free-port.cjs 3000 && npm run gen:docx",
-    "start": "office-addin-debugging start manifest.xml desktop --app word --document demo/lease.docx",
+    "start": "office-addin-debugging start manifest.xml desktop --app word --document demo/lease.docx --no-debug",
     "stop": "office-addin-debugging stop manifest.xml",
     "validate": "office-addin-manifest validate manifest.xml",
     "watch": "webpack --mode development --watch"
