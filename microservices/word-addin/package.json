@@ -25,8 +25,8 @@
     "prettier": "office-addin-lint prettier",
     "signin": "office-addin-dev-settings m365-account login",
     "signout": "office-addin-dev-settings m365-account logout",
-    "prestart": "node scripts/free-port.cjs 3000",
-    "start": "office-addin-debugging start manifest.xml",
+    "prestart": "node scripts/free-port.cjs 3000 && npm run gen:docx",
+    "start": "office-addin-debugging start manifest.xml desktop --app word --document demo/lease.docx",
     "stop": "office-addin-debugging stop manifest.xml",
     "validate": "office-addin-manifest validate manifest.xml",
     "watch": "webpack --mode development --watch"
