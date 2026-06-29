@@ -4,6 +4,11 @@ import { PLAYGROUND_URL } from '../config';
 
 export default function Nav() {
   const [hidden, setHidden] = useState(false);
+  // Intro: the nav starts off-screen and drops in shortly after load.
+  // Reduced-motion users skip the intro and see it in place immediately.
+  const [intro, setIntro] = useState(
+    () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  );
   const lastScrollY = useRef(0);
 
   useEffect(() => {
@@ -16,8 +21,14 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!intro) return;
+    const t = window.setTimeout(() => setIntro(false), 1200);
+    return () => window.clearTimeout(t);
+  }, [intro]);
+
   return (
-    <header className={`nav${hidden ? ' nav-hidden' : ''}`}>
+    <header className={`nav${intro || hidden ? ' nav-hidden' : ''}`}>
       <div className="wrap nav-inner">
         <a className="brand" href="#top">
           <span className="mark logo"><img src={ckMark} alt="ClauseKit" /></span>
