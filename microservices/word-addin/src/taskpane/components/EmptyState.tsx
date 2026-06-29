@@ -12,7 +12,7 @@ export default function EmptyState({ onPrompt }: EmptyStateProps) {
   return (
     <div className="ck-empty">
       <p className="e-sub">
-        Ask anything about the contract you&apos;re in or pick a starting point below.
+        Ask anything about this contract or pick a starting point below.
       </p>
       <div className="ck-suggest">
         {PROMPTS.map((p) => (
