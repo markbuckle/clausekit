@@ -75,7 +75,7 @@ const NEGOTIATE_PER_DAY = Number(process.env.NEGOTIATE_RATE_PER_DAY) || 25;
 const DAILY_TOKEN_CEILING =
   process.env.DAILY_TOKEN_CEILING !== undefined && process.env.DAILY_TOKEN_CEILING.trim() !== ""
     ? Number(process.env.DAILY_TOKEN_CEILING)
-    : 2_000; // TEMP: tiny default to demo the spend-limit error (~1 war-game). Raise (or set DAILY_TOKEN_CEILING) for real use.
+    : 25_000; // ~6 war-games or ~28 asks/day before the backstop trips; override via DAILY_TOKEN_CEILING.
 
 if (!process.env.ANTHROPIC_API_KEY) {
   console.error("Missing ANTHROPIC_API_KEY. Set it in backend/.env (see .env.example).");
