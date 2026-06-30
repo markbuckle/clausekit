@@ -100,6 +100,13 @@ module.exports = async (env, options) => {
       new webpack.ProvidePlugin({
         Promise: ["es6-promise", "Promise"],
       }),
+      // Inject the backend base URL at build time. Defaults to the local backend;
+      // set API_BASE_URL in the environment when building for deployment (8b).
+      new webpack.DefinePlugin({
+        __CLAUSEKIT_API_BASE_URL__: JSON.stringify(
+          process.env.API_BASE_URL || "http://localhost:4000"
+        ),
+      }),
     ],
     devServer: {
       hot: true,

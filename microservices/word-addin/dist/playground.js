@@ -1,3 +1,3548 @@
-/*! For license information please see playground.js.LICENSE.txt */
-"use strict";(globalThis.webpackChunkclausekit=globalThis.webpackChunkclausekit||[]).push([[188],{92881(e,n,a){a.d(n,{A:()=>o,E:()=>i});var r=a(74848),A=a(96540);const t=(0,A.createContext)(null);function o({service:e,children:n}){return(0,r.jsx)(t.Provider,{value:e,children:n})}function i(){const e=(0,A.useContext)(t);if(!e)throw new Error("useDocumentService must be used within a <DocumentServiceProvider>. Wrap the app in a provider with a mock or Word DocumentService.");return e}},72538(e,n,a){a.d(n,{A:()=>i});var r=a(71354),A=a.n(r),t=a(76314),o=a.n(t)()(A());o.push([e.id,"/* ── ClauseKit Playground chrome ──\n *\n * Playground-only layout: a two-pane demo surface (lease document on the\n * left, the real task pane docked on the right). This file styles ONLY the\n * playground shell and the rendered document — the task pane itself comes\n * entirely from the shared design system (clausekit.css).\n */\n\n.pg-root {\n  display: flex;\n  height: 100vh;\n  width: 100%;\n  overflow: hidden;\n  background: #eef0f3;\n}\n\n/* ── Document pane (left/center) ── */\n.pg-doc-pane {\n  flex: 1;\n  min-width: 0;\n  overflow-y: auto;\n  padding: 32px 24px 64px;\n  display: flex;\n  justify-content: center;\n  /* Top-align so the page sizes to its content height instead of being\n     stretched to the (viewport-bound) pane height. The pane is the scroll\n     container; gray shows only as the margin around the page. */\n  align-items: flex-start;\n}\n\n.pg-doc {\n  width: 100%;\n  max-width: 760px;\n  background: #fff;\n  border: 1px solid #e3e6ea;\n  border-radius: 4px;\n  box-shadow: 0 4px 24px rgba(17, 24, 39, 0.08);\n  padding: 56px 72px 72px;\n  /* height is auto (grows with content); fill the viewport when the document\n     is short. 96px = the pane's top (32) + bottom (64) padding. */\n  min-height: calc(100vh - 96px);\n  /* A serif gives the document a contractual feel, distinct from the pane UI. */\n  font-family: Georgia, 'Times New Roman', serif;\n  color: #1f2430;\n}\n\n.pg-doc-title {\n  text-align: center;\n  font-size: 19px;\n  font-weight: 700;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  margin: 0 0 28px;\n}\n\n.pg-recitals {\n  font-size: 14px;\n  line-height: 1.75;\n  text-align: justify;\n  margin: 0 0 28px;\n}\n\n.pg-clause {\n  margin: 0 0 22px;\n  scroll-margin-top: 24px;\n}\n\n.pg-clause-head {\n  font-size: 14.5px;\n  font-weight: 700;\n  margin: 0 0 8px;\n  display: flex;\n  gap: 8px;\n  align-items: baseline;\n}\n\n.pg-ref {\n  font-family: var(--font-mono, 'Roboto Mono', monospace);\n  font-size: 12.5px;\n  color: #6b7280;\n  flex: none;\n}\n\n.pg-clause-text {\n  font-size: 14px;\n  line-height: 1.8;\n  text-align: justify;\n  margin: 0;\n}\n\n/* ── Tracked-change rendering (Word-style) ── */\n.pg-del {\n  color: #b42318;\n  text-decoration: line-through;\n  text-decoration-color: rgba(180, 35, 24, 0.6);\n}\n.pg-ins {\n  color: #067647;\n  text-decoration: underline;\n  text-decoration-thickness: 1px;\n  margin-left: 3px;\n}\n\n/* Brief highlight when scrollTo targets a clause. */\n.pg-flash {\n  animation: pg-flash 1.2s ease-out;\n  border-radius: 3px;\n}\n@keyframes pg-flash {\n  0% { background: rgba(245, 158, 11, 0); }\n  18% { background: rgba(245, 158, 11, 0.35); }\n  100% { background: rgba(245, 158, 11, 0); }\n}\n\n/* ── Task-pane host (right) ── */\n.pg-pane-host {\n  width: 372px;\n  flex: none;\n  height: 100vh;\n  background: var(--bg, #f8f9fa);\n  border-left: 1px solid #d6dae0;\n  box-shadow: -6px 0 24px rgba(17, 24, 39, 0.08);\n  overflow: hidden;\n}\n\n/* The shared .ck-pane fills the host exactly as it does the Office task pane. */\n.pg-pane-host .ck-pane {\n  height: 100%;\n}\n","",{version:3,sources:["webpack://./src/playground/playground.css"],names:[],mappings:"AAAA;;;;;;EAME;;AAEF;EACE,aAAa;EACb,aAAa;EACb,WAAW;EACX,gBAAgB;EAChB,mBAAmB;AACrB;;AAEA,sCAAsC;AACtC;EACE,OAAO;EACP,YAAY;EACZ,gBAAgB;EAChB,uBAAuB;EACvB,aAAa;EACb,uBAAuB;EACvB;;gEAE8D;EAC9D,uBAAuB;AACzB;;AAEA;EACE,WAAW;EACX,gBAAgB;EAChB,gBAAgB;EAChB,yBAAyB;EACzB,kBAAkB;EAClB,6CAA6C;EAC7C,uBAAuB;EACvB;kEACgE;EAChE,8BAA8B;EAC9B,8EAA8E;EAC9E,8CAA8C;EAC9C,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,eAAe;EACf,gBAAgB;EAChB,sBAAsB;EACtB,yBAAyB;EACzB,gBAAgB;AAClB;;AAEA;EACE,eAAe;EACf,iBAAiB;EACjB,mBAAmB;EACnB,gBAAgB;AAClB;;AAEA;EACE,gBAAgB;EAChB,uBAAuB;AACzB;;AAEA;EACE,iBAAiB;EACjB,gBAAgB;EAChB,eAAe;EACf,aAAa;EACb,QAAQ;EACR,qBAAqB;AACvB;;AAEA;EACE,uDAAuD;EACvD,iBAAiB;EACjB,cAAc;EACd,UAAU;AACZ;;AAEA;EACE,eAAe;EACf,gBAAgB;EAChB,mBAAmB;EACnB,SAAS;AACX;;AAEA,gDAAgD;AAChD;EACE,cAAc;EACd,6BAA6B;EAC7B,6CAA6C;AAC/C;AACA;EACE,cAAc;EACd,0BAA0B;EAC1B,8BAA8B;EAC9B,gBAAgB;AAClB;;AAEA,oDAAoD;AACpD;EACE,iCAAiC;EACjC,kBAAkB;AACpB;AACA;EACE,KAAK,iCAAiC,EAAE;EACxC,MAAM,oCAAoC,EAAE;EAC5C,OAAO,iCAAiC,EAAE;AAC5C;;AAEA,iCAAiC;AACjC;EACE,YAAY;EACZ,UAAU;EACV,aAAa;EACb,8BAA8B;EAC9B,8BAA8B;EAC9B,8CAA8C;EAC9C,gBAAgB;AAClB;;AAEA,gFAAgF;AAChF;EACE,YAAY;AACd",sourcesContent:["/* ── ClauseKit Playground chrome ──\n *\n * Playground-only layout: a two-pane demo surface (lease document on the\n * left, the real task pane docked on the right). This file styles ONLY the\n * playground shell and the rendered document — the task pane itself comes\n * entirely from the shared design system (clausekit.css).\n */\n\n.pg-root {\n  display: flex;\n  height: 100vh;\n  width: 100%;\n  overflow: hidden;\n  background: #eef0f3;\n}\n\n/* ── Document pane (left/center) ── */\n.pg-doc-pane {\n  flex: 1;\n  min-width: 0;\n  overflow-y: auto;\n  padding: 32px 24px 64px;\n  display: flex;\n  justify-content: center;\n  /* Top-align so the page sizes to its content height instead of being\n     stretched to the (viewport-bound) pane height. The pane is the scroll\n     container; gray shows only as the margin around the page. */\n  align-items: flex-start;\n}\n\n.pg-doc {\n  width: 100%;\n  max-width: 760px;\n  background: #fff;\n  border: 1px solid #e3e6ea;\n  border-radius: 4px;\n  box-shadow: 0 4px 24px rgba(17, 24, 39, 0.08);\n  padding: 56px 72px 72px;\n  /* height is auto (grows with content); fill the viewport when the document\n     is short. 96px = the pane's top (32) + bottom (64) padding. */\n  min-height: calc(100vh - 96px);\n  /* A serif gives the document a contractual feel, distinct from the pane UI. */\n  font-family: Georgia, 'Times New Roman', serif;\n  color: #1f2430;\n}\n\n.pg-doc-title {\n  text-align: center;\n  font-size: 19px;\n  font-weight: 700;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  margin: 0 0 28px;\n}\n\n.pg-recitals {\n  font-size: 14px;\n  line-height: 1.75;\n  text-align: justify;\n  margin: 0 0 28px;\n}\n\n.pg-clause {\n  margin: 0 0 22px;\n  scroll-margin-top: 24px;\n}\n\n.pg-clause-head {\n  font-size: 14.5px;\n  font-weight: 700;\n  margin: 0 0 8px;\n  display: flex;\n  gap: 8px;\n  align-items: baseline;\n}\n\n.pg-ref {\n  font-family: var(--font-mono, 'Roboto Mono', monospace);\n  font-size: 12.5px;\n  color: #6b7280;\n  flex: none;\n}\n\n.pg-clause-text {\n  font-size: 14px;\n  line-height: 1.8;\n  text-align: justify;\n  margin: 0;\n}\n\n/* ── Tracked-change rendering (Word-style) ── */\n.pg-del {\n  color: #b42318;\n  text-decoration: line-through;\n  text-decoration-color: rgba(180, 35, 24, 0.6);\n}\n.pg-ins {\n  color: #067647;\n  text-decoration: underline;\n  text-decoration-thickness: 1px;\n  margin-left: 3px;\n}\n\n/* Brief highlight when scrollTo targets a clause. */\n.pg-flash {\n  animation: pg-flash 1.2s ease-out;\n  border-radius: 3px;\n}\n@keyframes pg-flash {\n  0% { background: rgba(245, 158, 11, 0); }\n  18% { background: rgba(245, 158, 11, 0.35); }\n  100% { background: rgba(245, 158, 11, 0); }\n}\n\n/* ── Task-pane host (right) ── */\n.pg-pane-host {\n  width: 372px;\n  flex: none;\n  height: 100vh;\n  background: var(--bg, #f8f9fa);\n  border-left: 1px solid #d6dae0;\n  box-shadow: -6px 0 24px rgba(17, 24, 39, 0.08);\n  overflow: hidden;\n}\n\n/* The shared .ck-pane fills the host exactly as it does the Office task pane. */\n.pg-pane-host .ck-pane {\n  height: 100%;\n}\n"],sourceRoot:""}]);const i=o},32777(e,n,a){a.d(n,{A:()=>i});var r=a(71354),A=a.n(r),t=a(76314),o=a.n(t)()(A());o.push([e.id,'/* ── ClauseKit Task Pane Design System ──\n *\n * Single source of truth for the task-pane UI. Loaded by both the Office\n * entry (src/taskpane/index.tsx) and the browser playground\n * (src/playground/playground.tsx) so the pane looks identical in either host.\n */\n:root {\n  --navy: #0E0E12;\n  --navy-700: #2b2b34;\n  --navy-300: #6c6c77;\n  --amber: #F59E0B;\n  --amber-600: #d4870a;\n  --amber-soft: #FEF3C7;\n  --amber-grad: linear-gradient(180deg, #FCC04A 0%, #F59E0B 52%, #E88B05 100%);\n  --amber-glow: inset 0 1px 0 rgba(255,255,255,.35), 0 2px 10px rgba(245,158,11,.4), 0 1px 2px rgba(160,98,0,.45);\n  --grey-grad: linear-gradient(180deg, #5b5b66 0%, #3d3d47 52%, #2b2b34 100%);\n  --grey-grad-hover: linear-gradient(180deg, #66666f 0%, #46464f 52%, #33333b 100%);\n  --grey-glow: inset 0 1px 0 rgba(255,255,255,.14), 0 2px 8px rgba(17,24,39,.20), 0 1px 2px rgba(17,24,39,.28);\n  --bg: #F8F9FA;\n  --surface: #FFFFFF;\n  --user-bubble: #EEF2FF;\n  --text-primary: #111827;\n  --text-secondary: #6B7280;\n  --border: #E5E7EB;\n  --border-strong: #D1D5DB;\n  --destructive: #EF4444;\n  --destructive-soft: #FEF2F2;\n  --fs-header: 16px;\n  --fs-body: 13px;\n  --fs-label: 11px;\n  --pane-pad: 12px;\n  --shadow-card: 0 1px 2px rgba(17,24,39,.06), 0 1px 3px rgba(17,24,39,.05);\n  --font-display: \'Space Grotesk\', \'Inter\', system-ui, sans-serif;\n  --font-body: \'Inter\', system-ui, sans-serif;\n  --font-mono: \'Roboto Mono\', monospace;\n}\n* { box-sizing: border-box; }\nhtml, body { margin: 0; padding: 0; height: 100%; -webkit-font-smoothing: antialiased; }\nbody { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); }\n#container { height: 100%; }\n\n/* Pane shell */\n.ck-pane { height: 100%; display: flex; flex-direction: column; }\n\n/* ── Header ── */\n.ck-header {\n  background: linear-gradient(180deg, #08080b 0%, #131318 55%, #232329 100%);\n  color: #fff; height: 36px; display: flex; align-items: center;\n  padding: 0 var(--pane-pad); gap: 10px;\n  border-bottom: 1px solid rgba(255,255,255,.06); flex-shrink: 0;\n}\n.h-mark { width: 30px; height: 30px; display: grid; place-items: center; flex: none; }\n.h-mark img { width: 26px; height: 26px; object-fit: contain; display: block; }\n.h-txt { display: flex; flex-direction: column; justify-content: center; line-height: 1.15; }\n.h-name { font-family: var(--font-display); font-size: var(--fs-header); font-weight: 600; letter-spacing: -.01em; }\n.h-actions { margin-left: auto; display: flex; gap: 2px; }\n.ck-theme-btn { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; color: rgba(255,255,255,.78); cursor: pointer; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10); transition: background .14s, color .14s, border-color .14s; }\n.ck-theme-btn:hover { background: rgba(255,255,255,.14); color: #fff; border-color: rgba(255,255,255,.18); }\n.ck-theme-btn:active { transform: translateY(.5px); }\n.ck-theme-btn svg { display: block; }\n\n/* ── Chat scroll area ── */\n.ck-chat { flex: 1; background: var(--bg); padding: var(--pane-pad); display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }\n.ck-daydiv { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: var(--fs-label); }\n.ck-daydiv::before, .ck-daydiv::after { content:""; height:1px; background: var(--border); flex:1; }\n\n/* Message rows */\n.ck-row { display: flex; gap: 8px; }\n.ck-row.user { justify-content: flex-end; }\n.ck-avatar { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; flex: none; margin-top: 2px; }\n.ck-avatar span { font-size: 9px; font-weight: 700; color: #fff; letter-spacing: .02em; }\n.ck-avatar img { width: 22px; height: 22px; object-fit: contain; display: block; }\n.ck-bubble { font-size: var(--fs-body); line-height: 1.55; padding: 10px 12px; border-radius: 12px; max-width: 264px; }\n.ck-bubble.user { background: var(--user-bubble); color: var(--navy); border-radius: 12px 12px 4px 12px; }\n.ck-bubble.ai { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); }\n.ck-bubble p { margin: 0; }\n.ck-bubble p + p { margin-top: 8px; }\n.ck-bubble strong { font-weight: 600; }\n.ck-time { font-size: 10px; color: var(--text-secondary); margin-top: 4px; }\n.ck-row.user .ck-time { text-align: right; }\n\n/* Quote block */\n.ck-quote { background: #fafbfc; border: 1px solid var(--border); border-left: 3px solid var(--navy-300); border-radius: 6px; padding: 9px 11px; margin: 10px 0 4px; }\n.q-meta { font-family: var(--font-mono); font-size: 10px; color: var(--text-secondary); letter-spacing: .02em; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }\n.q-meta::before { content:"\\201C"; font-family: Georgia, serif; font-size: 16px; line-height: 0; color: var(--navy-300); position: relative; top: 3px; }\n.q-text { font-size: 12px; line-height: 1.6; color: #374151; font-style: italic; }\n.q-text mark { background: var(--amber-soft); font-style: normal; padding: 0 1px; }\n\n/* Empty lines inside an AI answer (preserves list/paragraph spacing) */\n.ck-bubble.ai .ck-gap { height: 8px; }\n\n/* Error bubble + retry (chat thread) */\n.ck-error-bubble { background: var(--destructive-soft); border: 1px solid #fecdca; border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); padding: 10px 12px; font-size: var(--fs-body); line-height: 1.55; color: #b42318; }\n.ck-error-bubble p { margin: 0 0 8px; }\n.ck-retry { font-size: 12px; font-weight: 500; color: var(--navy); background: #fff; border: 1px solid var(--border-strong); border-radius: 6px; padding: 5px 12px; cursor: pointer; font-family: var(--font-body); }\n.ck-retry:hover { background: #f9fafb; }\n\n/* Citation chips row */\n.ck-cites { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }\n.ck-cites .ck-cite { margin-top: 0; }\n\n/* Citation chip */\n.ck-cite { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 11px; font-weight: 500; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 999px; padding: 4px 10px 4px 8px; cursor: pointer; }\n.ck-cite:hover { background: #e4eafd; }\n.pin { width: 11px; height: 11px; position: relative; flex: none; }\n.pin::before { content:""; position:absolute; inset:0; border:1.5px solid var(--navy); border-radius:50% 50% 50% 0; transform: rotate(-45deg); }\n.cite-arr { margin-left: 1px; color: var(--navy-300); font-size: 10px; }\n\n/* ── Action card ── */\n.ck-action-wrap { margin-top: 10px; }\n.ck-action { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--navy-300); border-radius: 8px; box-shadow: var(--shadow-card); overflow: hidden; }\n.ck-action.sev-high { border-left-color: var(--destructive); }\n.ck-action.sev-medium { border-left-color: var(--navy-300); }\n.ck-action.sev-low { border-left-color: var(--navy-300); }\n.a-head { padding: 11px 12px 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }\n.a-badge { font-family: var(--font-mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--amber-600); background: var(--amber-soft); border-radius: 4px; padding: 3px 6px; }\n.a-clause { font-family: var(--font-mono); font-size: 11px; font-weight: 500; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 4px; padding: 2px 6px; }\n.a-sev { margin-left: auto; font-size: 9px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; border-radius: 4px; padding: 2px 6px; }\n.a-sev.sev-high { color: #b42318; background: var(--destructive-soft); }\n.a-sev.sev-medium { color: var(--amber-600); background: var(--amber-soft); }\n.a-sev.sev-low { color: var(--text-secondary); background: #f3f4f6; }\n.a-title { font-size: 12.5px; font-weight: 600; line-height: 1.35; color: var(--text-primary); }\n.a-body { padding: 9px 12px 0; }\n.a-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.55; margin: 0; }\n.a-error { font-size: 12px; color: var(--destructive); background: var(--destructive-soft); border: 1px solid #fecdca; border-radius: 6px; padding: 7px 9px; margin: 10px 0 0; line-height: 1.45; }\n\n/* Diff */\n.ck-diff { margin: 10px 0 2px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; font-family: var(--font-mono); font-size: 11px; line-height: 1.55; }\n.d-line { padding: 6px 10px 6px 24px; position: relative; }\n.d-del { background: var(--destructive-soft); color: #b42318; }\n.d-del .t { text-decoration: line-through; text-decoration-color: rgba(180,35,24,.5); }\n.d-add { background: #ecfdf3; color: #067647; border-top: 1px solid #d1fadf; }\n.d-line::before { position: absolute; left: 9px; top: 6px; font-weight: 700; }\n.d-del::before { content: "−"; color: #d92d20; }\n.d-add::before { content: "+"; color: #079455; }\n\n/* Action footer */\n.a-foot { display: flex; gap: 8px; padding: 12px; align-items: center; }\n.a-foot .spacer { flex: 1; }\n.ck-btn { font-size: 13px; font-weight: 500; border-radius: 6px; padding: 8px 14px; cursor: pointer; border: 1px solid transparent; line-height: 1; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; font-family: var(--font-body); transition: background .12s, border-color .12s; }\n.ck-btn.primary { background: var(--grey-grad); color: #fff; font-weight: 600; border-color: rgba(17,24,39,.35); box-shadow: var(--grey-glow); }\n.ck-btn.primary:hover { background: var(--grey-grad-hover); }\n.ck-btn.danger-ghost { background: transparent; color: var(--text-secondary); border-color: transparent; }\n.ck-btn.danger-ghost:hover { background: var(--destructive-soft); color: var(--destructive); }\n.ck-btn.applied { background: #ecfdf3; color: #067647; border-color: #d1fadf; cursor: default; }\n.ck-btn.applied:hover { filter: none; }\n.chk { width: 6px; height: 11px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(40deg) translateY(-1px); display: inline-block; }\n\n/* Thinking dots */\n.ck-thinking { display: flex; gap: 8px; align-items: center; }\n.t-bubble { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); padding: 12px 14px; display: flex; gap: 5px; align-items: center; }\n.t-bubble i { width: 6px; height: 6px; border-radius: 50%; background: var(--navy-300); animation: blink 1.2s infinite ease-in-out; font-style: normal; display: block; }\n.t-bubble i:nth-child(2){ animation-delay: .18s; }\n.t-bubble i:nth-child(3){ animation-delay: .36s; }\n@keyframes blink { 0%,60%,100%{ opacity:.28; transform:translateY(0);} 30%{ opacity:1; transform:translateY(-2px);} }\n\n/* ── Empty state ── */\n.ck-empty { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 36px 22px; gap: 0; flex: 1; }\n.e-mark { width: 60px; height: 60px; border-radius: 16px; background: linear-gradient(180deg,#1d1d24 0%,#101015 100%); display: grid; place-items: center; position: relative; box-shadow: 0 10px 26px rgba(0,0,0,.28); border: 1px solid #2e2e36; margin-bottom: 18px; }\n.e-mark img { width: 34px; height: 34px; object-fit: contain; display: block; }\n.ck-empty h3 { font-family: var(--font-display); font-size: 15px; font-weight: 600; margin: 0 0 6px; color: var(--text-primary); }\n.e-sub { font-family: var(--font-display); font-size: 14px; font-weight: 500; color: var(--text-primary); line-height: 1.6; letter-spacing: -.01em; margin: 0 0 22px; max-width: 28ch; }\n.ck-suggest { display: flex; flex-direction: column; gap: 9px; width: 100%; }\n.s-btn { position: relative; text-align: left; font-size: 12.5px; color: var(--navy); background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 12px 13px; cursor: pointer; box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 9px; font-family: var(--font-body); overflow: hidden; transition: border-color .15s, box-shadow .15s, transform .15s, background .15s; }\n.s-btn::before { content:""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--grey-grad); opacity: 0; transition: opacity .15s; }\n.s-btn:hover { border-color: var(--border-strong); background: #fafafb; box-shadow: 0 4px 12px rgba(17,24,39,.08); transform: translateY(-1px); }\n.s-btn:hover::before { opacity: 1; }\n.s-btn:active { transform: translateY(0); }\n.s-txt { flex: 1; line-height: 1.4; }\n.s-btn .s-ar { margin-left: auto; color: var(--navy-300); font-size: 15px; flex: none; transition: color .15s, transform .15s; }\n.s-btn:hover .s-ar { color: var(--navy); transform: translateX(2px); }\n\n/* ── Privacy note ── */\n.ck-privacy { background: #fff; border-top: 1px solid var(--border); padding: 9px 12px; display: flex; align-items: center; gap: 9px; flex-shrink: 0; }\n.p-shield { width: 22px; height: 24px; flex: none; position: relative; }\n.p-shield::before { content:""; position:absolute; inset:0; background: #eef2ff; border:1.4px solid #dbe3fb; border-radius: 4px 4px 9px 9px / 4px 4px 14px 14px; }\n.p-shield::after { content:""; position:absolute; left:7px; top:8px; width:5px; height:8px; border-right:1.8px solid var(--navy); border-bottom:1.8px solid var(--navy); transform: rotate(40deg); }\n.p-txt { font-size: var(--fs-label); color: var(--text-secondary); line-height: 1.45; margin: 0; }\n.p-txt b { color: var(--text-primary); font-weight: 600; }\n\n/* ── Input area ── */\n.ck-input-wrap { background: var(--surface); border-top: 1px solid var(--border); padding: 0 var(--pane-pad) 8px; flex-shrink: 0; }\n.ck-input-resize { height: 14px; display: flex; align-items: center; justify-content: center; cursor: ns-resize; touch-action: none; }\n.ck-input-grip { width: 28px; height: 4px; border-radius: 999px; background: var(--border-strong); transition: background .12s; }\n.ck-input-resize:hover .ck-input-grip { background: var(--navy-300); }\n.ck-input { background: #fff; border: 1px solid var(--border-strong); border-radius: 12px; padding: 7px 7px 7px 13px; display: flex; align-items: flex-end; gap: 8px; transition: border-color .12s, box-shadow .12s; }\n.ck-input:focus-within { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(14,14,18,.08); }\n.ck-input textarea { flex: 1; font-size: var(--fs-body); color: var(--text-primary); line-height: 1.5; padding: 7px 0; border: none; outline: none; resize: none; background: transparent; font-family: var(--font-body); overflow-y: auto; }\n.ck-input textarea::placeholder { color: var(--text-secondary); }\n.ck-send { width: 34px; height: 34px; border-radius: 10px; background: var(--grey-grad); color: #fff; display: grid; place-items: center; flex: none; cursor: pointer; border: 1px solid rgba(17,24,39,.35); box-shadow: var(--grey-glow); transition: filter .12s, transform .12s, box-shadow .12s, background .12s; }\n.ck-send:hover { background: var(--grey-grad-hover); }\n.ck-send:active { transform: translateY(.5px); }\n.ck-send svg { display: block; }\n.ck-send.disabled { background: #eceef1; color: #aab1bb; border-color: var(--border); box-shadow: none; cursor: default; pointer-events: none; filter: none; }\n.ck-hint { font-size: var(--fs-label); color: var(--text-secondary); margin-top: 7px; display: flex; align-items: center; gap: 5px; padding: 0 2px; }\n.lock-icon { width: 9px; height: 9px; border: 1.4px solid var(--text-secondary); border-radius: 2px; position: relative; flex: none; }\n.lock-icon::before { content:""; position:absolute; left:1.5px; top:-3.5px; width:5px; height:5px; border:1.4px solid var(--text-secondary); border-bottom:0; border-radius:3px 3px 0 0; }\n\n/* ── Mode tabs ── */\n.ck-tabs { display: flex; gap: 0; padding: 3px 0 0; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }\n.ck-tab { flex: 1; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); background: none; border: none; padding: 6px 0 7px; cursor: pointer; border-bottom: 2px solid transparent; font-family: var(--font-body); }\n.ck-tab:hover { color: var(--text-primary); }\n.ck-tab.on { color: var(--navy); border-bottom-color: var(--navy); }\n\n/* ── Negotiation Simulator ── */\n.ck-sim { flex: 1; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; gap: 14px; padding: var(--pane-pad); }\n\n.sim-setup { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-card); padding: 14px; display: flex; flex-direction: column; gap: 12px; }\n.sim-title { font-family: var(--font-display); font-size: 14px; font-weight: 600; margin: 0; color: var(--text-primary); }\n.sim-sub { font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin: 5px 0 0; }\n.sim-side { display: flex; align-items: center; gap: 10px; }\n.sim-side-label { font-size: 12px; color: var(--text-secondary); }\n.sim-toggle { display: inline-flex; background: #eef0f3; border-radius: 8px; padding: 3px; gap: 2px; }\n.sim-seg { font-size: 12.5px; font-weight: 600; color: var(--text-secondary); background: none; border: none; border-radius: 6px; padding: 6px 16px; cursor: pointer; font-family: var(--font-body); }\n.sim-seg.on { background: #fff; color: var(--navy); box-shadow: var(--shadow-card); }\n.sim-run { justify-content: center; }\n\n.sim-loading { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: 12.5px; padding: 4px 2px; }\n.sim-error { border-radius: 8px; }\n.sim-empty { text-align: center; color: var(--text-secondary); font-size: 12.5px; line-height: 1.55; padding: 20px 18px; }\n.sim-placeholder { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; color: var(--text-secondary); font-size: 12.5px; line-height: 1.55; padding: 0px 22px; }\n.sim-ph-mark { width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(180deg,#1d1d24,#101015); display: grid; place-items: center; color: var(--amber); font-size: 22px; }\n.sim-count { font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--text-secondary); margin: 2px 2px 0; }\n\n/* Term card */\n.sim-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-card); overflow: hidden; }\n.sim-card-head { display: flex; align-items: center; gap: 8px; padding: 12px; flex-wrap: wrap; border-bottom: 1px solid var(--border); }\n.sim-ref { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 5px; padding: 2px 7px; }\n.sim-heading { font-size: 13px; font-weight: 600; color: var(--text-primary); }\n.sim-favors { margin-left: auto; font-size: 9.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; border-radius: 4px; padding: 3px 7px; background: var(--amber-soft); color: var(--amber-600); }\n.sim-favors.tenant { background: #e0f2fe; color: #0369a1; }\n.sim-favors.landlord { background: var(--amber-soft); color: var(--amber-600); }\n\n.sim-current { padding: 10px 12px; border-bottom: 1px solid var(--border); }\n.sim-current summary { font-size: 11.5px; font-weight: 500; color: var(--text-secondary); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px; }\n.sim-current summary::-webkit-details-marker { display: none; }\n.sim-current summary::before { content: "›"; transition: transform .15s; display: inline-block; }\n.sim-current[open] summary::before { transform: rotate(90deg); }\n.sim-current-text { font-size: 12px; line-height: 1.6; color: #374151; font-style: italic; background: #fafbfc; border-left: 3px solid var(--navy-300); border-radius: 0 6px 6px 0; padding: 9px 11px; margin: 9px 0 2px; }\n\n.sim-ladder { padding: 12px; display: flex; flex-direction: column; gap: 10px; }\n.sim-ladder-label { font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--text-secondary); }\n.sim-rung { border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 8px; padding: 10px 11px; }\n.sim-rung.tier-ideal { border-left-color: #16a34a; }\n.sim-rung.tier-market { border-left-color: var(--amber); }\n.sim-rung.tier-floor { border-left-color: var(--navy-300); }\n.sim-rung.applied { background: #f0fdf4; border-color: #bbf7d0; }\n.sim-tier { font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--text-secondary); }\n.sim-rung.tier-ideal .sim-tier { color: #16a34a; }\n.sim-rung.tier-market .sim-tier { color: var(--amber-600); }\n.sim-rung-text { font-size: 12.5px; line-height: 1.55; color: var(--text-primary); margin: 6px 0 0; }\n.sim-rung-rat { font-size: 11.5px; line-height: 1.5; color: var(--text-secondary); margin: 6px 0 0; }\n.sim-apply { margin-top: 10px; font-size: 12px; padding: 6px 12px; }\n\n/* Counterparty callout — the differentiator */\n.sim-counter { margin: 0 12px 12px; background: linear-gradient(180deg,#15151b,#1f1f27); border-radius: 9px; padding: 12px; }\n.sim-counter-head { display: flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 700; color: #fff; margin-bottom: 8px; }\n.sim-counter-icon { width: 13px; height: 13px; flex: none; background: var(--amber); clip-path: polygon(50% 0, 100% 100%, 0 100%); }\n.sim-counter-pred { font-size: 12.5px; line-height: 1.55; margin: 0; color: #eef0f5; }\n\n/* ── Scrollbars ──\n * Modern, slim black/grey track + thumb. Applies to the pane scrollbar and\n * every inner scroll area (chat, simulator). WebKit/Chromium hosts use the\n * ::-webkit-scrollbar pseudo-elements; Firefox uses scrollbar-* properties.\n */\n* {\n  scrollbar-width: thin;\n  scrollbar-color: #4b4b55 transparent;\n}\n*::-webkit-scrollbar { width: 10px; height: 10px; }\n*::-webkit-scrollbar-track { background: transparent; }\n*::-webkit-scrollbar-thumb {\n  background: #3a3a44;\n  border-radius: 999px;\n  border: 2px solid transparent;\n  background-clip: padding-box;\n  transition: background .15s;\n}\n*::-webkit-scrollbar-thumb:hover { background: #56565f; background-clip: padding-box; }\n*::-webkit-scrollbar-thumb:active { background: #6c6c77; background-clip: padding-box; }\n*::-webkit-scrollbar-corner { background: transparent; }\n.sim-counter-arg { font-size: 12px; line-height: 1.55; margin: 8px 0 0; color: #b9bdca; font-style: italic; border-left: 2px solid rgba(245,158,11,.5); padding-left: 9px; }\n',"",{version:3,sources:["webpack://./src/styles/clausekit.css"],names:[],mappings:"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",sourcesContent:['/* ── ClauseKit Task Pane Design System ──\n *\n * Single source of truth for the task-pane UI. Loaded by both the Office\n * entry (src/taskpane/index.tsx) and the browser playground\n * (src/playground/playground.tsx) so the pane looks identical in either host.\n */\n:root {\n  --navy: #0E0E12;\n  --navy-700: #2b2b34;\n  --navy-300: #6c6c77;\n  --amber: #F59E0B;\n  --amber-600: #d4870a;\n  --amber-soft: #FEF3C7;\n  --amber-grad: linear-gradient(180deg, #FCC04A 0%, #F59E0B 52%, #E88B05 100%);\n  --amber-glow: inset 0 1px 0 rgba(255,255,255,.35), 0 2px 10px rgba(245,158,11,.4), 0 1px 2px rgba(160,98,0,.45);\n  --grey-grad: linear-gradient(180deg, #5b5b66 0%, #3d3d47 52%, #2b2b34 100%);\n  --grey-grad-hover: linear-gradient(180deg, #66666f 0%, #46464f 52%, #33333b 100%);\n  --grey-glow: inset 0 1px 0 rgba(255,255,255,.14), 0 2px 8px rgba(17,24,39,.20), 0 1px 2px rgba(17,24,39,.28);\n  --bg: #F8F9FA;\n  --surface: #FFFFFF;\n  --user-bubble: #EEF2FF;\n  --text-primary: #111827;\n  --text-secondary: #6B7280;\n  --border: #E5E7EB;\n  --border-strong: #D1D5DB;\n  --destructive: #EF4444;\n  --destructive-soft: #FEF2F2;\n  --fs-header: 16px;\n  --fs-body: 13px;\n  --fs-label: 11px;\n  --pane-pad: 12px;\n  --shadow-card: 0 1px 2px rgba(17,24,39,.06), 0 1px 3px rgba(17,24,39,.05);\n  --font-display: \'Space Grotesk\', \'Inter\', system-ui, sans-serif;\n  --font-body: \'Inter\', system-ui, sans-serif;\n  --font-mono: \'Roboto Mono\', monospace;\n}\n* { box-sizing: border-box; }\nhtml, body { margin: 0; padding: 0; height: 100%; -webkit-font-smoothing: antialiased; }\nbody { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); }\n#container { height: 100%; }\n\n/* Pane shell */\n.ck-pane { height: 100%; display: flex; flex-direction: column; }\n\n/* ── Header ── */\n.ck-header {\n  background: linear-gradient(180deg, #08080b 0%, #131318 55%, #232329 100%);\n  color: #fff; height: 36px; display: flex; align-items: center;\n  padding: 0 var(--pane-pad); gap: 10px;\n  border-bottom: 1px solid rgba(255,255,255,.06); flex-shrink: 0;\n}\n.h-mark { width: 30px; height: 30px; display: grid; place-items: center; flex: none; }\n.h-mark img { width: 26px; height: 26px; object-fit: contain; display: block; }\n.h-txt { display: flex; flex-direction: column; justify-content: center; line-height: 1.15; }\n.h-name { font-family: var(--font-display); font-size: var(--fs-header); font-weight: 600; letter-spacing: -.01em; }\n.h-actions { margin-left: auto; display: flex; gap: 2px; }\n.ck-theme-btn { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; color: rgba(255,255,255,.78); cursor: pointer; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10); transition: background .14s, color .14s, border-color .14s; }\n.ck-theme-btn:hover { background: rgba(255,255,255,.14); color: #fff; border-color: rgba(255,255,255,.18); }\n.ck-theme-btn:active { transform: translateY(.5px); }\n.ck-theme-btn svg { display: block; }\n\n/* ── Chat scroll area ── */\n.ck-chat { flex: 1; background: var(--bg); padding: var(--pane-pad); display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }\n.ck-daydiv { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: var(--fs-label); }\n.ck-daydiv::before, .ck-daydiv::after { content:""; height:1px; background: var(--border); flex:1; }\n\n/* Message rows */\n.ck-row { display: flex; gap: 8px; }\n.ck-row.user { justify-content: flex-end; }\n.ck-avatar { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; flex: none; margin-top: 2px; }\n.ck-avatar span { font-size: 9px; font-weight: 700; color: #fff; letter-spacing: .02em; }\n.ck-avatar img { width: 22px; height: 22px; object-fit: contain; display: block; }\n.ck-bubble { font-size: var(--fs-body); line-height: 1.55; padding: 10px 12px; border-radius: 12px; max-width: 264px; }\n.ck-bubble.user { background: var(--user-bubble); color: var(--navy); border-radius: 12px 12px 4px 12px; }\n.ck-bubble.ai { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); }\n.ck-bubble p { margin: 0; }\n.ck-bubble p + p { margin-top: 8px; }\n.ck-bubble strong { font-weight: 600; }\n.ck-time { font-size: 10px; color: var(--text-secondary); margin-top: 4px; }\n.ck-row.user .ck-time { text-align: right; }\n\n/* Quote block */\n.ck-quote { background: #fafbfc; border: 1px solid var(--border); border-left: 3px solid var(--navy-300); border-radius: 6px; padding: 9px 11px; margin: 10px 0 4px; }\n.q-meta { font-family: var(--font-mono); font-size: 10px; color: var(--text-secondary); letter-spacing: .02em; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }\n.q-meta::before { content:"\\201C"; font-family: Georgia, serif; font-size: 16px; line-height: 0; color: var(--navy-300); position: relative; top: 3px; }\n.q-text { font-size: 12px; line-height: 1.6; color: #374151; font-style: italic; }\n.q-text mark { background: var(--amber-soft); font-style: normal; padding: 0 1px; }\n\n/* Empty lines inside an AI answer (preserves list/paragraph spacing) */\n.ck-bubble.ai .ck-gap { height: 8px; }\n\n/* Error bubble + retry (chat thread) */\n.ck-error-bubble { background: var(--destructive-soft); border: 1px solid #fecdca; border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); padding: 10px 12px; font-size: var(--fs-body); line-height: 1.55; color: #b42318; }\n.ck-error-bubble p { margin: 0 0 8px; }\n.ck-retry { font-size: 12px; font-weight: 500; color: var(--navy); background: #fff; border: 1px solid var(--border-strong); border-radius: 6px; padding: 5px 12px; cursor: pointer; font-family: var(--font-body); }\n.ck-retry:hover { background: #f9fafb; }\n\n/* Citation chips row */\n.ck-cites { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }\n.ck-cites .ck-cite { margin-top: 0; }\n\n/* Citation chip */\n.ck-cite { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 11px; font-weight: 500; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 999px; padding: 4px 10px 4px 8px; cursor: pointer; }\n.ck-cite:hover { background: #e4eafd; }\n.pin { width: 11px; height: 11px; position: relative; flex: none; }\n.pin::before { content:""; position:absolute; inset:0; border:1.5px solid var(--navy); border-radius:50% 50% 50% 0; transform: rotate(-45deg); }\n.cite-arr { margin-left: 1px; color: var(--navy-300); font-size: 10px; }\n\n/* ── Action card ── */\n.ck-action-wrap { margin-top: 10px; }\n.ck-action { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--navy-300); border-radius: 8px; box-shadow: var(--shadow-card); overflow: hidden; }\n.ck-action.sev-high { border-left-color: var(--destructive); }\n.ck-action.sev-medium { border-left-color: var(--navy-300); }\n.ck-action.sev-low { border-left-color: var(--navy-300); }\n.a-head { padding: 11px 12px 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }\n.a-badge { font-family: var(--font-mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--amber-600); background: var(--amber-soft); border-radius: 4px; padding: 3px 6px; }\n.a-clause { font-family: var(--font-mono); font-size: 11px; font-weight: 500; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 4px; padding: 2px 6px; }\n.a-sev { margin-left: auto; font-size: 9px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; border-radius: 4px; padding: 2px 6px; }\n.a-sev.sev-high { color: #b42318; background: var(--destructive-soft); }\n.a-sev.sev-medium { color: var(--amber-600); background: var(--amber-soft); }\n.a-sev.sev-low { color: var(--text-secondary); background: #f3f4f6; }\n.a-title { font-size: 12.5px; font-weight: 600; line-height: 1.35; color: var(--text-primary); }\n.a-body { padding: 9px 12px 0; }\n.a-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.55; margin: 0; }\n.a-error { font-size: 12px; color: var(--destructive); background: var(--destructive-soft); border: 1px solid #fecdca; border-radius: 6px; padding: 7px 9px; margin: 10px 0 0; line-height: 1.45; }\n\n/* Diff */\n.ck-diff { margin: 10px 0 2px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; font-family: var(--font-mono); font-size: 11px; line-height: 1.55; }\n.d-line { padding: 6px 10px 6px 24px; position: relative; }\n.d-del { background: var(--destructive-soft); color: #b42318; }\n.d-del .t { text-decoration: line-through; text-decoration-color: rgba(180,35,24,.5); }\n.d-add { background: #ecfdf3; color: #067647; border-top: 1px solid #d1fadf; }\n.d-line::before { position: absolute; left: 9px; top: 6px; font-weight: 700; }\n.d-del::before { content: "−"; color: #d92d20; }\n.d-add::before { content: "+"; color: #079455; }\n\n/* Action footer */\n.a-foot { display: flex; gap: 8px; padding: 12px; align-items: center; }\n.a-foot .spacer { flex: 1; }\n.ck-btn { font-size: 13px; font-weight: 500; border-radius: 6px; padding: 8px 14px; cursor: pointer; border: 1px solid transparent; line-height: 1; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; font-family: var(--font-body); transition: background .12s, border-color .12s; }\n.ck-btn.primary { background: var(--grey-grad); color: #fff; font-weight: 600; border-color: rgba(17,24,39,.35); box-shadow: var(--grey-glow); }\n.ck-btn.primary:hover { background: var(--grey-grad-hover); }\n.ck-btn.danger-ghost { background: transparent; color: var(--text-secondary); border-color: transparent; }\n.ck-btn.danger-ghost:hover { background: var(--destructive-soft); color: var(--destructive); }\n.ck-btn.applied { background: #ecfdf3; color: #067647; border-color: #d1fadf; cursor: default; }\n.ck-btn.applied:hover { filter: none; }\n.chk { width: 6px; height: 11px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(40deg) translateY(-1px); display: inline-block; }\n\n/* Thinking dots */\n.ck-thinking { display: flex; gap: 8px; align-items: center; }\n.t-bubble { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); padding: 12px 14px; display: flex; gap: 5px; align-items: center; }\n.t-bubble i { width: 6px; height: 6px; border-radius: 50%; background: var(--navy-300); animation: blink 1.2s infinite ease-in-out; font-style: normal; display: block; }\n.t-bubble i:nth-child(2){ animation-delay: .18s; }\n.t-bubble i:nth-child(3){ animation-delay: .36s; }\n@keyframes blink { 0%,60%,100%{ opacity:.28; transform:translateY(0);} 30%{ opacity:1; transform:translateY(-2px);} }\n\n/* ── Empty state ── */\n.ck-empty { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 36px 22px; gap: 0; flex: 1; }\n.e-mark { width: 60px; height: 60px; border-radius: 16px; background: linear-gradient(180deg,#1d1d24 0%,#101015 100%); display: grid; place-items: center; position: relative; box-shadow: 0 10px 26px rgba(0,0,0,.28); border: 1px solid #2e2e36; margin-bottom: 18px; }\n.e-mark img { width: 34px; height: 34px; object-fit: contain; display: block; }\n.ck-empty h3 { font-family: var(--font-display); font-size: 15px; font-weight: 600; margin: 0 0 6px; color: var(--text-primary); }\n.e-sub { font-family: var(--font-display); font-size: 14px; font-weight: 500; color: var(--text-primary); line-height: 1.6; letter-spacing: -.01em; margin: 0 0 22px; max-width: 28ch; }\n.ck-suggest { display: flex; flex-direction: column; gap: 9px; width: 100%; }\n.s-btn { position: relative; text-align: left; font-size: 12.5px; color: var(--navy); background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 12px 13px; cursor: pointer; box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 9px; font-family: var(--font-body); overflow: hidden; transition: border-color .15s, box-shadow .15s, transform .15s, background .15s; }\n.s-btn::before { content:""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--grey-grad); opacity: 0; transition: opacity .15s; }\n.s-btn:hover { border-color: var(--border-strong); background: #fafafb; box-shadow: 0 4px 12px rgba(17,24,39,.08); transform: translateY(-1px); }\n.s-btn:hover::before { opacity: 1; }\n.s-btn:active { transform: translateY(0); }\n.s-txt { flex: 1; line-height: 1.4; }\n.s-btn .s-ar { margin-left: auto; color: var(--navy-300); font-size: 15px; flex: none; transition: color .15s, transform .15s; }\n.s-btn:hover .s-ar { color: var(--navy); transform: translateX(2px); }\n\n/* ── Privacy note ── */\n.ck-privacy { background: #fff; border-top: 1px solid var(--border); padding: 9px 12px; display: flex; align-items: center; gap: 9px; flex-shrink: 0; }\n.p-shield { width: 22px; height: 24px; flex: none; position: relative; }\n.p-shield::before { content:""; position:absolute; inset:0; background: #eef2ff; border:1.4px solid #dbe3fb; border-radius: 4px 4px 9px 9px / 4px 4px 14px 14px; }\n.p-shield::after { content:""; position:absolute; left:7px; top:8px; width:5px; height:8px; border-right:1.8px solid var(--navy); border-bottom:1.8px solid var(--navy); transform: rotate(40deg); }\n.p-txt { font-size: var(--fs-label); color: var(--text-secondary); line-height: 1.45; margin: 0; }\n.p-txt b { color: var(--text-primary); font-weight: 600; }\n\n/* ── Input area ── */\n.ck-input-wrap { background: var(--surface); border-top: 1px solid var(--border); padding: 0 var(--pane-pad) 8px; flex-shrink: 0; }\n.ck-input-resize { height: 14px; display: flex; align-items: center; justify-content: center; cursor: ns-resize; touch-action: none; }\n.ck-input-grip { width: 28px; height: 4px; border-radius: 999px; background: var(--border-strong); transition: background .12s; }\n.ck-input-resize:hover .ck-input-grip { background: var(--navy-300); }\n.ck-input { background: #fff; border: 1px solid var(--border-strong); border-radius: 12px; padding: 7px 7px 7px 13px; display: flex; align-items: flex-end; gap: 8px; transition: border-color .12s, box-shadow .12s; }\n.ck-input:focus-within { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(14,14,18,.08); }\n.ck-input textarea { flex: 1; font-size: var(--fs-body); color: var(--text-primary); line-height: 1.5; padding: 7px 0; border: none; outline: none; resize: none; background: transparent; font-family: var(--font-body); overflow-y: auto; }\n.ck-input textarea::placeholder { color: var(--text-secondary); }\n.ck-send { width: 34px; height: 34px; border-radius: 10px; background: var(--grey-grad); color: #fff; display: grid; place-items: center; flex: none; cursor: pointer; border: 1px solid rgba(17,24,39,.35); box-shadow: var(--grey-glow); transition: filter .12s, transform .12s, box-shadow .12s, background .12s; }\n.ck-send:hover { background: var(--grey-grad-hover); }\n.ck-send:active { transform: translateY(.5px); }\n.ck-send svg { display: block; }\n.ck-send.disabled { background: #eceef1; color: #aab1bb; border-color: var(--border); box-shadow: none; cursor: default; pointer-events: none; filter: none; }\n.ck-hint { font-size: var(--fs-label); color: var(--text-secondary); margin-top: 7px; display: flex; align-items: center; gap: 5px; padding: 0 2px; }\n.lock-icon { width: 9px; height: 9px; border: 1.4px solid var(--text-secondary); border-radius: 2px; position: relative; flex: none; }\n.lock-icon::before { content:""; position:absolute; left:1.5px; top:-3.5px; width:5px; height:5px; border:1.4px solid var(--text-secondary); border-bottom:0; border-radius:3px 3px 0 0; }\n\n/* ── Mode tabs ── */\n.ck-tabs { display: flex; gap: 0; padding: 3px 0 0; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }\n.ck-tab { flex: 1; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); background: none; border: none; padding: 6px 0 7px; cursor: pointer; border-bottom: 2px solid transparent; font-family: var(--font-body); }\n.ck-tab:hover { color: var(--text-primary); }\n.ck-tab.on { color: var(--navy); border-bottom-color: var(--navy); }\n\n/* ── Negotiation Simulator ── */\n.ck-sim { flex: 1; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; gap: 14px; padding: var(--pane-pad); }\n\n.sim-setup { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-card); padding: 14px; display: flex; flex-direction: column; gap: 12px; }\n.sim-title { font-family: var(--font-display); font-size: 14px; font-weight: 600; margin: 0; color: var(--text-primary); }\n.sim-sub { font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin: 5px 0 0; }\n.sim-side { display: flex; align-items: center; gap: 10px; }\n.sim-side-label { font-size: 12px; color: var(--text-secondary); }\n.sim-toggle { display: inline-flex; background: #eef0f3; border-radius: 8px; padding: 3px; gap: 2px; }\n.sim-seg { font-size: 12.5px; font-weight: 600; color: var(--text-secondary); background: none; border: none; border-radius: 6px; padding: 6px 16px; cursor: pointer; font-family: var(--font-body); }\n.sim-seg.on { background: #fff; color: var(--navy); box-shadow: var(--shadow-card); }\n.sim-run { justify-content: center; }\n\n.sim-loading { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: 12.5px; padding: 4px 2px; }\n.sim-error { border-radius: 8px; }\n.sim-empty { text-align: center; color: var(--text-secondary); font-size: 12.5px; line-height: 1.55; padding: 20px 18px; }\n.sim-placeholder { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; color: var(--text-secondary); font-size: 12.5px; line-height: 1.55; padding: 0px 22px; }\n.sim-ph-mark { width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(180deg,#1d1d24,#101015); display: grid; place-items: center; color: var(--amber); font-size: 22px; }\n.sim-count { font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--text-secondary); margin: 2px 2px 0; }\n\n/* Term card */\n.sim-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-card); overflow: hidden; }\n.sim-card-head { display: flex; align-items: center; gap: 8px; padding: 12px; flex-wrap: wrap; border-bottom: 1px solid var(--border); }\n.sim-ref { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 5px; padding: 2px 7px; }\n.sim-heading { font-size: 13px; font-weight: 600; color: var(--text-primary); }\n.sim-favors { margin-left: auto; font-size: 9.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; border-radius: 4px; padding: 3px 7px; background: var(--amber-soft); color: var(--amber-600); }\n.sim-favors.tenant { background: #e0f2fe; color: #0369a1; }\n.sim-favors.landlord { background: var(--amber-soft); color: var(--amber-600); }\n\n.sim-current { padding: 10px 12px; border-bottom: 1px solid var(--border); }\n.sim-current summary { font-size: 11.5px; font-weight: 500; color: var(--text-secondary); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px; }\n.sim-current summary::-webkit-details-marker { display: none; }\n.sim-current summary::before { content: "›"; transition: transform .15s; display: inline-block; }\n.sim-current[open] summary::before { transform: rotate(90deg); }\n.sim-current-text { font-size: 12px; line-height: 1.6; color: #374151; font-style: italic; background: #fafbfc; border-left: 3px solid var(--navy-300); border-radius: 0 6px 6px 0; padding: 9px 11px; margin: 9px 0 2px; }\n\n.sim-ladder { padding: 12px; display: flex; flex-direction: column; gap: 10px; }\n.sim-ladder-label { font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--text-secondary); }\n.sim-rung { border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 8px; padding: 10px 11px; }\n.sim-rung.tier-ideal { border-left-color: #16a34a; }\n.sim-rung.tier-market { border-left-color: var(--amber); }\n.sim-rung.tier-floor { border-left-color: var(--navy-300); }\n.sim-rung.applied { background: #f0fdf4; border-color: #bbf7d0; }\n.sim-tier { font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--text-secondary); }\n.sim-rung.tier-ideal .sim-tier { color: #16a34a; }\n.sim-rung.tier-market .sim-tier { color: var(--amber-600); }\n.sim-rung-text { font-size: 12.5px; line-height: 1.55; color: var(--text-primary); margin: 6px 0 0; }\n.sim-rung-rat { font-size: 11.5px; line-height: 1.5; color: var(--text-secondary); margin: 6px 0 0; }\n.sim-apply { margin-top: 10px; font-size: 12px; padding: 6px 12px; }\n\n/* Counterparty callout — the differentiator */\n.sim-counter { margin: 0 12px 12px; background: linear-gradient(180deg,#15151b,#1f1f27); border-radius: 9px; padding: 12px; }\n.sim-counter-head { display: flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 700; color: #fff; margin-bottom: 8px; }\n.sim-counter-icon { width: 13px; height: 13px; flex: none; background: var(--amber); clip-path: polygon(50% 0, 100% 100%, 0 100%); }\n.sim-counter-pred { font-size: 12.5px; line-height: 1.55; margin: 0; color: #eef0f5; }\n\n/* ── Scrollbars ──\n * Modern, slim black/grey track + thumb. Applies to the pane scrollbar and\n * every inner scroll area (chat, simulator). WebKit/Chromium hosts use the\n * ::-webkit-scrollbar pseudo-elements; Firefox uses scrollbar-* properties.\n */\n* {\n  scrollbar-width: thin;\n  scrollbar-color: #4b4b55 transparent;\n}\n*::-webkit-scrollbar { width: 10px; height: 10px; }\n*::-webkit-scrollbar-track { background: transparent; }\n*::-webkit-scrollbar-thumb {\n  background: #3a3a44;\n  border-radius: 999px;\n  border: 2px solid transparent;\n  background-clip: padding-box;\n  transition: background .15s;\n}\n*::-webkit-scrollbar-thumb:hover { background: #56565f; background-clip: padding-box; }\n*::-webkit-scrollbar-thumb:active { background: #6c6c77; background-clip: padding-box; }\n*::-webkit-scrollbar-corner { background: transparent; }\n.sim-counter-arg { font-size: 12px; line-height: 1.55; margin: 8px 0 0; color: #b9bdca; font-style: italic; border-left: 2px solid rgba(245,158,11,.5); padding-left: 9px; }\n'],sourceRoot:""}]);const i=o},76314(e){e.exports=function(e){var n=[];return n.toString=function(){return this.map(function(n){var a="",r=void 0!==n[5];return n[4]&&(a+="@supports (".concat(n[4],") {")),n[2]&&(a+="@media ".concat(n[2]," {")),r&&(a+="@layer".concat(n[5].length>0?" ".concat(n[5]):""," {")),a+=e(n),r&&(a+="}"),n[2]&&(a+="}"),n[4]&&(a+="}"),a}).join("")},n.i=function(e,a,r,A,t){"string"==typeof e&&(e=[[null,e,void 0]]);var o={};if(r)for(var i=0;i<this.length;i++){var s=this[i][0];null!=s&&(o[s]=!0)}for(var l=0;l<e.length;l++){var d=[].concat(e[l]);r&&o[d[0]]||(void 0!==t&&(void 0===d[5]||(d[1]="@layer".concat(d[5].length>0?" ".concat(d[5]):""," {").concat(d[1],"}")),d[5]=t),a&&(d[2]?(d[1]="@media ".concat(d[2]," {").concat(d[1],"}"),d[2]=a):d[2]=a),A&&(d[4]?(d[1]="@supports (".concat(d[4],") {").concat(d[1],"}"),d[4]=A):d[4]="".concat(A)),n.push(d))}},n}},71354(e){e.exports=function(e){var n=e[1],a=e[3];if(!a)return n;if("function"==typeof btoa){var r=btoa(unescape(encodeURIComponent(JSON.stringify(a)))),A="sourceMappingURL=data:application/json;charset=utf-8;base64,".concat(r),t="/*# ".concat(A," */");return[n].concat([t]).join("\n")}return[n].join("\n")}},15018(){},5338(e,n,a){var r=a(40961);n.H=r.createRoot,r.hydrateRoot},21020(e,n,a){var r=a(96540),A=Symbol.for("react.element"),t=Symbol.for("react.fragment"),o=Object.prototype.hasOwnProperty,i=r.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner,s={key:!0,ref:!0,__self:!0,__source:!0};function l(e,n,a){var r,t={},l=null,d=null;for(r in void 0!==a&&(l=""+a),void 0!==n.key&&(l=""+n.key),void 0!==n.ref&&(d=n.ref),n)o.call(n,r)&&!s.hasOwnProperty(r)&&(t[r]=n[r]);if(e&&e.defaultProps)for(r in n=e.defaultProps)void 0===t[r]&&(t[r]=n[r]);return{$$typeof:A,type:e,key:l,ref:d,props:t,_owner:i.current}}n.Fragment=t,n.jsx=l,n.jsxs=l},74848(e,n,a){e.exports=a(21020)},64148(e,n,a){var r=a(85072),A=a.n(r),t=a(97825),o=a.n(t),i=a(77659),s=a.n(i),l=a(55056),d=a.n(l),c=a(10540),p=a.n(c),E=a(41113),g=a.n(E),h=a(32777),f={};f.styleTagTransform=g(),f.setAttributes=d(),f.insert=s().bind(null,"head"),f.domAPI=o(),f.insertStyleElement=p(),A()(h.A,f),h.A&&h.A.locals&&h.A.locals},85072(e){var n=[];function a(e){for(var a=-1,r=0;r<n.length;r++)if(n[r].identifier===e){a=r;break}return a}function r(e,r){for(var t={},o=[],i=0;i<e.length;i++){var s=e[i],l=r.base?s[0]+r.base:s[0],d=t[l]||0,c="".concat(l," ").concat(d);t[l]=d+1;var p=a(c),E={css:s[1],media:s[2],sourceMap:s[3],supports:s[4],layer:s[5]};if(-1!==p)n[p].references++,n[p].updater(E);else{var g=A(E,r);r.byIndex=i,n.splice(i,0,{identifier:c,updater:g,references:1})}o.push(c)}return o}function A(e,n){var a=n.domAPI(n);return a.update(e),function(n){if(n){if(n.css===e.css&&n.media===e.media&&n.sourceMap===e.sourceMap&&n.supports===e.supports&&n.layer===e.layer)return;a.update(e=n)}else a.remove()}}e.exports=function(e,A){var t=r(e=e||[],A=A||{});return function(e){e=e||[];for(var o=0;o<t.length;o++){var i=a(t[o]);n[i].references--}for(var s=r(e,A),l=0;l<t.length;l++){var d=a(t[l]);0===n[d].references&&(n[d].updater(),n.splice(d,1))}t=s}}},77659(e){var n={};e.exports=function(e,a){var r=function(e){if(void 0===n[e]){var a=document.querySelector(e);if(window.HTMLIFrameElement&&a instanceof window.HTMLIFrameElement)try{a=a.contentDocument.head}catch(e){a=null}n[e]=a}return n[e]}(e);if(!r)throw new Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");r.appendChild(a)}},10540(e){e.exports=function(e){var n=document.createElement("style");return e.setAttributes(n,e.attributes),e.insert(n,e.options),n}},55056(e,n,a){e.exports=function(e){var n=a.nc;n&&e.setAttribute("nonce",n)}},97825(e){e.exports=function(e){if("undefined"==typeof document)return{update:function(){},remove:function(){}};var n=e.insertStyleElement(e);return{update:function(a){!function(e,n,a){var r="";a.supports&&(r+="@supports (".concat(a.supports,") {")),a.media&&(r+="@media ".concat(a.media," {"));var A=void 0!==a.layer;A&&(r+="@layer".concat(a.layer.length>0?" ".concat(a.layer):""," {")),r+=a.css,A&&(r+="}"),a.media&&(r+="}"),a.supports&&(r+="}");var t=a.sourceMap;t&&"undefined"!=typeof btoa&&(r+="\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(t))))," */")),n.styleTagTransform(r,e,n.options)}(n,e,a)},remove:function(){!function(e){if(null===e.parentNode)return!1;e.parentNode.removeChild(e)}(n)}}}},41113(e){e.exports=function(e,n){if(n.styleSheet)n.styleSheet.cssText=e;else{for(;n.firstChild;)n.removeChild(n.firstChild);n.appendChild(document.createTextNode(e))}}},61665(e,n,a){var r=a(74848),A=a(96540),t=a(5338),o=a(17393),i=a(92881);const s="COMMERCIAL LEASE AGREEMENT",l="This Commercial Lease Agreement (this “Lease”) is entered into as of March 1, 2026 (the “Effective Date”) by and between Meridian Harbor Properties, LLC, a Delaware limited liability company (“Landlord”), and Northwind Apothecary, Inc., a Washington corporation (“Tenant”). Landlord is the owner of the retail center commonly known as Harbor Point Commons located at 1200 Wharfside Avenue, Seattle, Washington (the “Center”), and Tenant desires to lease certain premises therein. In consideration of the mutual covenants below, the parties agree as follows.",d=[{ref:"§1",heading:"Premises",text:"Landlord leases to Tenant, and Tenant leases from Landlord, those certain premises consisting of approximately 3,200 rentable square feet and known as Suite 140 (the “Premises”), as more particularly depicted on Exhibit A. The Premises are leased together with the non-exclusive right to use the common areas of the Center, subject to the terms of this Lease and Landlord's rules and regulations as reasonably amended from time to time."},{ref:"§2",heading:"Term",text:"The initial term of this Lease (the “Initial Term”) shall be five (5) years, commencing on April 1, 2026 (the “Commencement Date”) and expiring at 11:59 p.m. on March 31, 2031, unless sooner terminated or extended as provided herein. If Landlord is unable to deliver possession of the Premises by the Commencement Date, this Lease shall not be void or voidable, but the Commencement Date shall be adjusted to the date possession is tendered."},{ref:"§3",heading:"Permitted Use",text:"The Premises shall be used and occupied solely for the operation of a retail pharmacy and the sale of related health, wellness, and convenience goods, and for no other purpose without Landlord's prior written consent. Tenant shall continuously operate its business in the Premises during the customary business hours of the Center and shall not abandon or vacate the Premises during the Term."},{ref:"§4",heading:"Base Rent",text:"Tenant shall pay to Landlord base rent (“Base Rent”) for the first Lease Year in the amount of One Hundred Forty-Four Thousand Dollars ($144,000.00) per annum, payable in equal monthly installments of Twelve Thousand Dollars ($12,000.00) in advance on the first day of each calendar month, without demand, deduction, or setoff. As used herein, “Lease Year” means each successive twelve (12) month period during the Term, the first of which begins on the Commencement Date."},{ref:"§5",heading:"Rent Escalation",text:"Commencing on the first anniversary of the Commencement Date and on each anniversary thereafter during the Term, the Base Rent then in effect shall automatically increase by five percent (5%) over the Base Rent payable during the immediately preceding Lease Year, compounded annually. Such increases shall require no further notice to Tenant and shall apply to any renewal or extension of the Term."},{ref:"§6",heading:"Security Deposit",text:"Upon execution of this Lease, Tenant shall deposit with Landlord the sum of Twenty-Four Thousand Dollars ($24,000.00) as security for the full and faithful performance of Tenant's obligations (the “Security Deposit”). Landlord may, but shall not be obligated to, apply all or part of the Security Deposit to cure any default of Tenant. The Security Deposit shall not bear interest and may be commingled with Landlord's other funds."},{ref:"§7",heading:"Operating Expenses",text:"In addition to Base Rent, Tenant shall pay as additional rent its proportionate share of the Center's operating expenses, common area maintenance, real property taxes, and insurance (collectively, “Operating Expenses”), based on the ratio of the rentable area of the Premises to the total rentable area of the Center. Landlord shall furnish Tenant an annual reconciliation statement, and controllable Operating Expenses shall not increase by more than five percent (5%) per year on a cumulative basis."},{ref:"§8",heading:"Utilities",text:"Tenant shall arrange and pay for all utilities and services supplied to the Premises, including electricity, gas, water, sewer, telephone, and data, together with any connection or hook-up fees. Where any such utility is not separately metered, Tenant shall pay Landlord's reasonable estimate of Tenant's share. Landlord shall not be liable for any interruption of utility services not caused by Landlord's gross negligence or willful misconduct."},{ref:"§9",heading:"Maintenance and Repairs",text:"Tenant shall, at Tenant's sole cost and expense, keep and maintain the entire Premises in good order and repair, including the roof, foundation, exterior and structural walls, and the heating, ventilation, and air-conditioning systems serving the Premises, and shall replace any of the foregoing as and when necessary. Landlord shall have no obligation whatsoever to maintain, repair, or replace any portion of the Premises."},{ref:"§10",heading:"Alterations",text:"Tenant shall not make any alterations, additions, or improvements to the Premises without Landlord's prior written consent, which consent shall not be unreasonably withheld for non-structural interior alterations. All permitted alterations shall be performed in a good and workmanlike manner, in compliance with applicable laws, and shall become the property of Landlord upon installation unless Landlord elects otherwise in writing."},{ref:"§11",heading:"Assignment and Subletting",text:"Tenant shall not assign this Lease or sublet all or any portion of the Premises, whether voluntarily or by operation of law, without the prior written consent of Landlord, which consent Landlord may grant or withhold in its sole and absolute discretion for any reason or no reason. Any purported assignment or sublease made without such consent shall be void and shall constitute an Event of Default."},{ref:"§12",heading:"Insurance",text:"Tenant shall, at its expense, maintain commercial general liability insurance with limits of not less than Two Million Dollars ($2,000,000) per occurrence, naming Landlord as an additional insured, together with property insurance covering Tenant's personal property and improvements. Tenant shall deliver certificates of insurance to Landlord prior to occupancy and upon each renewal of coverage."},{ref:"§13",heading:"Indemnification",text:"Tenant shall indemnify, defend, and hold harmless Landlord from and against any and all claims, damages, liabilities, and expenses arising out of Tenant's use of the Premises or any act or omission of Tenant, its employees, agents, or invitees, except to the extent caused by Landlord's gross negligence or willful misconduct."},{ref:"§14",heading:"Default and Remedies",text:"The occurrence of any of the following shall constitute an “Event of Default”: (a) Tenant's failure to pay any Base Rent or additional rent within five (5) days after the same is due; (b) Tenant's failure to perform any other obligation under this Lease within fifteen (15) days after written notice; or (c) the insolvency or bankruptcy of Tenant. Upon an Event of Default, Landlord may terminate this Lease and pursue all remedies available at law or in equity."},{ref:"§15",heading:"Holdover",text:"If Tenant remains in possession of the Premises after the expiration or earlier termination of this Lease without Landlord's written consent, such occupancy shall be a tenancy at sufferance, and Tenant shall pay holdover rent equal to two hundred percent (200%) of the Base Rent and additional rent payable during the last month of the Term for each month or partial month of holdover. Tenant shall also be liable for all consequential damages arising from such holdover."},{ref:"§16",heading:"Renewal Option",text:"Tenant may request to extend the Term for one (1) additional period of five (5) years by delivering written notice to Landlord not less than nine (9) months prior to expiration; provided, however, that any such extension shall be granted or denied by Landlord in its sole discretion, and the Base Rent for any extension term shall be as determined by Landlord. Tenant shall have no vested right to renew this Lease."},{ref:"§17",heading:"Personal Guaranty",text:"As a material inducement to Landlord's entry into this Lease, the principal of Tenant, Dr. Eleanor Voss (the “Guarantor”), shall personally, absolutely, and unconditionally guarantee all of Tenant's obligations under this Lease, without limitation as to amount or duration, for the entire Term and any extension thereof. The Guarantor's liability shall be primary and shall survive any assignment, termination, or modification of this Lease."},{ref:"§18",heading:"Surrender",text:"Upon the expiration or termination of this Lease, Tenant shall surrender the Premises to Landlord in good order and condition, broom-clean, ordinary wear and tear excepted, and shall remove all of Tenant's personal property and any alterations Landlord requires to be removed. Any property left in the Premises may be deemed abandoned and disposed of by Landlord at Tenant's expense."},{ref:"§19",heading:"Notices",text:"All notices under this Lease shall be in writing and delivered personally, by nationally recognized overnight courier, or by certified mail, return receipt requested, to the addresses set forth in the preamble or such other address as either party may designate by notice. Notices shall be deemed given upon receipt or refusal of delivery."},{ref:"§20",heading:"Governing Law; Miscellaneous",text:"This Lease shall be governed by the laws of the State of Washington, without regard to its conflicts of law principles. This Lease constitutes the entire agreement between the parties and supersedes all prior negotiations and understandings. No amendment shall be effective unless in writing and signed by both parties. If any provision is held unenforceable, the remainder shall continue in full force and effect."}];function c(e){return`clause-${e}`}[{clauseRef:"§5",issue:"Base Rent escalates 5% compounding annually with no cap — well above market for a five-year retail lease, roughly doubling rent over a typical renewal horizon.",favoredParty:"landlord",fallbackLadder:[{label:"Landlord opening",language:"increase by five percent (5%) over the Base Rent payable during the immediately preceding Lease Year, compounded annually",rationale:"Aggressive fixed escalator that compounds well ahead of typical retail inflation."},{label:"Market",language:"increase by three percent (3%) over the Base Rent payable during the immediately preceding Lease Year",rationale:"Fixed 3% annual bumps are the prevailing norm for multi-year retail leases."},{label:"Tenant target",language:"increase by the lesser of (a) the percentage increase in the Consumer Price Index or (b) two and one-half percent (2.5%) over the Base Rent payable during the immediately preceding Lease Year",rationale:"CPI-with-a-cap ties rent to actual inflation and shields Tenant in high-inflation years."}]},{clauseRef:"§9",issue:"Tenant bears full repair AND replacement of the roof, foundation, structure, and HVAC, with Landlord carrying no obligation at all — atypical for a single suite in a multi-tenant center.",favoredParty:"landlord",fallbackLadder:[{label:"Landlord opening",language:"including the roof, foundation, exterior and structural walls, and the heating, ventilation, and air-conditioning systems serving the Premises, and shall replace any of the foregoing as and when necessary",rationale:"Pushes all building-envelope and capital-replacement risk onto a small-suite tenant."},{label:"Market",language:"excluding the roof, foundation, and exterior structural walls, which Landlord shall maintain and repair; Tenant shall maintain the heating, ventilation, and air-conditioning systems serving the Premises",rationale:"Standard split: Landlord keeps the structure/envelope, Tenant handles interior and routine HVAC."},{label:"Tenant target",language:"excluding the roof, foundation, exterior structural walls, and the heating, ventilation, and air-conditioning systems, all of which Landlord shall maintain, repair, and replace; Tenant shall be responsible only for routine HVAC servicing under a maintenance contract",rationale:"Caps Tenant to predictable routine servicing and shifts HVAC capital replacement to Landlord."}]},{clauseRef:"§11",issue:"Consent to assignment or subletting is at Landlord's sole and absolute discretion for any or no reason, leaving Tenant no exit, no affiliate transfers, and no path through a sale of the business.",favoredParty:"landlord",fallbackLadder:[{label:"Landlord opening",language:"which consent Landlord may grant or withhold in its sole and absolute discretion for any reason or no reason",rationale:"Absolute veto; Tenant cannot transfer even to a qualified successor."},{label:"Market",language:"which consent Landlord shall not unreasonably withhold, condition, or delay",rationale:"The reasonableness standard is the prevailing default and preserves Landlord's legitimate interests."},{label:"Tenant target",language:"which consent Landlord shall not unreasonably withhold, condition, or delay, and no consent shall be required for an assignment to an affiliate or in connection with a merger or sale of substantially all of Tenant's assets to a successor meeting Landlord's reasonable net-worth criteria",rationale:"Adds permitted-transfer carve-outs for corporate reorganizations Tenant cannot control."}]},{clauseRef:"§15",issue:"Holdover rent is set at 200% of rent plus consequential damages — punitive versus the 125–150% market range, and an inadvertent holdover could expose Tenant to open-ended consequentials.",favoredParty:"landlord",fallbackLadder:[{label:"Landlord opening",language:"two hundred percent (200%)",rationale:"Double rent plus consequentials is a penalty, not holdover compensation."},{label:"Market",language:"one hundred fifty percent (150%)",rationale:"150% of the last month's rent is the common holdover premium."},{label:"Tenant target",language:"one hundred twenty-five percent (125%)",rationale:"125% covers Landlord's real holdover cost; pair with a waiver of consequential damages for an inadvertent, short holdover."}]},{clauseRef:"§16",issue:"Renewal is entirely at Landlord's discretion with Landlord-set rent — an illusory option that gives Tenant no enforceable right to stay and no rent protection.",favoredParty:"landlord",fallbackLadder:[{label:"Landlord opening",language:"any such extension shall be granted or denied by Landlord in its sole discretion, and the Base Rent for any extension term shall be as determined by Landlord",rationale:"Illusory option; Tenant has no enforceable right to renew."},{label:"Market",language:"Tenant shall have the option to extend, exercisable by such notice, at a Base Rent equal to the then-fair-market rent for comparable space in the Center",rationale:"A true tenant option at fair-market rent is the standard renewal construct."},{label:"Tenant target",language:"Tenant shall have the option to extend, exercisable by such notice, at a Base Rent equal to the lesser of fair-market rent or 103% of the prior year's Base Rent, with fair-market rent determined by binding appraisal if the parties disagree",rationale:"Caps renewal rent and adds an appraisal backstop so Landlord cannot price Tenant out."}]},{clauseRef:"§17",issue:"The personal guaranty is unlimited in amount and duration and survives termination — open-ended personal exposure for the Guarantor with no cap and no sunset.",favoredParty:"landlord",fallbackLadder:[{label:"Landlord opening",language:"without limitation as to amount or duration, for the entire Term and any extension thereof",rationale:"Open-ended personal liability with no cap and no end date."},{label:"Market",language:"limited to obligations accruing during the first twenty-four (24) months of the Term and to a maximum of six (6) months' Base Rent",rationale:"A guaranty capped in time and amount is typical for a creditworthy small-business tenant."},{label:"Tenant target",language:"which guaranty shall terminate upon Tenant's completion of twenty-four (24) months without an uncured monetary default and shall in no event exceed three (3) months' Base Rent",rationale:"Burn-down guaranty rewards a clean payment history and caps downside to one quarter's rent."}]}].map(e=>e.clauseRef);const p="pg-flash";a(64148);var E=a(85072),g=a.n(E),h=a(97825),f=a.n(h),x=a(77659),u=a.n(x),m=a(55056),b=a.n(m),B=a(10540),y=a.n(B),v=a(41113),k=a.n(v),C=a(72538),w={};w.styleTagTransform=k(),w.setAttributes=b(),w.insert=u().bind(null,"head"),w.domAPI=f(),w.insertStyleElement=y(),g()(C.A,w),C.A&&C.A.locals&&C.A.locals;const j=new class{constructor(e=d){this.listeners=new Set,this.subscribe=e=>(this.listeners.add(e),()=>{this.listeners.delete(e)}),this.getSnapshot=()=>this.clauses,this.clauses=e.map(e=>({ref:e.ref,heading:e.heading,segments:[{kind:"text",text:e.text}]}))}notify(){this.listeners.forEach(e=>e())}clauseText(e){return e.segments.map(e=>"text"===e.kind?e.text:e.proposed).join("")}getFullText(){const e=this.clauses.map(e=>`${e.ref}. ${e.heading}\n\n${this.clauseText(e)}`).join("\n\n");return`${s}\n\n${l}\n\n${e}\n`}applyChange(e){const n=this.clauses.findIndex(n=>n.ref===e.clauseRef);if(-1===n)return{status:"not-found",searchedText:e.originalText};const a=this.clauses[n],r=[];if(a.segments.forEach((n,a)=>{if("text"!==n.kind||0===e.originalText.length)return;let A=n.text.indexOf(e.originalText);for(;-1!==A;)r.push({segIndex:a,offset:A}),A=n.text.indexOf(e.originalText,A+e.originalText.length)}),0===r.length)return{status:"not-found",searchedText:e.originalText};if(r.length>1)return{status:"ambiguous",matchCount:r.length};const{segIndex:A,offset:t}=r[0],o=a.segments[A],i=o.text.slice(0,t),s=o.text.slice(t+e.originalText.length),l=[];a.segments.forEach((n,a)=>{a===A?(i&&l.push({kind:"text",text:i}),l.push({kind:"change",original:e.originalText,proposed:e.proposedText}),s&&l.push({kind:"text",text:s})):l.push(n)});const d={...a,segments:l};return this.clauses=this.clauses.map((e,a)=>a===n?d:e),this.notify(),{status:"applied",clauseRef:e.clauseRef}}},T=new class{constructor(e){this.model=e}async getFullText(){return this.model.getFullText()}async getSelection(){if("undefined"==typeof window)return null;const e=window.getSelection();if(!e||e.isCollapsed||0===e.rangeCount)return null;const n=e.toString();if(!n.trim())return null;let a="",r="";const A=e.anchorNode?.parentElement?.closest(".pg-clause-text, .pg-recitals, .pg-doc"),t=A?.textContent??"",o=t.indexOf(n);return-1!==o&&(a=t.slice(Math.max(0,o-40),o),r=t.slice(o+n.length,o+n.length+40)),{text:n,contextBefore:a,contextAfter:r}}async applyTrackedChange(e){return this.model.applyChange(e)}async scrollTo(e){if("undefined"==typeof document)return!1;const n="clauseRef"in e?this.byRef(e.clauseRef):this.byText(e.text);return!!n&&(n.scrollIntoView({behavior:"smooth",block:"center"}),n.classList.add(p),window.setTimeout(()=>n.classList.remove(p),1200),!0)}byRef(e){return document.getElementById(c(e))}byText(e){return Array.from(document.querySelectorAll(".pg-clause")).find(n=>(n.textContent??"").includes(e))??null}}(j);function z(){const e=(0,A.useSyncExternalStore)(j.subscribe,j.getSnapshot,j.getSnapshot);return(0,r.jsxs)("article",{className:"pg-doc",children:[(0,r.jsx)("h1",{className:"pg-doc-title",children:s}),(0,r.jsx)("p",{className:"pg-recitals",children:l}),e.map(e=>(0,r.jsxs)("section",{className:"pg-clause",id:c(e.ref),children:[(0,r.jsxs)("h2",{className:"pg-clause-head",children:[(0,r.jsx)("span",{className:"pg-ref",children:e.ref}),(0,r.jsx)("span",{children:e.heading})]}),(0,r.jsx)("p",{className:"pg-clause-text",children:e.segments.map((e,n)=>"text"===e.kind?(0,r.jsx)("span",{children:e.text},n):(0,r.jsxs)("span",{children:[(0,r.jsx)("del",{className:"pg-del",children:e.original}),(0,r.jsx)("ins",{className:"pg-ins",children:e.proposed})]},n))})]},e.ref))]})}const S=document.getElementById("root");S&&(0,t.H)(S).render((0,r.jsx)(function(){return(0,r.jsxs)("div",{className:"pg-root",children:[(0,r.jsx)("div",{className:"pg-doc-pane",children:(0,r.jsx)(z,{})}),(0,r.jsx)("div",{className:"pg-pane-host",children:(0,r.jsx)(i.A,{service:T,children:(0,r.jsx)(o.A,{title:"ClauseKit"})})})]})},{}))},17393(e,n,a){a.d(n,{A:()=>f});var r=a(74848),A=a(96540);function t({theme:e,onToggleTheme:n}){const a="light"===e?"dark":"light";return(0,r.jsxs)("div",{className:"ck-header",children:[(0,r.jsx)("div",{className:"h-txt",children:(0,r.jsx)("span",{className:"h-name",children:"ClauseKit"})}),(0,r.jsx)("div",{className:"h-actions",children:(0,r.jsx)("button",{className:"ck-theme-btn",onClick:n,"aria-label":`Switch to ${a} mode`,title:`Switch to ${a} mode`,style:{display:"none"},children:"light"===e?(0,r.jsx)("svg",{viewBox:"0 0 24 24",width:"12",height:"12","aria-hidden":"true",children:(0,r.jsx)("path",{d:"M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z",fill:"none",stroke:"currentColor",strokeWidth:"1.8",strokeLinecap:"round",strokeLinejoin:"round"})}):(0,r.jsxs)("svg",{viewBox:"0 0 24 24",width:"12",height:"12","aria-hidden":"true",children:[(0,r.jsx)("circle",{cx:"12",cy:"12",r:"4",fill:"none",stroke:"currentColor",strokeWidth:"1.8"}),(0,r.jsx)("path",{d:"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4",fill:"none",stroke:"currentColor",strokeWidth:"1.8",strokeLinecap:"round"})]})})})]})}const o=["Is the 5% rent escalation off-market?","Are the tenant's repair obligations standard?","Is the personal guaranty unusual?"];function i({onPrompt:e}){return(0,r.jsxs)("div",{className:"ck-empty",children:[(0,r.jsx)("p",{className:"e-sub",children:"Ask anything about this contract or pick a starting point below."}),(0,r.jsx)("div",{className:"ck-suggest",children:o.map(n=>(0,r.jsxs)("button",{className:"s-btn",onClick:()=>e(n),children:[(0,r.jsx)("span",{className:"s-txt",children:n}),(0,r.jsx)("span",{className:"s-ar",children:"›"})]},n))})]})}var s=a(92881);function l({edit:e}){const n=(0,s.E)(),[a,t]=(0,A.useState)("idle"),[o,i]=(0,A.useState)(""),[l,d]=(0,A.useState)(!1);if(l)return null;const c="applying"===a?"Applying…":"error"===a?"Retry":"Apply Change";return(0,r.jsxs)("div",{className:`ck-action sev-${e.severity}`,children:[(0,r.jsxs)("div",{className:"a-head",children:[(0,r.jsx)("span",{className:"a-badge",children:"Suggested edit"}),(0,r.jsx)("span",{className:"a-clause",children:e.clauseRef}),(0,r.jsx)("span",{className:`a-sev sev-${e.severity}`,children:e.severity})]}),(0,r.jsxs)("div",{className:"a-body",children:[(0,r.jsx)("p",{className:"a-desc",children:e.rationale}),(0,r.jsxs)("div",{className:"ck-diff",children:[(0,r.jsx)("div",{className:"d-line d-del",children:(0,r.jsx)("span",{className:"t",children:e.originalText})}),(0,r.jsx)("div",{className:"d-line d-add",children:e.proposedText})]}),"error"===a&&(0,r.jsx)("p",{className:"a-error",children:o})]}),(0,r.jsxs)("div",{className:"a-foot",children:["applied"===a?(0,r.jsxs)("button",{className:"ck-btn applied",disabled:!0,children:[(0,r.jsx)("span",{className:"chk"})," Applied to document"]}):(0,r.jsxs)("button",{className:"ck-btn primary",onClick:async()=>{t("applying"),i("");try{const a=await n.applyTrackedChange(e);switch(a.status){case"applied":t("applied"),await n.scrollTo({clauseRef:a.clauseRef??e.clauseRef});break;case"not-found":t("error"),i(`Couldn't find the original text in ${e.clauseRef} to redline.`);break;case"ambiguous":t("error"),i(`Found ${a.matchCount} matches in ${e.clauseRef}; can't redline unambiguously.`)}}catch(e){t("error"),i(e instanceof Error?e.message:"Failed to apply the change.")}},disabled:"applying"===a,children:[(0,r.jsx)("span",{className:"chk"})," ",c]}),(0,r.jsx)("span",{className:"spacer"}),(0,r.jsx)("button",{className:"ck-btn danger-ghost",onClick:()=>d(!0),children:"Dismiss"})]})]})}function d({messages:e,loading:n,error:a,onRetry:t}){const o=(0,A.useRef)(null),i=(0,s.E)();return(0,A.useEffect)(()=>{o.current&&(o.current.scrollTop=o.current.scrollHeight)},[e,n,a]),(0,r.jsxs)("div",{className:"ck-chat",ref:o,children:[(0,r.jsx)("div",{className:"ck-daydiv",children:"Today"}),e.map((e,n)=>{return"user"===e.role?(0,r.jsx)("div",{className:"ck-row user",children:(0,r.jsxs)("div",{children:[(0,r.jsx)("div",{className:"ck-bubble user",children:(0,r.jsx)("p",{children:e.content})}),(0,r.jsx)("div",{className:"ck-time",children:"Just now"})]})},n):(0,r.jsxs)("div",{className:"ck-row",children:[(0,r.jsx)("div",{className:"ck-avatar",children:(0,r.jsx)("img",{src:"assets/ck-mark.svg",alt:"ClauseKit"})}),(0,r.jsxs)("div",{style:{flex:1,minWidth:0},children:[(0,r.jsx)("div",{className:"ck-bubble ai",children:(a=e.content,a.split("\n").map((e,n)=>{if(""===e.trim())return(0,r.jsx)("div",{className:"ck-gap"},n);const a=e.split(/(\*\*[^*]+\*\*)/g).filter(Boolean);return(0,r.jsx)("p",{children:a.map((e,n)=>e.startsWith("**")&&e.endsWith("**")?(0,r.jsx)("strong",{children:e.slice(2,-2)},n):(0,r.jsx)("span",{children:e},n))},n)}))}),e.citations&&e.citations.length>0&&(0,r.jsx)("div",{className:"ck-cites",children:e.citations.map(e=>(0,r.jsxs)("button",{className:"ck-cite",onClick:()=>{return n=e,void i.scrollTo({clauseRef:n});var n},children:[(0,r.jsx)("span",{className:"pin"}),"Jump to ",e,(0,r.jsx)("span",{className:"cite-arr",children:"›"})]},e))}),e.edit&&(0,r.jsx)("div",{className:"ck-action-wrap",children:(0,r.jsx)(l,{edit:e.edit})}),(0,r.jsx)("div",{className:"ck-time",children:"Just now"})]})]},n);var a}),n&&(0,r.jsxs)("div",{className:"ck-row ck-thinking",children:[(0,r.jsx)("div",{className:"ck-avatar",children:(0,r.jsx)("img",{src:"assets/ck-mark.svg",alt:"ClauseKit"})}),(0,r.jsxs)("div",{className:"t-bubble",children:[(0,r.jsx)("i",{}),(0,r.jsx)("i",{}),(0,r.jsx)("i",{})]})]}),a&&(0,r.jsxs)("div",{className:"ck-row",children:[(0,r.jsx)("div",{className:"ck-avatar",children:(0,r.jsx)("img",{src:"assets/ck-mark.svg",alt:"ClauseKit"})}),(0,r.jsx)("div",{style:{flex:1,minWidth:0},children:(0,r.jsxs)("div",{className:"ck-error-bubble",children:[(0,r.jsx)("p",{children:a}),(0,r.jsx)("button",{className:"ck-retry",onClick:t,children:"Retry"})]})})]})]})}function c({onSend:e,chatOpen:n,disabled:a=!1}){const[t,o]=(0,A.useState)(""),[i,s]=(0,A.useState)(40),l=(0,A.useRef)(null),d=()=>{const n=t.trim();n&&!a&&(e(n),o(""))},c=t.trim().length>0&&!a;return(0,r.jsx)(r.Fragment,{children:(0,r.jsxs)("div",{className:"ck-input-wrap",children:[(0,r.jsx)("div",{className:"ck-input-resize",onPointerDown:e=>{e.preventDefault();const n=e.clientY,a=i,r=e.currentTarget;r.setPointerCapture(e.pointerId);const A=e=>{const r=a+(n-e.clientY);s(Math.min(240,Math.max(40,r)))},t=e=>{r.releasePointerCapture(e.pointerId),r.removeEventListener("pointermove",A),r.removeEventListener("pointerup",t)};r.addEventListener("pointermove",A),r.addEventListener("pointerup",t)},role:"separator","aria-orientation":"horizontal","aria-label":"Resize input",title:"Drag to resize",children:(0,r.jsx)("span",{className:"ck-input-grip"})}),(0,r.jsxs)("div",{className:"ck-input",children:[(0,r.jsx)("textarea",{ref:l,placeholder:n?"Ask a follow-up…":"Ask about this contract…",value:t,onChange:e=>o(e.target.value),onKeyDown:e=>{"Enter"!==e.key||e.shiftKey||(e.preventDefault(),d())},style:{height:i}}),(0,r.jsx)("button",{className:"ck-send"+(c?"":" disabled"),onClick:d,disabled:!c,"aria-label":"Send",children:(0,r.jsx)("svg",{viewBox:"0 0 24 24",width:"17",height:"17","aria-hidden":"true",children:(0,r.jsx)("path",{d:"M12 19V6M12 6l-6 6M12 6l6 6",fill:"none",stroke:"currentColor",strokeWidth:"2.2",strokeLinecap:"round",strokeLinejoin:"round"})})})]})]})})}const p={ideal:"Ideal",market:"Market",floor:"Floor"};function E({term:e,heading:n,side:a}){const t=(0,s.E)(),[o,i]=(0,A.useState)(null),[l,d]=(0,A.useState)(null),[c,E]=(0,A.useState)(null),g="tenant"===a?"landlord":"tenant";return(0,r.jsxs)("div",{className:"sim-card",children:[(0,r.jsxs)("div",{className:"sim-card-head",children:[(0,r.jsx)("span",{className:"sim-ref",children:e.clauseRef}),n&&(0,r.jsx)("span",{className:"sim-heading",children:n}),(0,r.jsxs)("span",{className:`sim-favors ${e.favoredParty}`,children:["favors ",e.favoredParty]})]}),(0,r.jsxs)("details",{className:"sim-current",children:[(0,r.jsx)("summary",{children:"Current language"}),(0,r.jsx)("p",{className:"sim-current-text",children:e.currentText})]}),(0,r.jsxs)("div",{className:"sim-ladder",children:[(0,r.jsx)("div",{className:"sim-ladder-label",children:"Your fallback ladder"}),e.yourLadder.map(n=>{const a=o===n.tier,A=l===n.tier,s=null!==o&&!a;return(0,r.jsxs)("div",{className:`sim-rung tier-${n.tier}${a?" applied":""}`,children:[(0,r.jsx)("span",{className:"sim-tier",children:p[n.tier]??n.tier}),(0,r.jsx)("p",{className:"sim-rung-text",children:n.proposedText}),(0,r.jsx)("p",{className:"sim-rung-rat",children:n.rationale}),a?(0,r.jsxs)("button",{className:"ck-btn applied sim-apply",disabled:!0,children:[(0,r.jsx)("span",{className:"chk"})," Applied"]}):(0,r.jsx)("button",{className:"ck-btn primary sim-apply",onClick:()=>(async n=>{d(n.tier),E(null);try{const a={clauseRef:e.clauseRef,originalText:e.currentText,proposedText:n.proposedText,rationale:n.rationale,severity:"high"},r=await t.applyTrackedChange(a);switch(r.status){case"applied":i(n.tier),await t.scrollTo({clauseRef:r.clauseRef??e.clauseRef});break;case"not-found":E(`Couldn't find the ${e.clauseRef} language to redline`+(o?" — a position was already applied here.":"."));break;case"ambiguous":E(`Found ${r.matchCount} matches in ${e.clauseRef}; can't redline unambiguously.`)}}catch(e){E(e instanceof Error?e.message:"Failed to apply the change.")}finally{d(null)}})(n),disabled:A||s,children:A?"Applying…":"Apply this position"})]},n.tier)}),c&&(0,r.jsx)("p",{className:"a-error",children:c})]}),(0,r.jsxs)("div",{className:"sim-counter",children:[(0,r.jsxs)("div",{className:"sim-counter-head",children:[(0,r.jsx)("span",{className:"sim-counter-icon"}),"How the ",g," fights back"]}),(0,r.jsx)("p",{className:"sim-counter-pred",children:e.counterparty.predictedCounter}),(0,r.jsx)("p",{className:"sim-counter-arg",children:e.counterparty.argument})]})]})}function g({side:e,setSide:n,terms:a,headings:A,loading:t,error:o,run:i,ranSide:s}){return(0,r.jsxs)("div",{className:"ck-sim",children:[(0,r.jsxs)("div",{className:"sim-setup",children:[(0,r.jsxs)("div",{children:[(0,r.jsx)("p",{className:"sim-title",children:"Negotiation Simulator"}),(0,r.jsx)("p",{className:"sim-sub",children:"Pick your side:"})]}),(0,r.jsxs)("div",{className:"sim-side",children:[(0,r.jsx)("span",{className:"sim-side-label",children:"I represent the"}),(0,r.jsxs)("div",{className:"sim-toggle",children:[(0,r.jsx)("button",{className:"sim-seg"+("tenant"===e?" on":""),onClick:()=>n("tenant"),disabled:t,children:"Tenant"}),(0,r.jsx)("button",{className:"sim-seg"+("landlord"===e?" on":""),onClick:()=>n("landlord"),disabled:t,children:"Landlord"})]})]}),(0,r.jsx)("button",{className:"ck-btn primary sim-run",onClick:i,disabled:t,children:t?"War-gaming the lease…":a?"Re-run war-game":"War-game the lease"})]}),t&&(0,r.jsxs)("div",{className:"sim-loading",children:[(0,r.jsxs)("div",{className:"t-bubble",children:[(0,r.jsx)("i",{}),(0,r.jsx)("i",{}),(0,r.jsx)("i",{})]}),(0,r.jsxs)("span",{children:["War-gaming the lease as the ",e,"…"]})]}),o&&!t&&(0,r.jsxs)("div",{className:"ck-error-bubble sim-error",children:[(0,r.jsx)("p",{children:o}),(0,r.jsx)("button",{className:"ck-retry",onClick:i,children:"Retry"})]}),!t&&!o&&a&&0===a.length&&(0,r.jsxs)("p",{className:"sim-empty",children:["No off-market terms surfaced for the ",s,". Try the other side."]}),!t&&a&&a.length>0&&(0,r.jsxs)("div",{className:"sim-brief",children:[(0,r.jsxs)("p",{className:"sim-count",children:[a.length," term",a.length>1?"s":""," to negotiate as the ",s]}),a.map((n,a)=>(0,r.jsx)(E,{term:n,heading:A[n.clauseRef],side:s??e},a))]}),!t&&!o&&!a&&(0,r.jsx)("div",{className:"sim-placeholder",children:(0,r.jsx)("p",{children:"Run the war-game to see your fallback ladders and the counterparty's likely pushback."})})]})}const h="http://localhost:4000";function f(e){const[n,a]=(0,A.useState)("ask"),[o,l]=(0,A.useState)("light"),p=function(){const e=(0,s.E)(),[n,a]=(0,A.useState)([]),[r,t]=(0,A.useState)(!1),[o,i]=(0,A.useState)(null),l=(0,A.useCallback)(async(n,r)=>{t(!0),i(null);try{const A=await e.getFullText(),t=await fetch(`${h}/api/ask`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({documentText:A,message:n,history:r.slice(-6)})});if(!t.ok)throw new Error(`The assistant is unavailable (error ${t.status}).`);const o=await t.json(),i=(o.answer??"").trim();a(e=>[...e,{role:"assistant",content:i||"(The assistant returned an empty answer.)",citations:o.citations,edit:o.edit}])}catch(e){i(e instanceof Error?e.message:"Couldn't reach the assistant.")}finally{t(!1)}},[e]),d=(0,A.useCallback)(e=>{const A=e.trim();if(!A||r)return;const t=n;a(e=>[...e,{role:"user",content:A}]),l(A,t)},[l,r,n]),c=(0,A.useCallback)(()=>{if(r)return;let e=-1;for(let a=n.length-1;a>=0;a--)if("user"===n[a].role){e=a;break}-1!==e&&l(n[e].content,n.slice(0,e))},[n,l,r]);return{messages:n,loading:r,error:o,send:d,retry:c}}(),E=function(){const e=(0,s.E)(),[n,a]=(0,A.useState)("tenant"),[r,t]=(0,A.useState)(null),[o,i]=(0,A.useState)({}),[l,d]=(0,A.useState)(!1),[c,p]=(0,A.useState)(null),[E,g]=(0,A.useState)(null),f=(0,A.useCallback)(async()=>{d(!0),p(null);try{const a=await e.getFullText(),r=await fetch(`${h}/api/negotiate`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({documentText:a,side:n})});if(!r.ok)throw new Error(`The simulator is unavailable (error ${r.status}).`);const A=await r.json();t(Array.isArray(A.terms)?A.terms:[]),i(function(e){const n={},a=/(§\d+)\.\s+([^\r\n]+)/g;let r;for(;null!==(r=a.exec(e));)n[r[1]]||(n[r[1]]=r[2].trim());return n}(a)),g(n)}catch(e){p(e instanceof Error?e.message:"Couldn't reach the simulator.")}finally{d(!1)}},[e,n]);return{side:n,setSide:a,terms:r,headings:o,loading:l,error:c,run:f,ranSide:E}}(),f=p.messages.length>0;return(0,r.jsxs)("div",{className:"ck-pane","data-theme":o,children:[(0,r.jsx)(t,{theme:o,onToggleTheme:()=>l(e=>"light"===e?"dark":"light")}),(0,r.jsxs)("div",{className:"ck-tabs",children:[(0,r.jsx)("button",{className:"ck-tab"+("ask"===n?" on":""),onClick:()=>a("ask"),children:"Ask"}),(0,r.jsx)("button",{className:"ck-tab"+("simulator"===n?" on":""),onClick:()=>a("simulator"),children:"Simulator"})]}),"ask"===n?(0,r.jsxs)(r.Fragment,{children:[f?(0,r.jsx)(d,{messages:p.messages,loading:p.loading,error:p.error,onRetry:p.retry}):(0,r.jsx)(i,{onPrompt:p.send}),(0,r.jsx)(c,{onSend:p.send,chatOpen:f,disabled:p.loading})]}):(0,r.jsx)(g,{...E})]})}}},e=>{var n=n=>e(e.s=n);n(61665),n(15018)}]);
+"use strict";
+(globalThis["webpackChunkclausekit"] = globalThis["webpackChunkclausekit"] || []).push([["playground"],{
+
+/***/ "./src/config.ts"
+/*!***********************!*\
+  !*** ./src/config.ts ***!
+  \***********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   API_BASE_URL: () => (/* binding */ API_BASE_URL)
+/* harmony export */ });
+/**
+ * Runtime configuration for the task pane.
+ *
+ * Single source of truth for the backend base URL. Injected at build time by
+ * webpack's DefinePlugin from the API_BASE_URL env var (default http://localhost:4000),
+ * so localhost stays the default but a deployed URL can be baked in for production.
+ */
+const API_BASE_URL = "http://localhost:4000";
+
+/***/ },
+
+/***/ "./src/fixtures/lease/document.ts"
+/*!****************************************!*\
+  !*** ./src/fixtures/lease/document.ts ***!
+  \****************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LEASE_TITLE: () => (/* binding */ LEASE_TITLE),
+/* harmony export */   getClauseByRef: () => (/* binding */ getClauseByRef),
+/* harmony export */   getLeaseFullText: () => (/* binding */ getLeaseFullText),
+/* harmony export */   leaseClauses: () => (/* binding */ leaseClauses),
+/* harmony export */   leaseRecitals: () => (/* binding */ leaseRecitals)
+/* harmony export */ });
+/**
+ * The seeded demo document: a long-form commercial lease (landlord vs tenant)
+ * authored as clause-addressable data. This is the genuine input the LLM
+ * reasons over — it contains NO answer key. Six clauses carry deliberately
+ * off-market, landlord-favorable language (see ./metadata.ts for the curated
+ * sidecar): §5, §9, §11, §15, §16, §17.
+ */
+const LEASE_TITLE = "COMMERCIAL LEASE AGREEMENT";
+const leaseRecitals = "This Commercial Lease Agreement (this “Lease”) is entered into as of March 1, 2026 " + "(the “Effective Date”) by and between Meridian Harbor Properties, LLC, a Delaware limited " + "liability company (“Landlord”), and Northwind Apothecary, Inc., a Washington corporation " + "(“Tenant”). Landlord is the owner of the retail center commonly known as Harbor Point Commons " + "located at 1200 Wharfside Avenue, Seattle, Washington (the “Center”), and Tenant desires to " + "lease certain premises therein. In consideration of the mutual covenants below, the parties agree as follows.";
+const leaseClauses = [{
+  ref: "§1",
+  heading: "Premises",
+  text: "Landlord leases to Tenant, and Tenant leases from Landlord, those certain premises consisting of " + "approximately 3,200 rentable square feet and known as Suite 140 (the “Premises”), as more " + "particularly depicted on Exhibit A. The Premises are leased together with the non-exclusive right to " + "use the common areas of the Center, subject to the terms of this Lease and Landlord's rules and " + "regulations as reasonably amended from time to time."
+}, {
+  ref: "§2",
+  heading: "Term",
+  text: "The initial term of this Lease (the “Initial Term”) shall be five (5) years, commencing on " + "April 1, 2026 (the “Commencement Date”) and expiring at 11:59 p.m. on March 31, 2031, unless " + "sooner terminated or extended as provided herein. If Landlord is unable to deliver possession of the " + "Premises by the Commencement Date, this Lease shall not be void or voidable, but the Commencement Date " + "shall be adjusted to the date possession is tendered."
+}, {
+  ref: "§3",
+  heading: "Permitted Use",
+  text: "The Premises shall be used and occupied solely for the operation of a retail pharmacy and the sale of " + "related health, wellness, and convenience goods, and for no other purpose without Landlord's prior " + "written consent. Tenant shall continuously operate its business in the Premises during the customary " + "business hours of the Center and shall not abandon or vacate the Premises during the Term."
+}, {
+  ref: "§4",
+  heading: "Base Rent",
+  text: "Tenant shall pay to Landlord base rent (“Base Rent”) for the first Lease Year in the amount of " + "One Hundred Forty-Four Thousand Dollars ($144,000.00) per annum, payable in equal monthly installments " + "of Twelve Thousand Dollars ($12,000.00) in advance on the first day of each calendar month, without " + "demand, deduction, or setoff. As used herein, “Lease Year” means each successive twelve (12) " + "month period during the Term, the first of which begins on the Commencement Date."
+}, {
+  ref: "§5",
+  heading: "Rent Escalation",
+  text: "Commencing on the first anniversary of the Commencement Date and on each anniversary thereafter during " + "the Term, the Base Rent then in effect shall automatically increase by five percent (5%) over the Base " + "Rent payable during the immediately preceding Lease Year, compounded annually. Such increases shall " + "require no further notice to Tenant and shall apply to any renewal or extension of the Term."
+}, {
+  ref: "§6",
+  heading: "Security Deposit",
+  text: "Upon execution of this Lease, Tenant shall deposit with Landlord the sum of Twenty-Four Thousand Dollars " + "($24,000.00) as security for the full and faithful performance of Tenant's obligations (the " + "“Security Deposit”). Landlord may, but shall not be obligated to, apply all or part of the " + "Security Deposit to cure any default of Tenant. The Security Deposit shall not bear interest and may be " + "commingled with Landlord's other funds."
+}, {
+  ref: "§7",
+  heading: "Operating Expenses",
+  text: "In addition to Base Rent, Tenant shall pay as additional rent its proportionate share of the Center's " + "operating expenses, common area maintenance, real property taxes, and insurance (collectively, " + "“Operating Expenses”), based on the ratio of the rentable area of the Premises to the total " + "rentable area of the Center. Landlord shall furnish Tenant an annual reconciliation statement, and " + "controllable Operating Expenses shall not increase by more than five percent (5%) per year on a " + "cumulative basis."
+}, {
+  ref: "§8",
+  heading: "Utilities",
+  text: "Tenant shall arrange and pay for all utilities and services supplied to the Premises, including " + "electricity, gas, water, sewer, telephone, and data, together with any connection or hook-up fees. " + "Where any such utility is not separately metered, Tenant shall pay Landlord's reasonable estimate of " + "Tenant's share. Landlord shall not be liable for any interruption of utility services not caused by " + "Landlord's gross negligence or willful misconduct."
+}, {
+  ref: "§9",
+  heading: "Maintenance and Repairs",
+  text: "Tenant shall, at Tenant's sole cost and expense, keep and maintain the entire Premises in good order " + "and repair, including the roof, foundation, exterior and structural walls, and the heating, " + "ventilation, and air-conditioning systems serving the Premises, and shall replace any of the foregoing " + "as and when necessary. Landlord shall have no obligation whatsoever to maintain, repair, or replace any " + "portion of the Premises."
+}, {
+  ref: "§10",
+  heading: "Alterations",
+  text: "Tenant shall not make any alterations, additions, or improvements to the Premises without Landlord's " + "prior written consent, which consent shall not be unreasonably withheld for non-structural interior " + "alterations. All permitted alterations shall be performed in a good and workmanlike manner, in " + "compliance with applicable laws, and shall become the property of Landlord upon installation unless " + "Landlord elects otherwise in writing."
+}, {
+  ref: "§11",
+  heading: "Assignment and Subletting",
+  text: "Tenant shall not assign this Lease or sublet all or any portion of the Premises, whether voluntarily or " + "by operation of law, without the prior written consent of Landlord, which consent Landlord may grant or " + "withhold in its sole and absolute discretion for any reason or no reason. Any purported assignment or " + "sublease made without such consent shall be void and shall constitute an Event of Default."
+}, {
+  ref: "§12",
+  heading: "Insurance",
+  text: "Tenant shall, at its expense, maintain commercial general liability insurance with limits of not less " + "than Two Million Dollars ($2,000,000) per occurrence, naming Landlord as an additional insured, " + "together with property insurance covering Tenant's personal property and improvements. Tenant shall " + "deliver certificates of insurance to Landlord prior to occupancy and upon each renewal of coverage."
+}, {
+  ref: "§13",
+  heading: "Indemnification",
+  text: "Tenant shall indemnify, defend, and hold harmless Landlord from and against any and all claims, " + "damages, liabilities, and expenses arising out of Tenant's use of the Premises or any act or omission " + "of Tenant, its employees, agents, or invitees, except to the extent caused by Landlord's gross " + "negligence or willful misconduct."
+}, {
+  ref: "§14",
+  heading: "Default and Remedies",
+  text: "The occurrence of any of the following shall constitute an “Event of Default”: (a) Tenant's " + "failure to pay any Base Rent or additional rent within five (5) days after the same is due; (b) " + "Tenant's failure to perform any other obligation under this Lease within fifteen (15) days after " + "written notice; or (c) the insolvency or bankruptcy of Tenant. Upon an Event of Default, Landlord may " + "terminate this Lease and pursue all remedies available at law or in equity."
+}, {
+  ref: "§15",
+  heading: "Holdover",
+  text: "If Tenant remains in possession of the Premises after the expiration or earlier termination of this " + "Lease without Landlord's written consent, such occupancy shall be a tenancy at sufferance, and Tenant " + "shall pay holdover rent equal to two hundred percent (200%) of the Base Rent and additional rent " + "payable during the last month of the Term for each month or partial month of holdover. Tenant shall " + "also be liable for all consequential damages arising from such holdover."
+}, {
+  ref: "§16",
+  heading: "Renewal Option",
+  text: "Tenant may request to extend the Term for one (1) additional period of five (5) years by delivering " + "written notice to Landlord not less than nine (9) months prior to expiration; provided, however, that " + "any such extension shall be granted or denied by Landlord in its sole discretion, and the Base Rent for " + "any extension term shall be as determined by Landlord. Tenant shall have no vested right to renew this " + "Lease."
+}, {
+  ref: "§17",
+  heading: "Personal Guaranty",
+  text: "As a material inducement to Landlord's entry into this Lease, the principal of Tenant, Dr. Eleanor Voss " + "(the “Guarantor”), shall personally, absolutely, and unconditionally guarantee all of Tenant's " + "obligations under this Lease, without limitation as to amount or duration, for the entire Term and any " + "extension thereof. The Guarantor's liability shall be primary and shall survive any assignment, " + "termination, or modification of this Lease."
+}, {
+  ref: "§18",
+  heading: "Surrender",
+  text: "Upon the expiration or termination of this Lease, Tenant shall surrender the Premises to Landlord in " + "good order and condition, broom-clean, ordinary wear and tear excepted, and shall remove all of " + "Tenant's personal property and any alterations Landlord requires to be removed. Any property left in " + "the Premises may be deemed abandoned and disposed of by Landlord at Tenant's expense."
+}, {
+  ref: "§19",
+  heading: "Notices",
+  text: "All notices under this Lease shall be in writing and delivered personally, by nationally recognized " + "overnight courier, or by certified mail, return receipt requested, to the addresses set forth in the " + "preamble or such other address as either party may designate by notice. Notices shall be deemed given " + "upon receipt or refusal of delivery."
+}, {
+  ref: "§20",
+  heading: "Governing Law; Miscellaneous",
+  text: "This Lease shall be governed by the laws of the State of Washington, without regard to its conflicts of " + "law principles. This Lease constitutes the entire agreement between the parties and supersedes all " + "prior negotiations and understandings. No amendment shall be effective unless in writing and signed by " + "both parties. If any provision is held unenforceable, the remainder shall continue in full force and " + "effect."
+}];
+/** Returns the clause with the given ref, or undefined. */
+function getClauseByRef(ref) {
+  return leaseClauses.find(c => c.ref === ref);
+}
+/**
+ * Derives the full plain text of the lease from its clause structure. This is
+ * what a DocumentService.getFullText() implementation backed by this fixture
+ * would return.
+ */
+function getLeaseFullText() {
+  const body = leaseClauses.map(c => `${c.ref}. ${c.heading}\n\n${c.text}`).join("\n\n");
+  return `${LEASE_TITLE}\n\n${leaseRecitals}\n\n${body}\n`;
+}
+
+/***/ },
+
+/***/ "./src/fixtures/lease/index.ts"
+/*!*************************************!*\
+  !*** ./src/fixtures/lease/index.ts ***!
+  \*************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LEASE_TITLE: () => (/* reexport safe */ _document__WEBPACK_IMPORTED_MODULE_0__.LEASE_TITLE),
+/* harmony export */   contestedClauses: () => (/* reexport safe */ _metadata__WEBPACK_IMPORTED_MODULE_1__.contestedClauses),
+/* harmony export */   contestedRefs: () => (/* reexport safe */ _metadata__WEBPACK_IMPORTED_MODULE_1__.contestedRefs),
+/* harmony export */   getClauseByRef: () => (/* reexport safe */ _document__WEBPACK_IMPORTED_MODULE_0__.getClauseByRef),
+/* harmony export */   getContestedClause: () => (/* reexport safe */ _metadata__WEBPACK_IMPORTED_MODULE_1__.getContestedClause),
+/* harmony export */   getLeaseFullText: () => (/* reexport safe */ _document__WEBPACK_IMPORTED_MODULE_0__.getLeaseFullText),
+/* harmony export */   leaseClauses: () => (/* reexport safe */ _document__WEBPACK_IMPORTED_MODULE_0__.leaseClauses),
+/* harmony export */   leaseRecitals: () => (/* reexport safe */ _document__WEBPACK_IMPORTED_MODULE_0__.leaseRecitals)
+/* harmony export */ });
+/* harmony import */ var _document__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./document */ "./src/fixtures/lease/document.ts");
+/* harmony import */ var _metadata__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./metadata */ "./src/fixtures/lease/metadata.ts");
+
+
+
+/***/ },
+
+/***/ "./src/fixtures/lease/metadata.ts"
+/*!****************************************!*\
+  !*** ./src/fixtures/lease/metadata.ts ***!
+  \****************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   contestedClauses: () => (/* binding */ contestedClauses),
+/* harmony export */   contestedRefs: () => (/* binding */ contestedRefs),
+/* harmony export */   getContestedClause: () => (/* binding */ getContestedClause)
+/* harmony export */ });
+/**
+ * Curated reference sidecar for the seeded lease — SEPARATE from the prose in
+ * ./document.ts. This is NOT an answer key fed to the LLM: it is our curation
+ * for review and the pre-wired fallback ladders the step 9 Negotiation
+ * Simulator reuses. Each ladder is ordered landlord-favorable → tenant-favorable,
+ * with rung[0] echoing the clause's current (off-market) language, so either
+ * side can be role-played from its own end of the ladder.
+ */
+const contestedClauses = [{
+  clauseRef: "§5",
+  issue: "Base Rent escalates 5% compounding annually with no cap — well above market for a five-year " + "retail lease, roughly doubling rent over a typical renewal horizon.",
+  favoredParty: "landlord",
+  fallbackLadder: [{
+    label: "Landlord opening",
+    language: "increase by five percent (5%) over the Base Rent payable during the immediately preceding Lease " + "Year, compounded annually",
+    rationale: "Aggressive fixed escalator that compounds well ahead of typical retail inflation."
+  }, {
+    label: "Market",
+    language: "increase by three percent (3%) over the Base Rent payable during the immediately preceding Lease Year",
+    rationale: "Fixed 3% annual bumps are the prevailing norm for multi-year retail leases."
+  }, {
+    label: "Tenant target",
+    language: "increase by the lesser of (a) the percentage increase in the Consumer Price Index or (b) two and " + "one-half percent (2.5%) over the Base Rent payable during the immediately preceding Lease Year",
+    rationale: "CPI-with-a-cap ties rent to actual inflation and shields Tenant in high-inflation years."
+  }]
+}, {
+  clauseRef: "§9",
+  issue: "Tenant bears full repair AND replacement of the roof, foundation, structure, and HVAC, with Landlord " + "carrying no obligation at all — atypical for a single suite in a multi-tenant center.",
+  favoredParty: "landlord",
+  fallbackLadder: [{
+    label: "Landlord opening",
+    language: "including the roof, foundation, exterior and structural walls, and the heating, ventilation, and " + "air-conditioning systems serving the Premises, and shall replace any of the foregoing as and when necessary",
+    rationale: "Pushes all building-envelope and capital-replacement risk onto a small-suite tenant."
+  }, {
+    label: "Market",
+    language: "excluding the roof, foundation, and exterior structural walls, which Landlord shall maintain and " + "repair; Tenant shall maintain the heating, ventilation, and air-conditioning systems serving the Premises",
+    rationale: "Standard split: Landlord keeps the structure/envelope, Tenant handles interior and routine HVAC."
+  }, {
+    label: "Tenant target",
+    language: "excluding the roof, foundation, exterior structural walls, and the heating, ventilation, and " + "air-conditioning systems, all of which Landlord shall maintain, repair, and replace; Tenant shall be " + "responsible only for routine HVAC servicing under a maintenance contract",
+    rationale: "Caps Tenant to predictable routine servicing and shifts HVAC capital replacement to Landlord."
+  }]
+}, {
+  clauseRef: "§11",
+  issue: "Consent to assignment or subletting is at Landlord's sole and absolute discretion for any or no reason, " + "leaving Tenant no exit, no affiliate transfers, and no path through a sale of the business.",
+  favoredParty: "landlord",
+  fallbackLadder: [{
+    label: "Landlord opening",
+    language: "which consent Landlord may grant or withhold in its sole and absolute discretion for any reason or no reason",
+    rationale: "Absolute veto; Tenant cannot transfer even to a qualified successor."
+  }, {
+    label: "Market",
+    language: "which consent Landlord shall not unreasonably withhold, condition, or delay",
+    rationale: "The reasonableness standard is the prevailing default and preserves Landlord's legitimate interests."
+  }, {
+    label: "Tenant target",
+    language: "which consent Landlord shall not unreasonably withhold, condition, or delay, and no consent shall be " + "required for an assignment to an affiliate or in connection with a merger or sale of substantially all " + "of Tenant's assets to a successor meeting Landlord's reasonable net-worth criteria",
+    rationale: "Adds permitted-transfer carve-outs for corporate reorganizations Tenant cannot control."
+  }]
+}, {
+  clauseRef: "§15",
+  issue: "Holdover rent is set at 200% of rent plus consequential damages — punitive versus the 125–150% market " + "range, and an inadvertent holdover could expose Tenant to open-ended consequentials.",
+  favoredParty: "landlord",
+  fallbackLadder: [{
+    label: "Landlord opening",
+    language: "two hundred percent (200%)",
+    rationale: "Double rent plus consequentials is a penalty, not holdover compensation."
+  }, {
+    label: "Market",
+    language: "one hundred fifty percent (150%)",
+    rationale: "150% of the last month's rent is the common holdover premium."
+  }, {
+    label: "Tenant target",
+    language: "one hundred twenty-five percent (125%)",
+    rationale: "125% covers Landlord's real holdover cost; pair with a waiver of consequential damages for an " + "inadvertent, short holdover."
+  }]
+}, {
+  clauseRef: "§16",
+  issue: "Renewal is entirely at Landlord's discretion with Landlord-set rent — an illusory option that gives " + "Tenant no enforceable right to stay and no rent protection.",
+  favoredParty: "landlord",
+  fallbackLadder: [{
+    label: "Landlord opening",
+    language: "any such extension shall be granted or denied by Landlord in its sole discretion, and the Base Rent " + "for any extension term shall be as determined by Landlord",
+    rationale: "Illusory option; Tenant has no enforceable right to renew."
+  }, {
+    label: "Market",
+    language: "Tenant shall have the option to extend, exercisable by such notice, at a Base Rent equal to the " + "then-fair-market rent for comparable space in the Center",
+    rationale: "A true tenant option at fair-market rent is the standard renewal construct."
+  }, {
+    label: "Tenant target",
+    language: "Tenant shall have the option to extend, exercisable by such notice, at a Base Rent equal to the " + "lesser of fair-market rent or 103% of the prior year's Base Rent, with fair-market rent determined by " + "binding appraisal if the parties disagree",
+    rationale: "Caps renewal rent and adds an appraisal backstop so Landlord cannot price Tenant out."
+  }]
+}, {
+  clauseRef: "§17",
+  issue: "The personal guaranty is unlimited in amount and duration and survives termination — open-ended personal " + "exposure for the Guarantor with no cap and no sunset.",
+  favoredParty: "landlord",
+  fallbackLadder: [{
+    label: "Landlord opening",
+    language: "without limitation as to amount or duration, for the entire Term and any extension thereof",
+    rationale: "Open-ended personal liability with no cap and no end date."
+  }, {
+    label: "Market",
+    language: "limited to obligations accruing during the first twenty-four (24) months of the Term and to a maximum " + "of six (6) months' Base Rent",
+    rationale: "A guaranty capped in time and amount is typical for a creditworthy small-business tenant."
+  }, {
+    label: "Tenant target",
+    language: "which guaranty shall terminate upon Tenant's completion of twenty-four (24) months without an uncured " + "monetary default and shall in no event exceed three (3) months' Base Rent",
+    rationale: "Burn-down guaranty rewards a clean payment history and caps downside to one quarter's rent."
+  }]
+}];
+/** Refs of the contested clauses, in document order. */
+const contestedRefs = contestedClauses.map(c => c.clauseRef);
+/** Returns the contested-clause metadata for a ref, or undefined. */
+function getContestedClause(ref) {
+  return contestedClauses.find(c => c.clauseRef === ref);
+}
+
+/***/ },
+
+/***/ "./src/services/index.ts"
+/*!*******************************!*\
+  !*** ./src/services/index.ts ***!
+  \*******************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DocumentServiceProvider: () => (/* reexport safe */ _DocumentServiceContext__WEBPACK_IMPORTED_MODULE_0__.DocumentServiceProvider),
+/* harmony export */   useDocumentService: () => (/* reexport safe */ _DocumentServiceContext__WEBPACK_IMPORTED_MODULE_0__.useDocumentService)
+/* harmony export */ });
+/* harmony import */ var _DocumentServiceContext__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DocumentServiceContext */ "./src/services/DocumentServiceContext.tsx");
+
+
+/***/ },
+
+/***/ "./src/services/mock/MockDocumentService.ts"
+/*!**************************************************!*\
+  !*** ./src/services/mock/MockDocumentService.ts ***!
+  \**************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   MockDocumentService: () => (/* binding */ MockDocumentService)
+/* harmony export */ });
+/* harmony import */ var _documentModel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./documentModel */ "./src/services/mock/documentModel.ts");
+
+const FLASH_CLASS = "pg-flash";
+const FLASH_MS = 1200;
+const CONTEXT_CHARS = 40;
+/**
+ * In-browser DocumentService backed by a {@link DocumentModel}. Text operations
+ * delegate to the model; selection and scrolling read/drive the live canvas DOM
+ * (which is appropriate here — this is the mock used by the playground and
+ * tests, not the real Word host).
+ */
+class MockDocumentService {
+  constructor(model) {
+    this.model = model;
+  }
+  async getFullText() {
+    return this.model.getFullText();
+  }
+  async getSelection() {
+    if (typeof window === "undefined") return null;
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || sel.rangeCount === 0) return null;
+    const text = sel.toString();
+    if (!text.trim()) return null;
+    let contextBefore = "";
+    let contextAfter = "";
+    const container = sel.anchorNode?.parentElement?.closest(".pg-clause-text, .pg-recitals, .pg-doc");
+    const full = container?.textContent ?? "";
+    const at = full.indexOf(text);
+    if (at !== -1) {
+      contextBefore = full.slice(Math.max(0, at - CONTEXT_CHARS), at);
+      contextAfter = full.slice(at + text.length, at + text.length + CONTEXT_CHARS);
+    }
+    return {
+      text,
+      contextBefore,
+      contextAfter
+    };
+  }
+  async applyTrackedChange(edit) {
+    return this.model.applyChange(edit);
+  }
+  async scrollTo(target) {
+    if (typeof document === "undefined") return false;
+    const el = "clauseRef" in target ? this.byRef(target.clauseRef) : this.byText(target.text);
+    if (!el) return false;
+    el.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+    el.classList.add(FLASH_CLASS);
+    window.setTimeout(() => el.classList.remove(FLASH_CLASS), FLASH_MS);
+    return true;
+  }
+  byRef(ref) {
+    return document.getElementById((0,_documentModel__WEBPACK_IMPORTED_MODULE_0__.clauseDomId)(ref));
+  }
+  byText(text) {
+    const clauses = Array.from(document.querySelectorAll(".pg-clause"));
+    return clauses.find(c => (c.textContent ?? "").includes(text)) ?? null;
+  }
+}
+
+/***/ },
+
+/***/ "./src/services/mock/documentModel.ts"
+/*!********************************************!*\
+  !*** ./src/services/mock/documentModel.ts ***!
+  \********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DocumentModel: () => (/* binding */ DocumentModel),
+/* harmony export */   clauseDomId: () => (/* binding */ clauseDomId)
+/* harmony export */ });
+/* harmony import */ var _fixtures_lease__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../fixtures/lease */ "./src/fixtures/lease/index.ts");
+
+/**
+ * Stable DOM id for a clause in the canvas. Shared by the canvas renderer and
+ * the mock service's scrollTo so they agree on element ids.
+ */
+function clauseDomId(ref) {
+  return `clause-${ref}`;
+}
+/**
+ * Observable working copy of the lease. Initialized from the immutable fixture
+ * (which is never mutated), it records applied tracked-changes and notifies
+ * subscribers so the canvas can re-render. Pure data + subscriptions — no DOM.
+ */
+class DocumentModel {
+  constructor(source = _fixtures_lease__WEBPACK_IMPORTED_MODULE_0__.leaseClauses) {
+    this.listeners = new Set();
+    /** Subscribe to change notifications; returns an unsubscribe fn. */
+    this.subscribe = listener => {
+      this.listeners.add(listener);
+      return () => {
+        this.listeners.delete(listener);
+      };
+    };
+    /** Current working clauses. Reference changes only when the model mutates. */
+    this.getSnapshot = () => this.clauses;
+    this.clauses = source.map(c => ({
+      ref: c.ref,
+      heading: c.heading,
+      segments: [{
+        kind: "text",
+        text: c.text
+      }]
+    }));
+  }
+  notify() {
+    this.listeners.forEach(l => l());
+  }
+  clauseText(c) {
+    return c.segments.map(s => s.kind === "text" ? s.text : s.proposed).join("");
+  }
+  /** Full document text, reflecting applied changes (proposed text wins). */
+  getFullText() {
+    const body = this.clauses.map(c => `${c.ref}. ${c.heading}\n\n${this.clauseText(c)}`).join("\n\n");
+    return `${_fixtures_lease__WEBPACK_IMPORTED_MODULE_0__.LEASE_TITLE}\n\n${_fixtures_lease__WEBPACK_IMPORTED_MODULE_0__.leaseRecitals}\n\n${body}\n`;
+  }
+  /**
+   * Apply a tracked change. Searches for `edit.originalText` SCOPED to the
+   * clause named by `edit.clauseRef`, and only within still-unchanged text
+   * runs. Exactly one match → records the change and notifies. Zero →
+   * not-found. More than one → ambiguous (never guesses which to edit).
+   */
+  applyChange(edit) {
+    const idx = this.clauses.findIndex(c => c.ref === edit.clauseRef);
+    if (idx === -1) return {
+      status: "not-found",
+      searchedText: edit.originalText
+    };
+    const clause = this.clauses[idx];
+    const hits = [];
+    clause.segments.forEach((seg, si) => {
+      if (seg.kind !== "text" || edit.originalText.length === 0) return;
+      let pos = seg.text.indexOf(edit.originalText);
+      while (pos !== -1) {
+        hits.push({
+          segIndex: si,
+          offset: pos
+        });
+        pos = seg.text.indexOf(edit.originalText, pos + edit.originalText.length);
+      }
+    });
+    if (hits.length === 0) return {
+      status: "not-found",
+      searchedText: edit.originalText
+    };
+    if (hits.length > 1) return {
+      status: "ambiguous",
+      matchCount: hits.length
+    };
+    const {
+      segIndex,
+      offset
+    } = hits[0];
+    const target = clause.segments[segIndex];
+    const before = target.text.slice(0, offset);
+    const after = target.text.slice(offset + edit.originalText.length);
+    const segments = [];
+    clause.segments.forEach((s, si) => {
+      if (si !== segIndex) {
+        segments.push(s);
+        return;
+      }
+      if (before) segments.push({
+        kind: "text",
+        text: before
+      });
+      segments.push({
+        kind: "change",
+        original: edit.originalText,
+        proposed: edit.proposedText
+      });
+      if (after) segments.push({
+        kind: "text",
+        text: after
+      });
+    });
+    const updated = {
+      ...clause,
+      segments
+    };
+    this.clauses = this.clauses.map((c, i) => i === idx ? updated : c);
+    this.notify();
+    return {
+      status: "applied",
+      clauseRef: edit.clauseRef
+    };
+  }
+}
+
+/***/ },
+
+/***/ "./src/taskpane/components/useChat.ts"
+/*!********************************************!*\
+  !*** ./src/taskpane/components/useChat.ts ***!
+  \********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useChat: () => (/* binding */ useChat)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services */ "./src/services/index.ts");
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../config */ "./src/config.ts");
+
+
+
+/**
+ * How many prior turns to send as conversation history. The document itself
+ * never rides in history — it goes in `documentText`, which the backend caches
+ * as a stable prefix. Keeping history short keeps the uncached part small.
+ */
+const HISTORY_TURNS = 6;
+/**
+ * Owns the live chat: the message list, loading/error state, and the call to
+ * the backend's /api/ask, grounded in the document via the DocumentService seam.
+ * Assistant turns carry the structured citations and optional redline edit.
+ */
+function useChat() {
+  const service = (0,_services__WEBPACK_IMPORTED_MODULE_1__.useDocumentService)();
+  const [messages, setMessages] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [error, setError] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const ask = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async (message, history) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const documentText = await service.getFullText();
+      const res = await fetch(`${_config__WEBPACK_IMPORTED_MODULE_2__.API_BASE_URL}/api/ask`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          documentText,
+          message,
+          history: history.slice(-HISTORY_TURNS)
+        })
+      });
+      if (!res.ok) {
+        throw new Error(`The assistant is unavailable (error ${res.status}).`);
+      }
+      const data = await res.json();
+      const answer = (data.answer ?? "").trim();
+      setMessages(prev => [...prev, {
+        role: "assistant",
+        content: answer || "(The assistant returned an empty answer.)",
+        citations: data.citations,
+        edit: data.edit
+      }]);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Couldn't reach the assistant.");
+    } finally {
+      setLoading(false);
+    }
+  }, [service]);
+  const send = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(text => {
+    const trimmed = text.trim();
+    if (!trimmed || loading) return;
+    const history = messages;
+    setMessages(prev => [...prev, {
+      role: "user",
+      content: trimmed
+    }]);
+    void ask(trimmed, history);
+  }, [ask, loading, messages]);
+  const retry = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(() => {
+    if (loading) return;
+    // On error the assistant reply was never appended, so the last message is
+    // the user turn that failed — re-ask it with the history before it.
+    let lastUserIdx = -1;
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].role === "user") {
+        lastUserIdx = i;
+        break;
+      }
+    }
+    if (lastUserIdx === -1) return;
+    void ask(messages[lastUserIdx].content, messages.slice(0, lastUserIdx));
+  }, [messages, ask, loading]);
+  return {
+    messages,
+    loading,
+    error,
+    send,
+    retry
+  };
+}
+
+/***/ },
+
+/***/ "./src/taskpane/components/useNegotiate.ts"
+/*!*************************************************!*\
+  !*** ./src/taskpane/components/useNegotiate.ts ***!
+  \*************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useNegotiate: () => (/* binding */ useNegotiate)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services */ "./src/services/index.ts");
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../config */ "./src/config.ts");
+
+
+
+/**
+ * Best-effort "§N → heading" map from the document text. The lease formats
+ * clause headings as "§5. Rent Escalation"; documents that don't follow this
+ * just yield no headings (cards fall back to the ref alone).
+ */
+function parseHeadings(documentText) {
+  const map = {};
+  const re = /(§\d+)\.\s+([^\r\n]+)/g;
+  let m;
+  while ((m = re.exec(documentText)) !== null) {
+    if (!map[m[1]]) map[m[1]] = m[2].trim();
+  }
+  return map;
+}
+/**
+ * Owns the Negotiation Simulator: the chosen side, the brief (terms + headings),
+ * and the call to /api/negotiate, grounded in the document via the seam. Each
+ * term's ladder rungs are applied through the same applyTrackedChange path as Ask.
+ */
+function useNegotiate() {
+  const service = (0,_services__WEBPACK_IMPORTED_MODULE_1__.useDocumentService)();
+  const [side, setSide] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("tenant");
+  const [terms, setTerms] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [headings, setHeadings] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({});
+  const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [error, setError] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [ranSide, setRanSide] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const run = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const documentText = await service.getFullText();
+      const res = await fetch(`${_config__WEBPACK_IMPORTED_MODULE_2__.API_BASE_URL}/api/negotiate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          documentText,
+          side
+        })
+      });
+      if (!res.ok) {
+        throw new Error(`The simulator is unavailable (error ${res.status}).`);
+      }
+      const data = await res.json();
+      setTerms(Array.isArray(data.terms) ? data.terms : []);
+      setHeadings(parseHeadings(documentText));
+      setRanSide(side);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Couldn't reach the simulator.");
+    } finally {
+      setLoading(false);
+    }
+  }, [service, side]);
+  return {
+    side,
+    setSide,
+    terms,
+    headings,
+    loading,
+    error,
+    run,
+    ranSide
+  };
+}
+
+/***/ },
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/playground/playground.css"
+/*!*****************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/playground/playground.css ***!
+  \*****************************************************************************/
+(module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, `/* ── ClauseKit Playground chrome ──
+ *
+ * Playground-only layout: a two-pane demo surface (lease document on the
+ * left, the real task pane docked on the right). This file styles ONLY the
+ * playground shell and the rendered document — the task pane itself comes
+ * entirely from the shared design system (clausekit.css).
+ */
+
+.pg-root {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: #eef0f3;
+}
+
+/* ── Document pane (left/center) ── */
+.pg-doc-pane {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 32px 24px 64px;
+  display: flex;
+  justify-content: center;
+  /* Top-align so the page sizes to its content height instead of being
+     stretched to the (viewport-bound) pane height. The pane is the scroll
+     container; gray shows only as the margin around the page. */
+  align-items: flex-start;
+}
+
+.pg-doc {
+  width: 100%;
+  max-width: 760px;
+  background: #fff;
+  border: 1px solid #e3e6ea;
+  border-radius: 4px;
+  box-shadow: 0 4px 24px rgba(17, 24, 39, 0.08);
+  padding: 56px 72px 72px;
+  /* height is auto (grows with content); fill the viewport when the document
+     is short. 96px = the pane's top (32) + bottom (64) padding. */
+  min-height: calc(100vh - 96px);
+  /* A serif gives the document a contractual feel, distinct from the pane UI. */
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #1f2430;
+}
+
+.pg-doc-title {
+  text-align: center;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0 0 28px;
+}
+
+.pg-recitals {
+  font-size: 14px;
+  line-height: 1.75;
+  text-align: justify;
+  margin: 0 0 28px;
+}
+
+.pg-clause {
+  margin: 0 0 22px;
+  scroll-margin-top: 24px;
+}
+
+.pg-clause-head {
+  font-size: 14.5px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.pg-ref {
+  font-family: var(--font-mono, 'Roboto Mono', monospace);
+  font-size: 12.5px;
+  color: #6b7280;
+  flex: none;
+}
+
+.pg-clause-text {
+  font-size: 14px;
+  line-height: 1.8;
+  text-align: justify;
+  margin: 0;
+}
+
+/* ── Tracked-change rendering (Word-style) ── */
+.pg-del {
+  color: #b42318;
+  text-decoration: line-through;
+  text-decoration-color: rgba(180, 35, 24, 0.6);
+}
+.pg-ins {
+  color: #067647;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  margin-left: 3px;
+}
+
+/* Brief highlight when scrollTo targets a clause. */
+.pg-flash {
+  animation: pg-flash 1.2s ease-out;
+  border-radius: 3px;
+}
+@keyframes pg-flash {
+  0% { background: rgba(245, 158, 11, 0); }
+  18% { background: rgba(245, 158, 11, 0.35); }
+  100% { background: rgba(245, 158, 11, 0); }
+}
+
+/* ── Task-pane host (right) ── */
+.pg-pane-host {
+  width: 372px;
+  flex: none;
+  height: 100vh;
+  background: var(--bg, #f8f9fa);
+  border-left: 1px solid #d6dae0;
+  box-shadow: -6px 0 24px rgba(17, 24, 39, 0.08);
+  overflow: hidden;
+}
+
+/* The shared .ck-pane fills the host exactly as it does the Office task pane. */
+.pg-pane-host .ck-pane {
+  height: 100%;
+}
+`, "",{"version":3,"sources":["webpack://./src/playground/playground.css"],"names":[],"mappings":"AAAA;;;;;;EAME;;AAEF;EACE,aAAa;EACb,aAAa;EACb,WAAW;EACX,gBAAgB;EAChB,mBAAmB;AACrB;;AAEA,sCAAsC;AACtC;EACE,OAAO;EACP,YAAY;EACZ,gBAAgB;EAChB,uBAAuB;EACvB,aAAa;EACb,uBAAuB;EACvB;;gEAE8D;EAC9D,uBAAuB;AACzB;;AAEA;EACE,WAAW;EACX,gBAAgB;EAChB,gBAAgB;EAChB,yBAAyB;EACzB,kBAAkB;EAClB,6CAA6C;EAC7C,uBAAuB;EACvB;kEACgE;EAChE,8BAA8B;EAC9B,8EAA8E;EAC9E,8CAA8C;EAC9C,cAAc;AAChB;;AAEA;EACE,kBAAkB;EAClB,eAAe;EACf,gBAAgB;EAChB,sBAAsB;EACtB,yBAAyB;EACzB,gBAAgB;AAClB;;AAEA;EACE,eAAe;EACf,iBAAiB;EACjB,mBAAmB;EACnB,gBAAgB;AAClB;;AAEA;EACE,gBAAgB;EAChB,uBAAuB;AACzB;;AAEA;EACE,iBAAiB;EACjB,gBAAgB;EAChB,eAAe;EACf,aAAa;EACb,QAAQ;EACR,qBAAqB;AACvB;;AAEA;EACE,uDAAuD;EACvD,iBAAiB;EACjB,cAAc;EACd,UAAU;AACZ;;AAEA;EACE,eAAe;EACf,gBAAgB;EAChB,mBAAmB;EACnB,SAAS;AACX;;AAEA,gDAAgD;AAChD;EACE,cAAc;EACd,6BAA6B;EAC7B,6CAA6C;AAC/C;AACA;EACE,cAAc;EACd,0BAA0B;EAC1B,8BAA8B;EAC9B,gBAAgB;AAClB;;AAEA,oDAAoD;AACpD;EACE,iCAAiC;EACjC,kBAAkB;AACpB;AACA;EACE,KAAK,iCAAiC,EAAE;EACxC,MAAM,oCAAoC,EAAE;EAC5C,OAAO,iCAAiC,EAAE;AAC5C;;AAEA,iCAAiC;AACjC;EACE,YAAY;EACZ,UAAU;EACV,aAAa;EACb,8BAA8B;EAC9B,8BAA8B;EAC9B,8CAA8C;EAC9C,gBAAgB;AAClB;;AAEA,gFAAgF;AAChF;EACE,YAAY;AACd","sourcesContent":["/* ── ClauseKit Playground chrome ──\n *\n * Playground-only layout: a two-pane demo surface (lease document on the\n * left, the real task pane docked on the right). This file styles ONLY the\n * playground shell and the rendered document — the task pane itself comes\n * entirely from the shared design system (clausekit.css).\n */\n\n.pg-root {\n  display: flex;\n  height: 100vh;\n  width: 100%;\n  overflow: hidden;\n  background: #eef0f3;\n}\n\n/* ── Document pane (left/center) ── */\n.pg-doc-pane {\n  flex: 1;\n  min-width: 0;\n  overflow-y: auto;\n  padding: 32px 24px 64px;\n  display: flex;\n  justify-content: center;\n  /* Top-align so the page sizes to its content height instead of being\n     stretched to the (viewport-bound) pane height. The pane is the scroll\n     container; gray shows only as the margin around the page. */\n  align-items: flex-start;\n}\n\n.pg-doc {\n  width: 100%;\n  max-width: 760px;\n  background: #fff;\n  border: 1px solid #e3e6ea;\n  border-radius: 4px;\n  box-shadow: 0 4px 24px rgba(17, 24, 39, 0.08);\n  padding: 56px 72px 72px;\n  /* height is auto (grows with content); fill the viewport when the document\n     is short. 96px = the pane's top (32) + bottom (64) padding. */\n  min-height: calc(100vh - 96px);\n  /* A serif gives the document a contractual feel, distinct from the pane UI. */\n  font-family: Georgia, 'Times New Roman', serif;\n  color: #1f2430;\n}\n\n.pg-doc-title {\n  text-align: center;\n  font-size: 19px;\n  font-weight: 700;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  margin: 0 0 28px;\n}\n\n.pg-recitals {\n  font-size: 14px;\n  line-height: 1.75;\n  text-align: justify;\n  margin: 0 0 28px;\n}\n\n.pg-clause {\n  margin: 0 0 22px;\n  scroll-margin-top: 24px;\n}\n\n.pg-clause-head {\n  font-size: 14.5px;\n  font-weight: 700;\n  margin: 0 0 8px;\n  display: flex;\n  gap: 8px;\n  align-items: baseline;\n}\n\n.pg-ref {\n  font-family: var(--font-mono, 'Roboto Mono', monospace);\n  font-size: 12.5px;\n  color: #6b7280;\n  flex: none;\n}\n\n.pg-clause-text {\n  font-size: 14px;\n  line-height: 1.8;\n  text-align: justify;\n  margin: 0;\n}\n\n/* ── Tracked-change rendering (Word-style) ── */\n.pg-del {\n  color: #b42318;\n  text-decoration: line-through;\n  text-decoration-color: rgba(180, 35, 24, 0.6);\n}\n.pg-ins {\n  color: #067647;\n  text-decoration: underline;\n  text-decoration-thickness: 1px;\n  margin-left: 3px;\n}\n\n/* Brief highlight when scrollTo targets a clause. */\n.pg-flash {\n  animation: pg-flash 1.2s ease-out;\n  border-radius: 3px;\n}\n@keyframes pg-flash {\n  0% { background: rgba(245, 158, 11, 0); }\n  18% { background: rgba(245, 158, 11, 0.35); }\n  100% { background: rgba(245, 158, 11, 0); }\n}\n\n/* ── Task-pane host (right) ── */\n.pg-pane-host {\n  width: 372px;\n  flex: none;\n  height: 100vh;\n  background: var(--bg, #f8f9fa);\n  border-left: 1px solid #d6dae0;\n  box-shadow: -6px 0 24px rgba(17, 24, 39, 0.08);\n  overflow: hidden;\n}\n\n/* The shared .ck-pane fills the host exactly as it does the Office task pane. */\n.pg-pane-host .ck-pane {\n  height: 100%;\n}\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ },
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/clausekit.css"
+/*!************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/clausekit.css ***!
+  \************************************************************************/
+(module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, `/* ── ClauseKit Task Pane Design System ──
+ *
+ * Single source of truth for the task-pane UI. Loaded by both the Office
+ * entry (src/taskpane/index.tsx) and the browser playground
+ * (src/playground/playground.tsx) so the pane looks identical in either host.
+ */
+:root {
+  --navy: #0E0E12;
+  --navy-700: #2b2b34;
+  --navy-300: #6c6c77;
+  --amber: #F59E0B;
+  --amber-600: #d4870a;
+  --amber-soft: #FEF3C7;
+  --amber-grad: linear-gradient(180deg, #FCC04A 0%, #F59E0B 52%, #E88B05 100%);
+  --amber-glow: inset 0 1px 0 rgba(255,255,255,.35), 0 2px 10px rgba(245,158,11,.4), 0 1px 2px rgba(160,98,0,.45);
+  --grey-grad: linear-gradient(180deg, #5b5b66 0%, #3d3d47 52%, #2b2b34 100%);
+  --grey-grad-hover: linear-gradient(180deg, #66666f 0%, #46464f 52%, #33333b 100%);
+  --grey-glow: inset 0 1px 0 rgba(255,255,255,.14), 0 2px 8px rgba(17,24,39,.20), 0 1px 2px rgba(17,24,39,.28);
+  --bg: #F8F9FA;
+  --surface: #FFFFFF;
+  --user-bubble: #EEF2FF;
+  --text-primary: #111827;
+  --text-secondary: #6B7280;
+  --border: #E5E7EB;
+  --border-strong: #D1D5DB;
+  --destructive: #EF4444;
+  --destructive-soft: #FEF2F2;
+  --fs-header: 16px;
+  --fs-body: 13px;
+  --fs-label: 11px;
+  --pane-pad: 12px;
+  --shadow-card: 0 1px 2px rgba(17,24,39,.06), 0 1px 3px rgba(17,24,39,.05);
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'Roboto Mono', monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; -webkit-font-smoothing: antialiased; }
+body { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); }
+#container { height: 100%; }
+
+/* Pane shell */
+.ck-pane { height: 100%; display: flex; flex-direction: column; }
+
+/* ── Header ── */
+.ck-header {
+  background: linear-gradient(180deg, #08080b 0%, #131318 55%, #232329 100%);
+  color: #fff; height: 36px; display: flex; align-items: center;
+  padding: 0 var(--pane-pad); gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,.06); flex-shrink: 0;
+}
+.h-mark { width: 30px; height: 30px; display: grid; place-items: center; flex: none; }
+.h-mark img { width: 26px; height: 26px; object-fit: contain; display: block; }
+.h-txt { display: flex; flex-direction: column; justify-content: center; line-height: 1.15; }
+.h-name { font-family: var(--font-display); font-size: var(--fs-header); font-weight: 600; letter-spacing: -.01em; }
+.h-actions { margin-left: auto; display: flex; gap: 2px; }
+.ck-theme-btn { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; color: rgba(255,255,255,.78); cursor: pointer; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10); transition: background .14s, color .14s, border-color .14s; }
+.ck-theme-btn:hover { background: rgba(255,255,255,.14); color: #fff; border-color: rgba(255,255,255,.18); }
+.ck-theme-btn:active { transform: translateY(.5px); }
+.ck-theme-btn svg { display: block; }
+
+/* ── Chat scroll area ── */
+.ck-chat { flex: 1; background: var(--bg); padding: var(--pane-pad); display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
+.ck-daydiv { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: var(--fs-label); }
+.ck-daydiv::before, .ck-daydiv::after { content:""; height:1px; background: var(--border); flex:1; }
+
+/* Message rows */
+.ck-row { display: flex; gap: 8px; }
+.ck-row.user { justify-content: flex-end; }
+.ck-avatar { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; flex: none; margin-top: 2px; }
+.ck-avatar span { font-size: 9px; font-weight: 700; color: #fff; letter-spacing: .02em; }
+.ck-avatar img { width: 22px; height: 22px; object-fit: contain; display: block; }
+.ck-bubble { font-size: var(--fs-body); line-height: 1.55; padding: 10px 12px; border-radius: 12px; max-width: 264px; }
+.ck-bubble.user { background: var(--user-bubble); color: var(--navy); border-radius: 12px 12px 4px 12px; }
+.ck-bubble.ai { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); }
+.ck-bubble p { margin: 0; }
+.ck-bubble p + p { margin-top: 8px; }
+.ck-bubble strong { font-weight: 600; }
+.ck-time { font-size: 10px; color: var(--text-secondary); margin-top: 4px; }
+.ck-row.user .ck-time { text-align: right; }
+
+/* Quote block */
+.ck-quote { background: #fafbfc; border: 1px solid var(--border); border-left: 3px solid var(--navy-300); border-radius: 6px; padding: 9px 11px; margin: 10px 0 4px; }
+.q-meta { font-family: var(--font-mono); font-size: 10px; color: var(--text-secondary); letter-spacing: .02em; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
+.q-meta::before { content:"\\201C"; font-family: Georgia, serif; font-size: 16px; line-height: 0; color: var(--navy-300); position: relative; top: 3px; }
+.q-text { font-size: 12px; line-height: 1.6; color: #374151; font-style: italic; }
+.q-text mark { background: var(--amber-soft); font-style: normal; padding: 0 1px; }
+
+/* Empty lines inside an AI answer (preserves list/paragraph spacing) */
+.ck-bubble.ai .ck-gap { height: 8px; }
+
+/* Error bubble + retry (chat thread) */
+.ck-error-bubble { background: var(--destructive-soft); border: 1px solid #fecdca; border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); padding: 10px 12px; font-size: var(--fs-body); line-height: 1.55; color: #b42318; }
+.ck-error-bubble p { margin: 0 0 8px; }
+.ck-retry { font-size: 12px; font-weight: 500; color: var(--navy); background: #fff; border: 1px solid var(--border-strong); border-radius: 6px; padding: 5px 12px; cursor: pointer; font-family: var(--font-body); }
+.ck-retry:hover { background: #f9fafb; }
+
+/* Citation chips row */
+.ck-cites { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.ck-cites .ck-cite { margin-top: 0; }
+
+/* Citation chip */
+.ck-cite { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 11px; font-weight: 500; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 999px; padding: 4px 10px 4px 8px; cursor: pointer; }
+.ck-cite:hover { background: #e4eafd; }
+.pin { width: 11px; height: 11px; position: relative; flex: none; }
+.pin::before { content:""; position:absolute; inset:0; border:1.5px solid var(--navy); border-radius:50% 50% 50% 0; transform: rotate(-45deg); }
+.cite-arr { margin-left: 1px; color: var(--navy-300); font-size: 10px; }
+
+/* ── Action card ── */
+.ck-action-wrap { margin-top: 10px; }
+.ck-action { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--navy-300); border-radius: 8px; box-shadow: var(--shadow-card); overflow: hidden; }
+.ck-action.sev-high { border-left-color: var(--destructive); }
+.ck-action.sev-medium { border-left-color: var(--navy-300); }
+.ck-action.sev-low { border-left-color: var(--navy-300); }
+.a-head { padding: 11px 12px 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.a-badge { font-family: var(--font-mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--amber-600); background: var(--amber-soft); border-radius: 4px; padding: 3px 6px; }
+.a-clause { font-family: var(--font-mono); font-size: 11px; font-weight: 500; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 4px; padding: 2px 6px; }
+.a-sev { margin-left: auto; font-size: 9px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; border-radius: 4px; padding: 2px 6px; }
+.a-sev.sev-high { color: #b42318; background: var(--destructive-soft); }
+.a-sev.sev-medium { color: var(--amber-600); background: var(--amber-soft); }
+.a-sev.sev-low { color: var(--text-secondary); background: #f3f4f6; }
+.a-title { font-size: 12.5px; font-weight: 600; line-height: 1.35; color: var(--text-primary); }
+.a-body { padding: 9px 12px 0; }
+.a-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.55; margin: 0; }
+.a-error { font-size: 12px; color: var(--destructive); background: var(--destructive-soft); border: 1px solid #fecdca; border-radius: 6px; padding: 7px 9px; margin: 10px 0 0; line-height: 1.45; }
+
+/* Diff */
+.ck-diff { margin: 10px 0 2px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; font-family: var(--font-mono); font-size: 11px; line-height: 1.55; }
+.d-line { padding: 6px 10px 6px 24px; position: relative; }
+.d-del { background: var(--destructive-soft); color: #b42318; }
+.d-del .t { text-decoration: line-through; text-decoration-color: rgba(180,35,24,.5); }
+.d-add { background: #ecfdf3; color: #067647; border-top: 1px solid #d1fadf; }
+.d-line::before { position: absolute; left: 9px; top: 6px; font-weight: 700; }
+.d-del::before { content: "−"; color: #d92d20; }
+.d-add::before { content: "+"; color: #079455; }
+
+/* Action footer */
+.a-foot { display: flex; gap: 8px; padding: 12px; align-items: center; }
+.a-foot .spacer { flex: 1; }
+.ck-btn { font-size: 13px; font-weight: 500; border-radius: 6px; padding: 8px 14px; cursor: pointer; border: 1px solid transparent; line-height: 1; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; font-family: var(--font-body); transition: background .12s, border-color .12s; }
+.ck-btn.primary { background: var(--grey-grad); color: #fff; font-weight: 600; border-color: rgba(17,24,39,.35); box-shadow: var(--grey-glow); }
+.ck-btn.primary:hover { background: var(--grey-grad-hover); }
+.ck-btn.danger-ghost { background: transparent; color: var(--text-secondary); border-color: transparent; }
+.ck-btn.danger-ghost:hover { background: var(--destructive-soft); color: var(--destructive); }
+.ck-btn.applied { background: #ecfdf3; color: #067647; border-color: #d1fadf; cursor: default; }
+.ck-btn.applied:hover { filter: none; }
+.chk { width: 6px; height: 11px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(40deg) translateY(-1px); display: inline-block; }
+
+/* Thinking dots */
+.ck-thinking { display: flex; gap: 8px; align-items: center; }
+.t-bubble { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); padding: 12px 14px; display: flex; gap: 5px; align-items: center; }
+.t-bubble i { width: 6px; height: 6px; border-radius: 50%; background: var(--navy-300); animation: blink 1.2s infinite ease-in-out; font-style: normal; display: block; }
+.t-bubble i:nth-child(2){ animation-delay: .18s; }
+.t-bubble i:nth-child(3){ animation-delay: .36s; }
+@keyframes blink { 0%,60%,100%{ opacity:.28; transform:translateY(0);} 30%{ opacity:1; transform:translateY(-2px);} }
+
+/* ── Empty state ── */
+.ck-empty { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 36px 22px; gap: 0; flex: 1; }
+.e-mark { width: 60px; height: 60px; border-radius: 16px; background: linear-gradient(180deg,#1d1d24 0%,#101015 100%); display: grid; place-items: center; position: relative; box-shadow: 0 10px 26px rgba(0,0,0,.28); border: 1px solid #2e2e36; margin-bottom: 18px; }
+.e-mark img { width: 34px; height: 34px; object-fit: contain; display: block; }
+.ck-empty h3 { font-family: var(--font-display); font-size: 15px; font-weight: 600; margin: 0 0 6px; color: var(--text-primary); }
+.e-sub { font-family: var(--font-display); font-size: 14px; font-weight: 500; color: var(--text-primary); line-height: 1.6; letter-spacing: -.01em; margin: 0 0 22px; max-width: 28ch; }
+.ck-suggest { display: flex; flex-direction: column; gap: 9px; width: 100%; }
+.s-btn { position: relative; text-align: left; font-size: 12.5px; color: var(--navy); background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 12px 13px; cursor: pointer; box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 9px; font-family: var(--font-body); overflow: hidden; transition: border-color .15s, box-shadow .15s, transform .15s, background .15s; }
+.s-btn::before { content:""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--grey-grad); opacity: 0; transition: opacity .15s; }
+.s-btn:hover { border-color: var(--border-strong); background: #fafafb; box-shadow: 0 4px 12px rgba(17,24,39,.08); transform: translateY(-1px); }
+.s-btn:hover::before { opacity: 1; }
+.s-btn:active { transform: translateY(0); }
+.s-txt { flex: 1; line-height: 1.4; }
+.s-btn .s-ar { margin-left: auto; color: var(--navy-300); font-size: 15px; flex: none; transition: color .15s, transform .15s; }
+.s-btn:hover .s-ar { color: var(--navy); transform: translateX(2px); }
+
+/* ── Privacy note ── */
+.ck-privacy { background: #fff; border-top: 1px solid var(--border); padding: 9px 12px; display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
+.p-shield { width: 22px; height: 24px; flex: none; position: relative; }
+.p-shield::before { content:""; position:absolute; inset:0; background: #eef2ff; border:1.4px solid #dbe3fb; border-radius: 4px 4px 9px 9px / 4px 4px 14px 14px; }
+.p-shield::after { content:""; position:absolute; left:7px; top:8px; width:5px; height:8px; border-right:1.8px solid var(--navy); border-bottom:1.8px solid var(--navy); transform: rotate(40deg); }
+.p-txt { font-size: var(--fs-label); color: var(--text-secondary); line-height: 1.45; margin: 0; }
+.p-txt b { color: var(--text-primary); font-weight: 600; }
+
+/* ── Input area ── */
+.ck-input-wrap { background: var(--surface); border-top: 1px solid var(--border); padding: 0 var(--pane-pad) 8px; flex-shrink: 0; }
+.ck-input-resize { height: 14px; display: flex; align-items: center; justify-content: center; cursor: ns-resize; touch-action: none; }
+.ck-input-grip { width: 28px; height: 4px; border-radius: 999px; background: var(--border-strong); transition: background .12s; }
+.ck-input-resize:hover .ck-input-grip { background: var(--navy-300); }
+.ck-input { background: #fff; border: 1px solid var(--border-strong); border-radius: 12px; padding: 7px 7px 7px 13px; display: flex; align-items: flex-end; gap: 8px; transition: border-color .12s, box-shadow .12s; }
+.ck-input:focus-within { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(14,14,18,.08); }
+.ck-input textarea { flex: 1; font-size: var(--fs-body); color: var(--text-primary); line-height: 1.5; padding: 7px 0; border: none; outline: none; resize: none; background: transparent; font-family: var(--font-body); overflow-y: auto; }
+.ck-input textarea::placeholder { color: var(--text-secondary); }
+.ck-send { width: 34px; height: 34px; border-radius: 10px; background: var(--grey-grad); color: #fff; display: grid; place-items: center; flex: none; cursor: pointer; border: 1px solid rgba(17,24,39,.35); box-shadow: var(--grey-glow); transition: filter .12s, transform .12s, box-shadow .12s, background .12s; }
+.ck-send:hover { background: var(--grey-grad-hover); }
+.ck-send:active { transform: translateY(.5px); }
+.ck-send svg { display: block; }
+.ck-send.disabled { background: #eceef1; color: #aab1bb; border-color: var(--border); box-shadow: none; cursor: default; pointer-events: none; filter: none; }
+.ck-hint { font-size: var(--fs-label); color: var(--text-secondary); margin-top: 7px; display: flex; align-items: center; gap: 5px; padding: 0 2px; }
+.lock-icon { width: 9px; height: 9px; border: 1.4px solid var(--text-secondary); border-radius: 2px; position: relative; flex: none; }
+.lock-icon::before { content:""; position:absolute; left:1.5px; top:-3.5px; width:5px; height:5px; border:1.4px solid var(--text-secondary); border-bottom:0; border-radius:3px 3px 0 0; }
+
+/* ── Mode tabs ── */
+.ck-tabs { display: flex; gap: 0; padding: 3px 0 0; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.ck-tab { flex: 1; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); background: none; border: none; padding: 6px 0 7px; cursor: pointer; border-bottom: 2px solid transparent; font-family: var(--font-body); }
+.ck-tab:hover { color: var(--text-primary); }
+.ck-tab.on { color: var(--navy); border-bottom-color: var(--navy); }
+
+/* ── Negotiation Simulator ── */
+.ck-sim { flex: 1; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; gap: 14px; padding: var(--pane-pad); }
+
+.sim-setup { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-card); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.sim-title { font-family: var(--font-display); font-size: 14px; font-weight: 600; margin: 0; color: var(--text-primary); }
+.sim-sub { font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin: 5px 0 0; }
+.sim-side { display: flex; align-items: center; gap: 10px; }
+.sim-side-label { font-size: 12px; color: var(--text-secondary); }
+.sim-toggle { display: inline-flex; background: #eef0f3; border-radius: 8px; padding: 3px; gap: 2px; }
+.sim-seg { font-size: 12.5px; font-weight: 600; color: var(--text-secondary); background: none; border: none; border-radius: 6px; padding: 6px 16px; cursor: pointer; font-family: var(--font-body); }
+.sim-seg.on { background: #fff; color: var(--navy); box-shadow: var(--shadow-card); }
+.sim-run { justify-content: center; }
+
+.sim-loading { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: 12.5px; padding: 4px 2px; }
+.sim-loading-text { display: flex; flex-direction: column; gap: 2px; }
+.sim-loading-hint { font-size: 11px; color: var(--text-secondary); opacity: .8; }
+.sim-error { border-radius: 8px; }
+.sim-empty { text-align: center; color: var(--text-secondary); font-size: 12.5px; line-height: 1.55; padding: 20px 18px; }
+.sim-placeholder { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; color: var(--text-secondary); font-size: 12.5px; line-height: 1.55; padding: 0px 22px; }
+.sim-ph-mark { width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(180deg,#1d1d24,#101015); display: grid; place-items: center; color: var(--amber); font-size: 22px; }
+.sim-count { font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--text-secondary); margin: 2px 2px 0; }
+
+/* Term card */
+.sim-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-card); overflow: hidden; }
+.sim-card-head { display: flex; align-items: center; gap: 8px; padding: 12px; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
+.sim-ref { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 5px; padding: 2px 7px; }
+.sim-heading { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.sim-favors { margin-left: auto; font-size: 9.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; border-radius: 4px; padding: 3px 7px; background: var(--amber-soft); color: var(--amber-600); }
+.sim-favors.tenant { background: #e0f2fe; color: #0369a1; }
+.sim-favors.landlord { background: var(--amber-soft); color: var(--amber-600); }
+
+.sim-current { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+.sim-current summary { font-size: 11.5px; font-weight: 500; color: var(--text-secondary); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px; }
+.sim-current summary::-webkit-details-marker { display: none; }
+.sim-current summary::before { content: "›"; transition: transform .15s; display: inline-block; }
+.sim-current[open] summary::before { transform: rotate(90deg); }
+.sim-current-text { font-size: 12px; line-height: 1.6; color: #374151; font-style: italic; background: #fafbfc; border-left: 3px solid var(--navy-300); border-radius: 0 6px 6px 0; padding: 9px 11px; margin: 9px 0 2px; }
+
+.sim-ladder { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.sim-ladder-label { font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--text-secondary); }
+.sim-rung { border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 8px; padding: 10px 11px; }
+.sim-rung.tier-ideal { border-left-color: #16a34a; }
+.sim-rung.tier-market { border-left-color: var(--amber); }
+.sim-rung.tier-floor { border-left-color: var(--navy-300); }
+.sim-rung.applied { background: #f0fdf4; border-color: #bbf7d0; }
+.sim-tier { font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--text-secondary); }
+.sim-rung.tier-ideal .sim-tier { color: #16a34a; }
+.sim-rung.tier-market .sim-tier { color: var(--amber-600); }
+.sim-rung-text { font-size: 12.5px; line-height: 1.55; color: var(--text-primary); margin: 6px 0 0; }
+.sim-rung-rat { font-size: 11.5px; line-height: 1.5; color: var(--text-secondary); margin: 6px 0 0; }
+.sim-apply { margin-top: 10px; font-size: 12px; padding: 6px 12px; }
+
+/* Counterparty callout — the differentiator */
+.sim-counter { margin: 0 12px 12px; background: linear-gradient(180deg,#15151b,#1f1f27); border-radius: 9px; padding: 12px; }
+.sim-counter-head { display: flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.sim-counter-icon { width: 13px; height: 13px; flex: none; background: var(--amber); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.sim-counter-pred { font-size: 12.5px; line-height: 1.55; margin: 0; color: #eef0f5; }
+
+/* ── Scrollbars ──
+ * Modern, slim black/grey track + thumb. Applies to the pane scrollbar and
+ * every inner scroll area (chat, simulator). WebKit/Chromium hosts use the
+ * ::-webkit-scrollbar pseudo-elements; Firefox uses scrollbar-* properties.
+ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #4b4b55 transparent;
+}
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: #3a3a44;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background .15s;
+}
+*::-webkit-scrollbar-thumb:hover { background: #56565f; background-clip: padding-box; }
+*::-webkit-scrollbar-thumb:active { background: #6c6c77; background-clip: padding-box; }
+*::-webkit-scrollbar-corner { background: transparent; }
+.sim-counter-arg { font-size: 12px; line-height: 1.55; margin: 8px 0 0; color: #b9bdca; font-style: italic; border-left: 2px solid rgba(245,158,11,.5); padding-left: 9px; }
+`, "",{"version":3,"sources":["webpack://./src/styles/clausekit.css"],"names":[],"mappings":"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","sourcesContent":["/* ── ClauseKit Task Pane Design System ──\n *\n * Single source of truth for the task-pane UI. Loaded by both the Office\n * entry (src/taskpane/index.tsx) and the browser playground\n * (src/playground/playground.tsx) so the pane looks identical in either host.\n */\n:root {\n  --navy: #0E0E12;\n  --navy-700: #2b2b34;\n  --navy-300: #6c6c77;\n  --amber: #F59E0B;\n  --amber-600: #d4870a;\n  --amber-soft: #FEF3C7;\n  --amber-grad: linear-gradient(180deg, #FCC04A 0%, #F59E0B 52%, #E88B05 100%);\n  --amber-glow: inset 0 1px 0 rgba(255,255,255,.35), 0 2px 10px rgba(245,158,11,.4), 0 1px 2px rgba(160,98,0,.45);\n  --grey-grad: linear-gradient(180deg, #5b5b66 0%, #3d3d47 52%, #2b2b34 100%);\n  --grey-grad-hover: linear-gradient(180deg, #66666f 0%, #46464f 52%, #33333b 100%);\n  --grey-glow: inset 0 1px 0 rgba(255,255,255,.14), 0 2px 8px rgba(17,24,39,.20), 0 1px 2px rgba(17,24,39,.28);\n  --bg: #F8F9FA;\n  --surface: #FFFFFF;\n  --user-bubble: #EEF2FF;\n  --text-primary: #111827;\n  --text-secondary: #6B7280;\n  --border: #E5E7EB;\n  --border-strong: #D1D5DB;\n  --destructive: #EF4444;\n  --destructive-soft: #FEF2F2;\n  --fs-header: 16px;\n  --fs-body: 13px;\n  --fs-label: 11px;\n  --pane-pad: 12px;\n  --shadow-card: 0 1px 2px rgba(17,24,39,.06), 0 1px 3px rgba(17,24,39,.05);\n  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;\n  --font-body: 'Inter', system-ui, sans-serif;\n  --font-mono: 'Roboto Mono', monospace;\n}\n* { box-sizing: border-box; }\nhtml, body { margin: 0; padding: 0; height: 100%; -webkit-font-smoothing: antialiased; }\nbody { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); }\n#container { height: 100%; }\n\n/* Pane shell */\n.ck-pane { height: 100%; display: flex; flex-direction: column; }\n\n/* ── Header ── */\n.ck-header {\n  background: linear-gradient(180deg, #08080b 0%, #131318 55%, #232329 100%);\n  color: #fff; height: 36px; display: flex; align-items: center;\n  padding: 0 var(--pane-pad); gap: 10px;\n  border-bottom: 1px solid rgba(255,255,255,.06); flex-shrink: 0;\n}\n.h-mark { width: 30px; height: 30px; display: grid; place-items: center; flex: none; }\n.h-mark img { width: 26px; height: 26px; object-fit: contain; display: block; }\n.h-txt { display: flex; flex-direction: column; justify-content: center; line-height: 1.15; }\n.h-name { font-family: var(--font-display); font-size: var(--fs-header); font-weight: 600; letter-spacing: -.01em; }\n.h-actions { margin-left: auto; display: flex; gap: 2px; }\n.ck-theme-btn { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; color: rgba(255,255,255,.78); cursor: pointer; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10); transition: background .14s, color .14s, border-color .14s; }\n.ck-theme-btn:hover { background: rgba(255,255,255,.14); color: #fff; border-color: rgba(255,255,255,.18); }\n.ck-theme-btn:active { transform: translateY(.5px); }\n.ck-theme-btn svg { display: block; }\n\n/* ── Chat scroll area ── */\n.ck-chat { flex: 1; background: var(--bg); padding: var(--pane-pad); display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }\n.ck-daydiv { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: var(--fs-label); }\n.ck-daydiv::before, .ck-daydiv::after { content:\"\"; height:1px; background: var(--border); flex:1; }\n\n/* Message rows */\n.ck-row { display: flex; gap: 8px; }\n.ck-row.user { justify-content: flex-end; }\n.ck-avatar { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; flex: none; margin-top: 2px; }\n.ck-avatar span { font-size: 9px; font-weight: 700; color: #fff; letter-spacing: .02em; }\n.ck-avatar img { width: 22px; height: 22px; object-fit: contain; display: block; }\n.ck-bubble { font-size: var(--fs-body); line-height: 1.55; padding: 10px 12px; border-radius: 12px; max-width: 264px; }\n.ck-bubble.user { background: var(--user-bubble); color: var(--navy); border-radius: 12px 12px 4px 12px; }\n.ck-bubble.ai { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); }\n.ck-bubble p { margin: 0; }\n.ck-bubble p + p { margin-top: 8px; }\n.ck-bubble strong { font-weight: 600; }\n.ck-time { font-size: 10px; color: var(--text-secondary); margin-top: 4px; }\n.ck-row.user .ck-time { text-align: right; }\n\n/* Quote block */\n.ck-quote { background: #fafbfc; border: 1px solid var(--border); border-left: 3px solid var(--navy-300); border-radius: 6px; padding: 9px 11px; margin: 10px 0 4px; }\n.q-meta { font-family: var(--font-mono); font-size: 10px; color: var(--text-secondary); letter-spacing: .02em; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }\n.q-meta::before { content:\"\\201C\"; font-family: Georgia, serif; font-size: 16px; line-height: 0; color: var(--navy-300); position: relative; top: 3px; }\n.q-text { font-size: 12px; line-height: 1.6; color: #374151; font-style: italic; }\n.q-text mark { background: var(--amber-soft); font-style: normal; padding: 0 1px; }\n\n/* Empty lines inside an AI answer (preserves list/paragraph spacing) */\n.ck-bubble.ai .ck-gap { height: 8px; }\n\n/* Error bubble + retry (chat thread) */\n.ck-error-bubble { background: var(--destructive-soft); border: 1px solid #fecdca; border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); padding: 10px 12px; font-size: var(--fs-body); line-height: 1.55; color: #b42318; }\n.ck-error-bubble p { margin: 0 0 8px; }\n.ck-retry { font-size: 12px; font-weight: 500; color: var(--navy); background: #fff; border: 1px solid var(--border-strong); border-radius: 6px; padding: 5px 12px; cursor: pointer; font-family: var(--font-body); }\n.ck-retry:hover { background: #f9fafb; }\n\n/* Citation chips row */\n.ck-cites { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }\n.ck-cites .ck-cite { margin-top: 0; }\n\n/* Citation chip */\n.ck-cite { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 11px; font-weight: 500; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 999px; padding: 4px 10px 4px 8px; cursor: pointer; }\n.ck-cite:hover { background: #e4eafd; }\n.pin { width: 11px; height: 11px; position: relative; flex: none; }\n.pin::before { content:\"\"; position:absolute; inset:0; border:1.5px solid var(--navy); border-radius:50% 50% 50% 0; transform: rotate(-45deg); }\n.cite-arr { margin-left: 1px; color: var(--navy-300); font-size: 10px; }\n\n/* ── Action card ── */\n.ck-action-wrap { margin-top: 10px; }\n.ck-action { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--navy-300); border-radius: 8px; box-shadow: var(--shadow-card); overflow: hidden; }\n.ck-action.sev-high { border-left-color: var(--destructive); }\n.ck-action.sev-medium { border-left-color: var(--navy-300); }\n.ck-action.sev-low { border-left-color: var(--navy-300); }\n.a-head { padding: 11px 12px 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }\n.a-badge { font-family: var(--font-mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--amber-600); background: var(--amber-soft); border-radius: 4px; padding: 3px 6px; }\n.a-clause { font-family: var(--font-mono); font-size: 11px; font-weight: 500; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 4px; padding: 2px 6px; }\n.a-sev { margin-left: auto; font-size: 9px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; border-radius: 4px; padding: 2px 6px; }\n.a-sev.sev-high { color: #b42318; background: var(--destructive-soft); }\n.a-sev.sev-medium { color: var(--amber-600); background: var(--amber-soft); }\n.a-sev.sev-low { color: var(--text-secondary); background: #f3f4f6; }\n.a-title { font-size: 12.5px; font-weight: 600; line-height: 1.35; color: var(--text-primary); }\n.a-body { padding: 9px 12px 0; }\n.a-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.55; margin: 0; }\n.a-error { font-size: 12px; color: var(--destructive); background: var(--destructive-soft); border: 1px solid #fecdca; border-radius: 6px; padding: 7px 9px; margin: 10px 0 0; line-height: 1.45; }\n\n/* Diff */\n.ck-diff { margin: 10px 0 2px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; font-family: var(--font-mono); font-size: 11px; line-height: 1.55; }\n.d-line { padding: 6px 10px 6px 24px; position: relative; }\n.d-del { background: var(--destructive-soft); color: #b42318; }\n.d-del .t { text-decoration: line-through; text-decoration-color: rgba(180,35,24,.5); }\n.d-add { background: #ecfdf3; color: #067647; border-top: 1px solid #d1fadf; }\n.d-line::before { position: absolute; left: 9px; top: 6px; font-weight: 700; }\n.d-del::before { content: \"−\"; color: #d92d20; }\n.d-add::before { content: \"+\"; color: #079455; }\n\n/* Action footer */\n.a-foot { display: flex; gap: 8px; padding: 12px; align-items: center; }\n.a-foot .spacer { flex: 1; }\n.ck-btn { font-size: 13px; font-weight: 500; border-radius: 6px; padding: 8px 14px; cursor: pointer; border: 1px solid transparent; line-height: 1; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; font-family: var(--font-body); transition: background .12s, border-color .12s; }\n.ck-btn.primary { background: var(--grey-grad); color: #fff; font-weight: 600; border-color: rgba(17,24,39,.35); box-shadow: var(--grey-glow); }\n.ck-btn.primary:hover { background: var(--grey-grad-hover); }\n.ck-btn.danger-ghost { background: transparent; color: var(--text-secondary); border-color: transparent; }\n.ck-btn.danger-ghost:hover { background: var(--destructive-soft); color: var(--destructive); }\n.ck-btn.applied { background: #ecfdf3; color: #067647; border-color: #d1fadf; cursor: default; }\n.ck-btn.applied:hover { filter: none; }\n.chk { width: 6px; height: 11px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(40deg) translateY(-1px); display: inline-block; }\n\n/* Thinking dots */\n.ck-thinking { display: flex; gap: 8px; align-items: center; }\n.t-bubble { background: var(--surface); border: 1px solid var(--border); border-radius: 4px 12px 12px 12px; box-shadow: var(--shadow-card); padding: 12px 14px; display: flex; gap: 5px; align-items: center; }\n.t-bubble i { width: 6px; height: 6px; border-radius: 50%; background: var(--navy-300); animation: blink 1.2s infinite ease-in-out; font-style: normal; display: block; }\n.t-bubble i:nth-child(2){ animation-delay: .18s; }\n.t-bubble i:nth-child(3){ animation-delay: .36s; }\n@keyframes blink { 0%,60%,100%{ opacity:.28; transform:translateY(0);} 30%{ opacity:1; transform:translateY(-2px);} }\n\n/* ── Empty state ── */\n.ck-empty { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 36px 22px; gap: 0; flex: 1; }\n.e-mark { width: 60px; height: 60px; border-radius: 16px; background: linear-gradient(180deg,#1d1d24 0%,#101015 100%); display: grid; place-items: center; position: relative; box-shadow: 0 10px 26px rgba(0,0,0,.28); border: 1px solid #2e2e36; margin-bottom: 18px; }\n.e-mark img { width: 34px; height: 34px; object-fit: contain; display: block; }\n.ck-empty h3 { font-family: var(--font-display); font-size: 15px; font-weight: 600; margin: 0 0 6px; color: var(--text-primary); }\n.e-sub { font-family: var(--font-display); font-size: 14px; font-weight: 500; color: var(--text-primary); line-height: 1.6; letter-spacing: -.01em; margin: 0 0 22px; max-width: 28ch; }\n.ck-suggest { display: flex; flex-direction: column; gap: 9px; width: 100%; }\n.s-btn { position: relative; text-align: left; font-size: 12.5px; color: var(--navy); background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 12px 13px; cursor: pointer; box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 9px; font-family: var(--font-body); overflow: hidden; transition: border-color .15s, box-shadow .15s, transform .15s, background .15s; }\n.s-btn::before { content:\"\"; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--grey-grad); opacity: 0; transition: opacity .15s; }\n.s-btn:hover { border-color: var(--border-strong); background: #fafafb; box-shadow: 0 4px 12px rgba(17,24,39,.08); transform: translateY(-1px); }\n.s-btn:hover::before { opacity: 1; }\n.s-btn:active { transform: translateY(0); }\n.s-txt { flex: 1; line-height: 1.4; }\n.s-btn .s-ar { margin-left: auto; color: var(--navy-300); font-size: 15px; flex: none; transition: color .15s, transform .15s; }\n.s-btn:hover .s-ar { color: var(--navy); transform: translateX(2px); }\n\n/* ── Privacy note ── */\n.ck-privacy { background: #fff; border-top: 1px solid var(--border); padding: 9px 12px; display: flex; align-items: center; gap: 9px; flex-shrink: 0; }\n.p-shield { width: 22px; height: 24px; flex: none; position: relative; }\n.p-shield::before { content:\"\"; position:absolute; inset:0; background: #eef2ff; border:1.4px solid #dbe3fb; border-radius: 4px 4px 9px 9px / 4px 4px 14px 14px; }\n.p-shield::after { content:\"\"; position:absolute; left:7px; top:8px; width:5px; height:8px; border-right:1.8px solid var(--navy); border-bottom:1.8px solid var(--navy); transform: rotate(40deg); }\n.p-txt { font-size: var(--fs-label); color: var(--text-secondary); line-height: 1.45; margin: 0; }\n.p-txt b { color: var(--text-primary); font-weight: 600; }\n\n/* ── Input area ── */\n.ck-input-wrap { background: var(--surface); border-top: 1px solid var(--border); padding: 0 var(--pane-pad) 8px; flex-shrink: 0; }\n.ck-input-resize { height: 14px; display: flex; align-items: center; justify-content: center; cursor: ns-resize; touch-action: none; }\n.ck-input-grip { width: 28px; height: 4px; border-radius: 999px; background: var(--border-strong); transition: background .12s; }\n.ck-input-resize:hover .ck-input-grip { background: var(--navy-300); }\n.ck-input { background: #fff; border: 1px solid var(--border-strong); border-radius: 12px; padding: 7px 7px 7px 13px; display: flex; align-items: flex-end; gap: 8px; transition: border-color .12s, box-shadow .12s; }\n.ck-input:focus-within { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(14,14,18,.08); }\n.ck-input textarea { flex: 1; font-size: var(--fs-body); color: var(--text-primary); line-height: 1.5; padding: 7px 0; border: none; outline: none; resize: none; background: transparent; font-family: var(--font-body); overflow-y: auto; }\n.ck-input textarea::placeholder { color: var(--text-secondary); }\n.ck-send { width: 34px; height: 34px; border-radius: 10px; background: var(--grey-grad); color: #fff; display: grid; place-items: center; flex: none; cursor: pointer; border: 1px solid rgba(17,24,39,.35); box-shadow: var(--grey-glow); transition: filter .12s, transform .12s, box-shadow .12s, background .12s; }\n.ck-send:hover { background: var(--grey-grad-hover); }\n.ck-send:active { transform: translateY(.5px); }\n.ck-send svg { display: block; }\n.ck-send.disabled { background: #eceef1; color: #aab1bb; border-color: var(--border); box-shadow: none; cursor: default; pointer-events: none; filter: none; }\n.ck-hint { font-size: var(--fs-label); color: var(--text-secondary); margin-top: 7px; display: flex; align-items: center; gap: 5px; padding: 0 2px; }\n.lock-icon { width: 9px; height: 9px; border: 1.4px solid var(--text-secondary); border-radius: 2px; position: relative; flex: none; }\n.lock-icon::before { content:\"\"; position:absolute; left:1.5px; top:-3.5px; width:5px; height:5px; border:1.4px solid var(--text-secondary); border-bottom:0; border-radius:3px 3px 0 0; }\n\n/* ── Mode tabs ── */\n.ck-tabs { display: flex; gap: 0; padding: 3px 0 0; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }\n.ck-tab { flex: 1; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); background: none; border: none; padding: 6px 0 7px; cursor: pointer; border-bottom: 2px solid transparent; font-family: var(--font-body); }\n.ck-tab:hover { color: var(--text-primary); }\n.ck-tab.on { color: var(--navy); border-bottom-color: var(--navy); }\n\n/* ── Negotiation Simulator ── */\n.ck-sim { flex: 1; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; gap: 14px; padding: var(--pane-pad); }\n\n.sim-setup { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-card); padding: 14px; display: flex; flex-direction: column; gap: 12px; }\n.sim-title { font-family: var(--font-display); font-size: 14px; font-weight: 600; margin: 0; color: var(--text-primary); }\n.sim-sub { font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin: 5px 0 0; }\n.sim-side { display: flex; align-items: center; gap: 10px; }\n.sim-side-label { font-size: 12px; color: var(--text-secondary); }\n.sim-toggle { display: inline-flex; background: #eef0f3; border-radius: 8px; padding: 3px; gap: 2px; }\n.sim-seg { font-size: 12.5px; font-weight: 600; color: var(--text-secondary); background: none; border: none; border-radius: 6px; padding: 6px 16px; cursor: pointer; font-family: var(--font-body); }\n.sim-seg.on { background: #fff; color: var(--navy); box-shadow: var(--shadow-card); }\n.sim-run { justify-content: center; }\n\n.sim-loading { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: 12.5px; padding: 4px 2px; }\n.sim-loading-text { display: flex; flex-direction: column; gap: 2px; }\n.sim-loading-hint { font-size: 11px; color: var(--text-secondary); opacity: .8; }\n.sim-error { border-radius: 8px; }\n.sim-empty { text-align: center; color: var(--text-secondary); font-size: 12.5px; line-height: 1.55; padding: 20px 18px; }\n.sim-placeholder { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; color: var(--text-secondary); font-size: 12.5px; line-height: 1.55; padding: 0px 22px; }\n.sim-ph-mark { width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(180deg,#1d1d24,#101015); display: grid; place-items: center; color: var(--amber); font-size: 22px; }\n.sim-count { font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--text-secondary); margin: 2px 2px 0; }\n\n/* Term card */\n.sim-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-card); overflow: hidden; }\n.sim-card-head { display: flex; align-items: center; gap: 8px; padding: 12px; flex-wrap: wrap; border-bottom: 1px solid var(--border); }\n.sim-ref { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--navy); background: #eef2ff; border: 1px solid #dbe3fb; border-radius: 5px; padding: 2px 7px; }\n.sim-heading { font-size: 13px; font-weight: 600; color: var(--text-primary); }\n.sim-favors { margin-left: auto; font-size: 9.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; border-radius: 4px; padding: 3px 7px; background: var(--amber-soft); color: var(--amber-600); }\n.sim-favors.tenant { background: #e0f2fe; color: #0369a1; }\n.sim-favors.landlord { background: var(--amber-soft); color: var(--amber-600); }\n\n.sim-current { padding: 10px 12px; border-bottom: 1px solid var(--border); }\n.sim-current summary { font-size: 11.5px; font-weight: 500; color: var(--text-secondary); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px; }\n.sim-current summary::-webkit-details-marker { display: none; }\n.sim-current summary::before { content: \"›\"; transition: transform .15s; display: inline-block; }\n.sim-current[open] summary::before { transform: rotate(90deg); }\n.sim-current-text { font-size: 12px; line-height: 1.6; color: #374151; font-style: italic; background: #fafbfc; border-left: 3px solid var(--navy-300); border-radius: 0 6px 6px 0; padding: 9px 11px; margin: 9px 0 2px; }\n\n.sim-ladder { padding: 12px; display: flex; flex-direction: column; gap: 10px; }\n.sim-ladder-label { font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--text-secondary); }\n.sim-rung { border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 8px; padding: 10px 11px; }\n.sim-rung.tier-ideal { border-left-color: #16a34a; }\n.sim-rung.tier-market { border-left-color: var(--amber); }\n.sim-rung.tier-floor { border-left-color: var(--navy-300); }\n.sim-rung.applied { background: #f0fdf4; border-color: #bbf7d0; }\n.sim-tier { font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--text-secondary); }\n.sim-rung.tier-ideal .sim-tier { color: #16a34a; }\n.sim-rung.tier-market .sim-tier { color: var(--amber-600); }\n.sim-rung-text { font-size: 12.5px; line-height: 1.55; color: var(--text-primary); margin: 6px 0 0; }\n.sim-rung-rat { font-size: 11.5px; line-height: 1.5; color: var(--text-secondary); margin: 6px 0 0; }\n.sim-apply { margin-top: 10px; font-size: 12px; padding: 6px 12px; }\n\n/* Counterparty callout — the differentiator */\n.sim-counter { margin: 0 12px 12px; background: linear-gradient(180deg,#15151b,#1f1f27); border-radius: 9px; padding: 12px; }\n.sim-counter-head { display: flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 700; color: #fff; margin-bottom: 8px; }\n.sim-counter-icon { width: 13px; height: 13px; flex: none; background: var(--amber); clip-path: polygon(50% 0, 100% 100%, 0 100%); }\n.sim-counter-pred { font-size: 12.5px; line-height: 1.55; margin: 0; color: #eef0f5; }\n\n/* ── Scrollbars ──\n * Modern, slim black/grey track + thumb. Applies to the pane scrollbar and\n * every inner scroll area (chat, simulator). WebKit/Chromium hosts use the\n * ::-webkit-scrollbar pseudo-elements; Firefox uses scrollbar-* properties.\n */\n* {\n  scrollbar-width: thin;\n  scrollbar-color: #4b4b55 transparent;\n}\n*::-webkit-scrollbar { width: 10px; height: 10px; }\n*::-webkit-scrollbar-track { background: transparent; }\n*::-webkit-scrollbar-thumb {\n  background: #3a3a44;\n  border-radius: 999px;\n  border: 2px solid transparent;\n  background-clip: padding-box;\n  transition: background .15s;\n}\n*::-webkit-scrollbar-thumb:hover { background: #56565f; background-clip: padding-box; }\n*::-webkit-scrollbar-thumb:active { background: #6c6c77; background-clip: padding-box; }\n*::-webkit-scrollbar-corner { background: transparent; }\n.sim-counter-arg { font-size: 12px; line-height: 1.55; margin: 8px 0 0; color: #b9bdca; font-style: italic; border-left: 2px solid rgba(245,158,11,.5); padding-left: 9px; }\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ },
+
+/***/ "./node_modules/css-loader/dist/runtime/api.js"
+/*!*****************************************************!*\
+  !*** ./node_modules/css-loader/dist/runtime/api.js ***!
+  \*****************************************************/
+(module) {
+
+
+
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+*/
+module.exports = function (cssWithMappingToString) {
+  var list = [];
+
+  // return the list of modules as css string
+  list.toString = function toString() {
+    return this.map(function (item) {
+      var content = "";
+      var needLayer = typeof item[5] !== "undefined";
+      if (item[4]) {
+        content += "@supports (".concat(item[4], ") {");
+      }
+      if (item[2]) {
+        content += "@media ".concat(item[2], " {");
+      }
+      if (needLayer) {
+        content += "@layer".concat(item[5].length > 0 ? " ".concat(item[5]) : "", " {");
+      }
+      content += cssWithMappingToString(item);
+      if (needLayer) {
+        content += "}";
+      }
+      if (item[2]) {
+        content += "}";
+      }
+      if (item[4]) {
+        content += "}";
+      }
+      return content;
+    }).join("");
+  };
+
+  // import a list of modules into the list
+  list.i = function i(modules, media, dedupe, supports, layer) {
+    if (typeof modules === "string") {
+      modules = [[null, modules, undefined]];
+    }
+    var alreadyImportedModules = {};
+    if (dedupe) {
+      for (var k = 0; k < this.length; k++) {
+        var id = this[k][0];
+        if (id != null) {
+          alreadyImportedModules[id] = true;
+        }
+      }
+    }
+    for (var _k = 0; _k < modules.length; _k++) {
+      var item = [].concat(modules[_k]);
+      if (dedupe && alreadyImportedModules[item[0]]) {
+        continue;
+      }
+      if (typeof layer !== "undefined") {
+        if (typeof item[5] === "undefined") {
+          item[5] = layer;
+        } else {
+          item[1] = "@layer".concat(item[5].length > 0 ? " ".concat(item[5]) : "", " {").concat(item[1], "}");
+          item[5] = layer;
+        }
+      }
+      if (media) {
+        if (!item[2]) {
+          item[2] = media;
+        } else {
+          item[1] = "@media ".concat(item[2], " {").concat(item[1], "}");
+          item[2] = media;
+        }
+      }
+      if (supports) {
+        if (!item[4]) {
+          item[4] = "".concat(supports);
+        } else {
+          item[1] = "@supports (".concat(item[4], ") {").concat(item[1], "}");
+          item[4] = supports;
+        }
+      }
+      list.push(item);
+    }
+  };
+  return list;
+};
+
+/***/ },
+
+/***/ "./node_modules/css-loader/dist/runtime/sourceMaps.js"
+/*!************************************************************!*\
+  !*** ./node_modules/css-loader/dist/runtime/sourceMaps.js ***!
+  \************************************************************/
+(module) {
+
+
+
+module.exports = function (item) {
+  var content = item[1];
+  var cssMapping = item[3];
+  if (!cssMapping) {
+    return content;
+  }
+  if (typeof btoa === "function") {
+    var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(cssMapping))));
+    var data = "sourceMappingURL=data:application/json;charset=utf-8;base64,".concat(base64);
+    var sourceMapping = "/*# ".concat(data, " */");
+    return [content].concat([sourceMapping]).join("\n");
+  }
+  return [content].join("\n");
+};
+
+/***/ },
+
+/***/ "./src/playground/playground.html"
+/*!****************************************!*\
+  !*** ./src/playground/playground.html ***!
+  \****************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+// Module
+var code = `<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ClauseKit — Playground</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- No Office.js: this entry runs in a plain browser tab. Styles and the
+         React app are loaded by src/playground/playground.tsx. -->
+</head>
+
+<body>
+    <div id="root"></div>
+</body>
+
+</html>
+`;
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (code);
+
+/***/ },
+
+/***/ "./node_modules/react-dom/client.js"
+/*!******************************************!*\
+  !*** ./node_modules/react-dom/client.js ***!
+  \******************************************/
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+var m = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+if (false) // removed by dead control flow
+{} else {
+  var i = m.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+  exports.createRoot = function(c, o) {
+    i.usingClientEntryPoint = true;
+    try {
+      return m.createRoot(c, o);
+    } finally {
+      i.usingClientEntryPoint = false;
+    }
+  };
+  exports.hydrateRoot = function(c, h, o) {
+    i.usingClientEntryPoint = true;
+    try {
+      return m.hydrateRoot(c, h, o);
+    } finally {
+      i.usingClientEntryPoint = false;
+    }
+  };
+}
+
+
+/***/ },
+
+/***/ "./node_modules/react/cjs/react-jsx-runtime.development.js"
+/*!*****************************************************************!*\
+  !*** ./node_modules/react/cjs/react-jsx-runtime.development.js ***!
+  \*****************************************************************/
+(__unused_webpack_module, exports, __webpack_require__) {
+
+/**
+ * @license React
+ * react-jsx-runtime.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+if (true) {
+  (function() {
+'use strict';
+
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+// ATTENTION
+// When adding new symbols to this file,
+// Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
+// The Symbol used to tag the ReactElement-like types.
+var REACT_ELEMENT_TYPE = Symbol.for('react.element');
+var REACT_PORTAL_TYPE = Symbol.for('react.portal');
+var REACT_FRAGMENT_TYPE = Symbol.for('react.fragment');
+var REACT_STRICT_MODE_TYPE = Symbol.for('react.strict_mode');
+var REACT_PROFILER_TYPE = Symbol.for('react.profiler');
+var REACT_PROVIDER_TYPE = Symbol.for('react.provider');
+var REACT_CONTEXT_TYPE = Symbol.for('react.context');
+var REACT_FORWARD_REF_TYPE = Symbol.for('react.forward_ref');
+var REACT_SUSPENSE_TYPE = Symbol.for('react.suspense');
+var REACT_SUSPENSE_LIST_TYPE = Symbol.for('react.suspense_list');
+var REACT_MEMO_TYPE = Symbol.for('react.memo');
+var REACT_LAZY_TYPE = Symbol.for('react.lazy');
+var REACT_OFFSCREEN_TYPE = Symbol.for('react.offscreen');
+var MAYBE_ITERATOR_SYMBOL = Symbol.iterator;
+var FAUX_ITERATOR_SYMBOL = '@@iterator';
+function getIteratorFn(maybeIterable) {
+  if (maybeIterable === null || typeof maybeIterable !== 'object') {
+    return null;
+  }
+
+  var maybeIterator = MAYBE_ITERATOR_SYMBOL && maybeIterable[MAYBE_ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL];
+
+  if (typeof maybeIterator === 'function') {
+    return maybeIterator;
+  }
+
+  return null;
+}
+
+var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+
+function error(format) {
+  {
+    {
+      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        args[_key2 - 1] = arguments[_key2];
+      }
+
+      printWarning('error', format, args);
+    }
+  }
+}
+
+function printWarning(level, format, args) {
+  // When changing this logic, you might want to also
+  // update consoleWithStackDev.www.js as well.
+  {
+    var ReactDebugCurrentFrame = ReactSharedInternals.ReactDebugCurrentFrame;
+    var stack = ReactDebugCurrentFrame.getStackAddendum();
+
+    if (stack !== '') {
+      format += '%s';
+      args = args.concat([stack]);
+    } // eslint-disable-next-line react-internal/safe-string-coercion
+
+
+    var argsWithFormat = args.map(function (item) {
+      return String(item);
+    }); // Careful: RN currently depends on this prefix
+
+    argsWithFormat.unshift('Warning: ' + format); // We intentionally don't use spread (or .apply) directly because it
+    // breaks IE9: https://github.com/facebook/react/issues/13610
+    // eslint-disable-next-line react-internal/no-production-logging
+
+    Function.prototype.apply.call(console[level], console, argsWithFormat);
+  }
+}
+
+// -----------------------------------------------------------------------------
+
+var enableScopeAPI = false; // Experimental Create Event Handle API.
+var enableCacheElement = false;
+var enableTransitionTracing = false; // No known bugs, but needs performance testing
+
+var enableLegacyHidden = false; // Enables unstable_avoidThisFallback feature in Fiber
+// stuff. Intended to enable React core members to more easily debug scheduling
+// issues in DEV builds.
+
+var enableDebugTracing = false; // Track which Fiber(s) schedule render work.
+
+var REACT_MODULE_REFERENCE;
+
+{
+  REACT_MODULE_REFERENCE = Symbol.for('react.module.reference');
+}
+
+function isValidElementType(type) {
+  if (typeof type === 'string' || typeof type === 'function') {
+    return true;
+  } // Note: typeof might be other than 'symbol' or 'number' (e.g. if it's a polyfill).
+
+
+  if (type === REACT_FRAGMENT_TYPE || type === REACT_PROFILER_TYPE || enableDebugTracing  || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || enableLegacyHidden  || type === REACT_OFFSCREEN_TYPE || enableScopeAPI  || enableCacheElement  || enableTransitionTracing ) {
+    return true;
+  }
+
+  if (typeof type === 'object' && type !== null) {
+    if (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || // This needs to include all possible module reference object
+    // types supported by any Flight configuration anywhere since
+    // we don't know which Flight build this will end up being used
+    // with.
+    type.$$typeof === REACT_MODULE_REFERENCE || type.getModuleId !== undefined) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function getWrappedName(outerType, innerType, wrapperName) {
+  var displayName = outerType.displayName;
+
+  if (displayName) {
+    return displayName;
+  }
+
+  var functionName = innerType.displayName || innerType.name || '';
+  return functionName !== '' ? wrapperName + "(" + functionName + ")" : wrapperName;
+} // Keep in sync with react-reconciler/getComponentNameFromFiber
+
+
+function getContextName(type) {
+  return type.displayName || 'Context';
+} // Note that the reconciler package should generally prefer to use getComponentNameFromFiber() instead.
+
+
+function getComponentNameFromType(type) {
+  if (type == null) {
+    // Host root, text node or just invalid type.
+    return null;
+  }
+
+  {
+    if (typeof type.tag === 'number') {
+      error('Received an unexpected object in getComponentNameFromType(). ' + 'This is likely a bug in React. Please file an issue.');
+    }
+  }
+
+  if (typeof type === 'function') {
+    return type.displayName || type.name || null;
+  }
+
+  if (typeof type === 'string') {
+    return type;
+  }
+
+  switch (type) {
+    case REACT_FRAGMENT_TYPE:
+      return 'Fragment';
+
+    case REACT_PORTAL_TYPE:
+      return 'Portal';
+
+    case REACT_PROFILER_TYPE:
+      return 'Profiler';
+
+    case REACT_STRICT_MODE_TYPE:
+      return 'StrictMode';
+
+    case REACT_SUSPENSE_TYPE:
+      return 'Suspense';
+
+    case REACT_SUSPENSE_LIST_TYPE:
+      return 'SuspenseList';
+
+  }
+
+  if (typeof type === 'object') {
+    switch (type.$$typeof) {
+      case REACT_CONTEXT_TYPE:
+        var context = type;
+        return getContextName(context) + '.Consumer';
+
+      case REACT_PROVIDER_TYPE:
+        var provider = type;
+        return getContextName(provider._context) + '.Provider';
+
+      case REACT_FORWARD_REF_TYPE:
+        return getWrappedName(type, type.render, 'ForwardRef');
+
+      case REACT_MEMO_TYPE:
+        var outerName = type.displayName || null;
+
+        if (outerName !== null) {
+          return outerName;
+        }
+
+        return getComponentNameFromType(type.type) || 'Memo';
+
+      case REACT_LAZY_TYPE:
+        {
+          var lazyComponent = type;
+          var payload = lazyComponent._payload;
+          var init = lazyComponent._init;
+
+          try {
+            return getComponentNameFromType(init(payload));
+          } catch (x) {
+            return null;
+          }
+        }
+
+      // eslint-disable-next-line no-fallthrough
+    }
+  }
+
+  return null;
+}
+
+var assign = Object.assign;
+
+// Helpers to patch console.logs to avoid logging during side-effect free
+// replaying on render function. This currently only patches the object
+// lazily which won't cover if the log function was extracted eagerly.
+// We could also eagerly patch the method.
+var disabledDepth = 0;
+var prevLog;
+var prevInfo;
+var prevWarn;
+var prevError;
+var prevGroup;
+var prevGroupCollapsed;
+var prevGroupEnd;
+
+function disabledLog() {}
+
+disabledLog.__reactDisabledLog = true;
+function disableLogs() {
+  {
+    if (disabledDepth === 0) {
+      /* eslint-disable react-internal/no-production-logging */
+      prevLog = console.log;
+      prevInfo = console.info;
+      prevWarn = console.warn;
+      prevError = console.error;
+      prevGroup = console.group;
+      prevGroupCollapsed = console.groupCollapsed;
+      prevGroupEnd = console.groupEnd; // https://github.com/facebook/react/issues/19099
+
+      var props = {
+        configurable: true,
+        enumerable: true,
+        value: disabledLog,
+        writable: true
+      }; // $FlowFixMe Flow thinks console is immutable.
+
+      Object.defineProperties(console, {
+        info: props,
+        log: props,
+        warn: props,
+        error: props,
+        group: props,
+        groupCollapsed: props,
+        groupEnd: props
+      });
+      /* eslint-enable react-internal/no-production-logging */
+    }
+
+    disabledDepth++;
+  }
+}
+function reenableLogs() {
+  {
+    disabledDepth--;
+
+    if (disabledDepth === 0) {
+      /* eslint-disable react-internal/no-production-logging */
+      var props = {
+        configurable: true,
+        enumerable: true,
+        writable: true
+      }; // $FlowFixMe Flow thinks console is immutable.
+
+      Object.defineProperties(console, {
+        log: assign({}, props, {
+          value: prevLog
+        }),
+        info: assign({}, props, {
+          value: prevInfo
+        }),
+        warn: assign({}, props, {
+          value: prevWarn
+        }),
+        error: assign({}, props, {
+          value: prevError
+        }),
+        group: assign({}, props, {
+          value: prevGroup
+        }),
+        groupCollapsed: assign({}, props, {
+          value: prevGroupCollapsed
+        }),
+        groupEnd: assign({}, props, {
+          value: prevGroupEnd
+        })
+      });
+      /* eslint-enable react-internal/no-production-logging */
+    }
+
+    if (disabledDepth < 0) {
+      error('disabledDepth fell below zero. ' + 'This is a bug in React. Please file an issue.');
+    }
+  }
+}
+
+var ReactCurrentDispatcher = ReactSharedInternals.ReactCurrentDispatcher;
+var prefix;
+function describeBuiltInComponentFrame(name, source, ownerFn) {
+  {
+    if (prefix === undefined) {
+      // Extract the VM specific prefix used by each line.
+      try {
+        throw Error();
+      } catch (x) {
+        var match = x.stack.trim().match(/\n( *(at )?)/);
+        prefix = match && match[1] || '';
+      }
+    } // We use the prefix to ensure our stacks line up with native stack frames.
+
+
+    return '\n' + prefix + name;
+  }
+}
+var reentry = false;
+var componentFrameCache;
+
+{
+  var PossiblyWeakMap = typeof WeakMap === 'function' ? WeakMap : Map;
+  componentFrameCache = new PossiblyWeakMap();
+}
+
+function describeNativeComponentFrame(fn, construct) {
+  // If something asked for a stack inside a fake render, it should get ignored.
+  if ( !fn || reentry) {
+    return '';
+  }
+
+  {
+    var frame = componentFrameCache.get(fn);
+
+    if (frame !== undefined) {
+      return frame;
+    }
+  }
+
+  var control;
+  reentry = true;
+  var previousPrepareStackTrace = Error.prepareStackTrace; // $FlowFixMe It does accept undefined.
+
+  Error.prepareStackTrace = undefined;
+  var previousDispatcher;
+
+  {
+    previousDispatcher = ReactCurrentDispatcher.current; // Set the dispatcher in DEV because this might be call in the render function
+    // for warnings.
+
+    ReactCurrentDispatcher.current = null;
+    disableLogs();
+  }
+
+  try {
+    // This should throw.
+    if (construct) {
+      // Something should be setting the props in the constructor.
+      var Fake = function () {
+        throw Error();
+      }; // $FlowFixMe
+
+
+      Object.defineProperty(Fake.prototype, 'props', {
+        set: function () {
+          // We use a throwing setter instead of frozen or non-writable props
+          // because that won't throw in a non-strict mode function.
+          throw Error();
+        }
+      });
+
+      if (typeof Reflect === 'object' && Reflect.construct) {
+        // We construct a different control for this case to include any extra
+        // frames added by the construct call.
+        try {
+          Reflect.construct(Fake, []);
+        } catch (x) {
+          control = x;
+        }
+
+        Reflect.construct(fn, [], Fake);
+      } else {
+        try {
+          Fake.call();
+        } catch (x) {
+          control = x;
+        }
+
+        fn.call(Fake.prototype);
+      }
+    } else {
+      try {
+        throw Error();
+      } catch (x) {
+        control = x;
+      }
+
+      fn();
+    }
+  } catch (sample) {
+    // This is inlined manually because closure doesn't do it for us.
+    if (sample && control && typeof sample.stack === 'string') {
+      // This extracts the first frame from the sample that isn't also in the control.
+      // Skipping one frame that we assume is the frame that calls the two.
+      var sampleLines = sample.stack.split('\n');
+      var controlLines = control.stack.split('\n');
+      var s = sampleLines.length - 1;
+      var c = controlLines.length - 1;
+
+      while (s >= 1 && c >= 0 && sampleLines[s] !== controlLines[c]) {
+        // We expect at least one stack frame to be shared.
+        // Typically this will be the root most one. However, stack frames may be
+        // cut off due to maximum stack limits. In this case, one maybe cut off
+        // earlier than the other. We assume that the sample is longer or the same
+        // and there for cut off earlier. So we should find the root most frame in
+        // the sample somewhere in the control.
+        c--;
+      }
+
+      for (; s >= 1 && c >= 0; s--, c--) {
+        // Next we find the first one that isn't the same which should be the
+        // frame that called our sample function and the control.
+        if (sampleLines[s] !== controlLines[c]) {
+          // In V8, the first line is describing the message but other VMs don't.
+          // If we're about to return the first line, and the control is also on the same
+          // line, that's a pretty good indicator that our sample threw at same line as
+          // the control. I.e. before we entered the sample frame. So we ignore this result.
+          // This can happen if you passed a class to function component, or non-function.
+          if (s !== 1 || c !== 1) {
+            do {
+              s--;
+              c--; // We may still have similar intermediate frames from the construct call.
+              // The next one that isn't the same should be our match though.
+
+              if (c < 0 || sampleLines[s] !== controlLines[c]) {
+                // V8 adds a "new" prefix for native classes. Let's remove it to make it prettier.
+                var _frame = '\n' + sampleLines[s].replace(' at new ', ' at '); // If our component frame is labeled "<anonymous>"
+                // but we have a user-provided "displayName"
+                // splice it in to make the stack more readable.
+
+
+                if (fn.displayName && _frame.includes('<anonymous>')) {
+                  _frame = _frame.replace('<anonymous>', fn.displayName);
+                }
+
+                {
+                  if (typeof fn === 'function') {
+                    componentFrameCache.set(fn, _frame);
+                  }
+                } // Return the line we found.
+
+
+                return _frame;
+              }
+            } while (s >= 1 && c >= 0);
+          }
+
+          break;
+        }
+      }
+    }
+  } finally {
+    reentry = false;
+
+    {
+      ReactCurrentDispatcher.current = previousDispatcher;
+      reenableLogs();
+    }
+
+    Error.prepareStackTrace = previousPrepareStackTrace;
+  } // Fallback to just using the name if we couldn't make it throw.
+
+
+  var name = fn ? fn.displayName || fn.name : '';
+  var syntheticFrame = name ? describeBuiltInComponentFrame(name) : '';
+
+  {
+    if (typeof fn === 'function') {
+      componentFrameCache.set(fn, syntheticFrame);
+    }
+  }
+
+  return syntheticFrame;
+}
+function describeFunctionComponentFrame(fn, source, ownerFn) {
+  {
+    return describeNativeComponentFrame(fn, false);
+  }
+}
+
+function shouldConstruct(Component) {
+  var prototype = Component.prototype;
+  return !!(prototype && prototype.isReactComponent);
+}
+
+function describeUnknownElementTypeFrameInDEV(type, source, ownerFn) {
+
+  if (type == null) {
+    return '';
+  }
+
+  if (typeof type === 'function') {
+    {
+      return describeNativeComponentFrame(type, shouldConstruct(type));
+    }
+  }
+
+  if (typeof type === 'string') {
+    return describeBuiltInComponentFrame(type);
+  }
+
+  switch (type) {
+    case REACT_SUSPENSE_TYPE:
+      return describeBuiltInComponentFrame('Suspense');
+
+    case REACT_SUSPENSE_LIST_TYPE:
+      return describeBuiltInComponentFrame('SuspenseList');
+  }
+
+  if (typeof type === 'object') {
+    switch (type.$$typeof) {
+      case REACT_FORWARD_REF_TYPE:
+        return describeFunctionComponentFrame(type.render);
+
+      case REACT_MEMO_TYPE:
+        // Memo may contain any component type so we recursively resolve it.
+        return describeUnknownElementTypeFrameInDEV(type.type, source, ownerFn);
+
+      case REACT_LAZY_TYPE:
+        {
+          var lazyComponent = type;
+          var payload = lazyComponent._payload;
+          var init = lazyComponent._init;
+
+          try {
+            // Lazy may contain any component type so we recursively resolve it.
+            return describeUnknownElementTypeFrameInDEV(init(payload), source, ownerFn);
+          } catch (x) {}
+        }
+    }
+  }
+
+  return '';
+}
+
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+
+var loggedTypeFailures = {};
+var ReactDebugCurrentFrame = ReactSharedInternals.ReactDebugCurrentFrame;
+
+function setCurrentlyValidatingElement(element) {
+  {
+    if (element) {
+      var owner = element._owner;
+      var stack = describeUnknownElementTypeFrameInDEV(element.type, element._source, owner ? owner.type : null);
+      ReactDebugCurrentFrame.setExtraStackFrame(stack);
+    } else {
+      ReactDebugCurrentFrame.setExtraStackFrame(null);
+    }
+  }
+}
+
+function checkPropTypes(typeSpecs, values, location, componentName, element) {
+  {
+    // $FlowFixMe This is okay but Flow doesn't know it.
+    var has = Function.call.bind(hasOwnProperty);
+
+    for (var typeSpecName in typeSpecs) {
+      if (has(typeSpecs, typeSpecName)) {
+        var error$1 = void 0; // Prop type validation may throw. In case they do, we don't want to
+        // fail the render phase where it didn't fail before. So we log it.
+        // After these have been cleaned up, we'll let them throw.
+
+        try {
+          // This is intentionally an invariant that gets caught. It's the same
+          // behavior as without this statement except with a better message.
+          if (typeof typeSpecs[typeSpecName] !== 'function') {
+            // eslint-disable-next-line react-internal/prod-error-codes
+            var err = Error((componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' + 'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.' + 'This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.');
+            err.name = 'Invariant Violation';
+            throw err;
+          }
+
+          error$1 = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED');
+        } catch (ex) {
+          error$1 = ex;
+        }
+
+        if (error$1 && !(error$1 instanceof Error)) {
+          setCurrentlyValidatingElement(element);
+
+          error('%s: type specification of %s' + ' `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', location, typeSpecName, typeof error$1);
+
+          setCurrentlyValidatingElement(null);
+        }
+
+        if (error$1 instanceof Error && !(error$1.message in loggedTypeFailures)) {
+          // Only monitor this failure once because there tends to be a lot of the
+          // same error.
+          loggedTypeFailures[error$1.message] = true;
+          setCurrentlyValidatingElement(element);
+
+          error('Failed %s type: %s', location, error$1.message);
+
+          setCurrentlyValidatingElement(null);
+        }
+      }
+    }
+  }
+}
+
+var isArrayImpl = Array.isArray; // eslint-disable-next-line no-redeclare
+
+function isArray(a) {
+  return isArrayImpl(a);
+}
+
+/*
+ * The `'' + value` pattern (used in in perf-sensitive code) throws for Symbol
+ * and Temporal.* types. See https://github.com/facebook/react/pull/22064.
+ *
+ * The functions in this module will throw an easier-to-understand,
+ * easier-to-debug exception with a clear errors message message explaining the
+ * problem. (Instead of a confusing exception thrown inside the implementation
+ * of the `value` object).
+ */
+// $FlowFixMe only called in DEV, so void return is not possible.
+function typeName(value) {
+  {
+    // toStringTag is needed for namespaced types like Temporal.Instant
+    var hasToStringTag = typeof Symbol === 'function' && Symbol.toStringTag;
+    var type = hasToStringTag && value[Symbol.toStringTag] || value.constructor.name || 'Object';
+    return type;
+  }
+} // $FlowFixMe only called in DEV, so void return is not possible.
+
+
+function willCoercionThrow(value) {
+  {
+    try {
+      testStringCoercion(value);
+      return false;
+    } catch (e) {
+      return true;
+    }
+  }
+}
+
+function testStringCoercion(value) {
+  // If you ended up here by following an exception call stack, here's what's
+  // happened: you supplied an object or symbol value to React (as a prop, key,
+  // DOM attribute, CSS property, string ref, etc.) and when React tried to
+  // coerce it to a string using `'' + value`, an exception was thrown.
+  //
+  // The most common types that will cause this exception are `Symbol` instances
+  // and Temporal objects like `Temporal.Instant`. But any object that has a
+  // `valueOf` or `[Symbol.toPrimitive]` method that throws will also cause this
+  // exception. (Library authors do this to prevent users from using built-in
+  // numeric operators like `+` or comparison operators like `>=` because custom
+  // methods are needed to perform accurate arithmetic or comparison.)
+  //
+  // To fix the problem, coerce this object or symbol value to a string before
+  // passing it to React. The most reliable way is usually `String(value)`.
+  //
+  // To find which value is throwing, check the browser or debugger console.
+  // Before this exception was thrown, there should be `console.error` output
+  // that shows the type (Symbol, Temporal.PlainDate, etc.) that caused the
+  // problem and how that type was used: key, atrribute, input value prop, etc.
+  // In most cases, this console output also shows the component and its
+  // ancestor components where the exception happened.
+  //
+  // eslint-disable-next-line react-internal/safe-string-coercion
+  return '' + value;
+}
+function checkKeyStringCoercion(value) {
+  {
+    if (willCoercionThrow(value)) {
+      error('The provided key is an unsupported type %s.' + ' This value must be coerced to a string before before using it here.', typeName(value));
+
+      return testStringCoercion(value); // throw (to help callers find troubleshooting comments)
+    }
+  }
+}
+
+var ReactCurrentOwner = ReactSharedInternals.ReactCurrentOwner;
+var RESERVED_PROPS = {
+  key: true,
+  ref: true,
+  __self: true,
+  __source: true
+};
+var specialPropKeyWarningShown;
+var specialPropRefWarningShown;
+var didWarnAboutStringRefs;
+
+{
+  didWarnAboutStringRefs = {};
+}
+
+function hasValidRef(config) {
+  {
+    if (hasOwnProperty.call(config, 'ref')) {
+      var getter = Object.getOwnPropertyDescriptor(config, 'ref').get;
+
+      if (getter && getter.isReactWarning) {
+        return false;
+      }
+    }
+  }
+
+  return config.ref !== undefined;
+}
+
+function hasValidKey(config) {
+  {
+    if (hasOwnProperty.call(config, 'key')) {
+      var getter = Object.getOwnPropertyDescriptor(config, 'key').get;
+
+      if (getter && getter.isReactWarning) {
+        return false;
+      }
+    }
+  }
+
+  return config.key !== undefined;
+}
+
+function warnIfStringRefCannotBeAutoConverted(config, self) {
+  {
+    if (typeof config.ref === 'string' && ReactCurrentOwner.current && self && ReactCurrentOwner.current.stateNode !== self) {
+      var componentName = getComponentNameFromType(ReactCurrentOwner.current.type);
+
+      if (!didWarnAboutStringRefs[componentName]) {
+        error('Component "%s" contains the string ref "%s". ' + 'Support for string refs will be removed in a future major release. ' + 'This case cannot be automatically converted to an arrow function. ' + 'We ask you to manually fix this case by using useRef() or createRef() instead. ' + 'Learn more about using refs safely here: ' + 'https://reactjs.org/link/strict-mode-string-ref', getComponentNameFromType(ReactCurrentOwner.current.type), config.ref);
+
+        didWarnAboutStringRefs[componentName] = true;
+      }
+    }
+  }
+}
+
+function defineKeyPropWarningGetter(props, displayName) {
+  {
+    var warnAboutAccessingKey = function () {
+      if (!specialPropKeyWarningShown) {
+        specialPropKeyWarningShown = true;
+
+        error('%s: `key` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://reactjs.org/link/special-props)', displayName);
+      }
+    };
+
+    warnAboutAccessingKey.isReactWarning = true;
+    Object.defineProperty(props, 'key', {
+      get: warnAboutAccessingKey,
+      configurable: true
+    });
+  }
+}
+
+function defineRefPropWarningGetter(props, displayName) {
+  {
+    var warnAboutAccessingRef = function () {
+      if (!specialPropRefWarningShown) {
+        specialPropRefWarningShown = true;
+
+        error('%s: `ref` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://reactjs.org/link/special-props)', displayName);
+      }
+    };
+
+    warnAboutAccessingRef.isReactWarning = true;
+    Object.defineProperty(props, 'ref', {
+      get: warnAboutAccessingRef,
+      configurable: true
+    });
+  }
+}
+/**
+ * Factory method to create a new React element. This no longer adheres to
+ * the class pattern, so do not use new to call it. Also, instanceof check
+ * will not work. Instead test $$typeof field against Symbol.for('react.element') to check
+ * if something is a React Element.
+ *
+ * @param {*} type
+ * @param {*} props
+ * @param {*} key
+ * @param {string|object} ref
+ * @param {*} owner
+ * @param {*} self A *temporary* helper to detect places where `this` is
+ * different from the `owner` when React.createElement is called, so that we
+ * can warn. We want to get rid of owner and replace string `ref`s with arrow
+ * functions, and as long as `this` and owner are the same, there will be no
+ * change in behavior.
+ * @param {*} source An annotation object (added by a transpiler or otherwise)
+ * indicating filename, line number, and/or other information.
+ * @internal
+ */
+
+
+var ReactElement = function (type, key, ref, self, source, owner, props) {
+  var element = {
+    // This tag allows us to uniquely identify this as a React Element
+    $$typeof: REACT_ELEMENT_TYPE,
+    // Built-in properties that belong on the element
+    type: type,
+    key: key,
+    ref: ref,
+    props: props,
+    // Record the component responsible for creating this element.
+    _owner: owner
+  };
+
+  {
+    // The validation flag is currently mutative. We put it on
+    // an external backing store so that we can freeze the whole object.
+    // This can be replaced with a WeakMap once they are implemented in
+    // commonly used development environments.
+    element._store = {}; // To make comparing ReactElements easier for testing purposes, we make
+    // the validation flag non-enumerable (where possible, which should
+    // include every environment we run tests in), so the test framework
+    // ignores it.
+
+    Object.defineProperty(element._store, 'validated', {
+      configurable: false,
+      enumerable: false,
+      writable: true,
+      value: false
+    }); // self and source are DEV only properties.
+
+    Object.defineProperty(element, '_self', {
+      configurable: false,
+      enumerable: false,
+      writable: false,
+      value: self
+    }); // Two elements created in two different places should be considered
+    // equal for testing purposes and therefore we hide it from enumeration.
+
+    Object.defineProperty(element, '_source', {
+      configurable: false,
+      enumerable: false,
+      writable: false,
+      value: source
+    });
+
+    if (Object.freeze) {
+      Object.freeze(element.props);
+      Object.freeze(element);
+    }
+  }
+
+  return element;
+};
+/**
+ * https://github.com/reactjs/rfcs/pull/107
+ * @param {*} type
+ * @param {object} props
+ * @param {string} key
+ */
+
+function jsxDEV(type, config, maybeKey, source, self) {
+  {
+    var propName; // Reserved names are extracted
+
+    var props = {};
+    var key = null;
+    var ref = null; // Currently, key can be spread in as a prop. This causes a potential
+    // issue if key is also explicitly declared (ie. <div {...props} key="Hi" />
+    // or <div key="Hi" {...props} /> ). We want to deprecate key spread,
+    // but as an intermediary step, we will use jsxDEV for everything except
+    // <div {...props} key="Hi" />, because we aren't currently able to tell if
+    // key is explicitly declared to be undefined or not.
+
+    if (maybeKey !== undefined) {
+      {
+        checkKeyStringCoercion(maybeKey);
+      }
+
+      key = '' + maybeKey;
+    }
+
+    if (hasValidKey(config)) {
+      {
+        checkKeyStringCoercion(config.key);
+      }
+
+      key = '' + config.key;
+    }
+
+    if (hasValidRef(config)) {
+      ref = config.ref;
+      warnIfStringRefCannotBeAutoConverted(config, self);
+    } // Remaining properties are added to a new props object
+
+
+    for (propName in config) {
+      if (hasOwnProperty.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
+        props[propName] = config[propName];
+      }
+    } // Resolve default props
+
+
+    if (type && type.defaultProps) {
+      var defaultProps = type.defaultProps;
+
+      for (propName in defaultProps) {
+        if (props[propName] === undefined) {
+          props[propName] = defaultProps[propName];
+        }
+      }
+    }
+
+    if (key || ref) {
+      var displayName = typeof type === 'function' ? type.displayName || type.name || 'Unknown' : type;
+
+      if (key) {
+        defineKeyPropWarningGetter(props, displayName);
+      }
+
+      if (ref) {
+        defineRefPropWarningGetter(props, displayName);
+      }
+    }
+
+    return ReactElement(type, key, ref, self, source, ReactCurrentOwner.current, props);
+  }
+}
+
+var ReactCurrentOwner$1 = ReactSharedInternals.ReactCurrentOwner;
+var ReactDebugCurrentFrame$1 = ReactSharedInternals.ReactDebugCurrentFrame;
+
+function setCurrentlyValidatingElement$1(element) {
+  {
+    if (element) {
+      var owner = element._owner;
+      var stack = describeUnknownElementTypeFrameInDEV(element.type, element._source, owner ? owner.type : null);
+      ReactDebugCurrentFrame$1.setExtraStackFrame(stack);
+    } else {
+      ReactDebugCurrentFrame$1.setExtraStackFrame(null);
+    }
+  }
+}
+
+var propTypesMisspellWarningShown;
+
+{
+  propTypesMisspellWarningShown = false;
+}
+/**
+ * Verifies the object is a ReactElement.
+ * See https://reactjs.org/docs/react-api.html#isvalidelement
+ * @param {?object} object
+ * @return {boolean} True if `object` is a ReactElement.
+ * @final
+ */
+
+
+function isValidElement(object) {
+  {
+    return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+  }
+}
+
+function getDeclarationErrorAddendum() {
+  {
+    if (ReactCurrentOwner$1.current) {
+      var name = getComponentNameFromType(ReactCurrentOwner$1.current.type);
+
+      if (name) {
+        return '\n\nCheck the render method of `' + name + '`.';
+      }
+    }
+
+    return '';
+  }
+}
+
+function getSourceInfoErrorAddendum(source) {
+  {
+    if (source !== undefined) {
+      var fileName = source.fileName.replace(/^.*[\\\/]/, '');
+      var lineNumber = source.lineNumber;
+      return '\n\nCheck your code at ' + fileName + ':' + lineNumber + '.';
+    }
+
+    return '';
+  }
+}
+/**
+ * Warn if there's no key explicitly set on dynamic arrays of children or
+ * object keys are not valid. This allows us to keep track of children between
+ * updates.
+ */
+
+
+var ownerHasKeyUseWarning = {};
+
+function getCurrentComponentErrorInfo(parentType) {
+  {
+    var info = getDeclarationErrorAddendum();
+
+    if (!info) {
+      var parentName = typeof parentType === 'string' ? parentType : parentType.displayName || parentType.name;
+
+      if (parentName) {
+        info = "\n\nCheck the top-level render call using <" + parentName + ">.";
+      }
+    }
+
+    return info;
+  }
+}
+/**
+ * Warn if the element doesn't have an explicit key assigned to it.
+ * This element is in an array. The array could grow and shrink or be
+ * reordered. All children that haven't already been validated are required to
+ * have a "key" property assigned to it. Error statuses are cached so a warning
+ * will only be shown once.
+ *
+ * @internal
+ * @param {ReactElement} element Element that requires a key.
+ * @param {*} parentType element's parent's type.
+ */
+
+
+function validateExplicitKey(element, parentType) {
+  {
+    if (!element._store || element._store.validated || element.key != null) {
+      return;
+    }
+
+    element._store.validated = true;
+    var currentComponentErrorInfo = getCurrentComponentErrorInfo(parentType);
+
+    if (ownerHasKeyUseWarning[currentComponentErrorInfo]) {
+      return;
+    }
+
+    ownerHasKeyUseWarning[currentComponentErrorInfo] = true; // Usually the current owner is the offender, but if it accepts children as a
+    // property, it may be the creator of the child that's responsible for
+    // assigning it a key.
+
+    var childOwner = '';
+
+    if (element && element._owner && element._owner !== ReactCurrentOwner$1.current) {
+      // Give the component that originally created this child.
+      childOwner = " It was passed a child from " + getComponentNameFromType(element._owner.type) + ".";
+    }
+
+    setCurrentlyValidatingElement$1(element);
+
+    error('Each child in a list should have a unique "key" prop.' + '%s%s See https://reactjs.org/link/warning-keys for more information.', currentComponentErrorInfo, childOwner);
+
+    setCurrentlyValidatingElement$1(null);
+  }
+}
+/**
+ * Ensure that every element either is passed in a static location, in an
+ * array with an explicit keys property defined, or in an object literal
+ * with valid key property.
+ *
+ * @internal
+ * @param {ReactNode} node Statically passed child of any type.
+ * @param {*} parentType node's parent's type.
+ */
+
+
+function validateChildKeys(node, parentType) {
+  {
+    if (typeof node !== 'object') {
+      return;
+    }
+
+    if (isArray(node)) {
+      for (var i = 0; i < node.length; i++) {
+        var child = node[i];
+
+        if (isValidElement(child)) {
+          validateExplicitKey(child, parentType);
+        }
+      }
+    } else if (isValidElement(node)) {
+      // This element was passed in a valid location.
+      if (node._store) {
+        node._store.validated = true;
+      }
+    } else if (node) {
+      var iteratorFn = getIteratorFn(node);
+
+      if (typeof iteratorFn === 'function') {
+        // Entry iterators used to provide implicit keys,
+        // but now we print a separate warning for them later.
+        if (iteratorFn !== node.entries) {
+          var iterator = iteratorFn.call(node);
+          var step;
+
+          while (!(step = iterator.next()).done) {
+            if (isValidElement(step.value)) {
+              validateExplicitKey(step.value, parentType);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+/**
+ * Given an element, validate that its props follow the propTypes definition,
+ * provided by the type.
+ *
+ * @param {ReactElement} element
+ */
+
+
+function validatePropTypes(element) {
+  {
+    var type = element.type;
+
+    if (type === null || type === undefined || typeof type === 'string') {
+      return;
+    }
+
+    var propTypes;
+
+    if (typeof type === 'function') {
+      propTypes = type.propTypes;
+    } else if (typeof type === 'object' && (type.$$typeof === REACT_FORWARD_REF_TYPE || // Note: Memo only checks outer props here.
+    // Inner props are checked in the reconciler.
+    type.$$typeof === REACT_MEMO_TYPE)) {
+      propTypes = type.propTypes;
+    } else {
+      return;
+    }
+
+    if (propTypes) {
+      // Intentionally inside to avoid triggering lazy initializers:
+      var name = getComponentNameFromType(type);
+      checkPropTypes(propTypes, element.props, 'prop', name, element);
+    } else if (type.PropTypes !== undefined && !propTypesMisspellWarningShown) {
+      propTypesMisspellWarningShown = true; // Intentionally inside to avoid triggering lazy initializers:
+
+      var _name = getComponentNameFromType(type);
+
+      error('Component %s declared `PropTypes` instead of `propTypes`. Did you misspell the property assignment?', _name || 'Unknown');
+    }
+
+    if (typeof type.getDefaultProps === 'function' && !type.getDefaultProps.isReactClassApproved) {
+      error('getDefaultProps is only used on classic React.createClass ' + 'definitions. Use a static property named `defaultProps` instead.');
+    }
+  }
+}
+/**
+ * Given a fragment, validate that it can only be provided with fragment props
+ * @param {ReactElement} fragment
+ */
+
+
+function validateFragmentProps(fragment) {
+  {
+    var keys = Object.keys(fragment.props);
+
+    for (var i = 0; i < keys.length; i++) {
+      var key = keys[i];
+
+      if (key !== 'children' && key !== 'key') {
+        setCurrentlyValidatingElement$1(fragment);
+
+        error('Invalid prop `%s` supplied to `React.Fragment`. ' + 'React.Fragment can only have `key` and `children` props.', key);
+
+        setCurrentlyValidatingElement$1(null);
+        break;
+      }
+    }
+
+    if (fragment.ref !== null) {
+      setCurrentlyValidatingElement$1(fragment);
+
+      error('Invalid attribute `ref` supplied to `React.Fragment`.');
+
+      setCurrentlyValidatingElement$1(null);
+    }
+  }
+}
+
+var didWarnAboutKeySpread = {};
+function jsxWithValidation(type, props, key, isStaticChildren, source, self) {
+  {
+    var validType = isValidElementType(type); // We warn in this case but don't throw. We expect the element creation to
+    // succeed and there will likely be errors in render.
+
+    if (!validType) {
+      var info = '';
+
+      if (type === undefined || typeof type === 'object' && type !== null && Object.keys(type).length === 0) {
+        info += ' You likely forgot to export your component from the file ' + "it's defined in, or you might have mixed up default and named imports.";
+      }
+
+      var sourceInfo = getSourceInfoErrorAddendum(source);
+
+      if (sourceInfo) {
+        info += sourceInfo;
+      } else {
+        info += getDeclarationErrorAddendum();
+      }
+
+      var typeString;
+
+      if (type === null) {
+        typeString = 'null';
+      } else if (isArray(type)) {
+        typeString = 'array';
+      } else if (type !== undefined && type.$$typeof === REACT_ELEMENT_TYPE) {
+        typeString = "<" + (getComponentNameFromType(type.type) || 'Unknown') + " />";
+        info = ' Did you accidentally export a JSX literal instead of a component?';
+      } else {
+        typeString = typeof type;
+      }
+
+      error('React.jsx: type is invalid -- expected a string (for ' + 'built-in components) or a class/function (for composite ' + 'components) but got: %s.%s', typeString, info);
+    }
+
+    var element = jsxDEV(type, props, key, source, self); // The result can be nullish if a mock or a custom function is used.
+    // TODO: Drop this when these are no longer allowed as the type argument.
+
+    if (element == null) {
+      return element;
+    } // Skip key warning if the type isn't valid since our key validation logic
+    // doesn't expect a non-string/function type and can throw confusing errors.
+    // We don't want exception behavior to differ between dev and prod.
+    // (Rendering will throw with a helpful message and as soon as the type is
+    // fixed, the key warnings will appear.)
+
+
+    if (validType) {
+      var children = props.children;
+
+      if (children !== undefined) {
+        if (isStaticChildren) {
+          if (isArray(children)) {
+            for (var i = 0; i < children.length; i++) {
+              validateChildKeys(children[i], type);
+            }
+
+            if (Object.freeze) {
+              Object.freeze(children);
+            }
+          } else {
+            error('React.jsx: Static children should always be an array. ' + 'You are likely explicitly calling React.jsxs or React.jsxDEV. ' + 'Use the Babel transform instead.');
+          }
+        } else {
+          validateChildKeys(children, type);
+        }
+      }
+    }
+
+    {
+      if (hasOwnProperty.call(props, 'key')) {
+        var componentName = getComponentNameFromType(type);
+        var keys = Object.keys(props).filter(function (k) {
+          return k !== 'key';
+        });
+        var beforeExample = keys.length > 0 ? '{key: someKey, ' + keys.join(': ..., ') + ': ...}' : '{key: someKey}';
+
+        if (!didWarnAboutKeySpread[componentName + beforeExample]) {
+          var afterExample = keys.length > 0 ? '{' + keys.join(': ..., ') + ': ...}' : '{}';
+
+          error('A props object containing a "key" prop is being spread into JSX:\n' + '  let props = %s;\n' + '  <%s {...props} />\n' + 'React keys must be passed directly to JSX without using spread:\n' + '  let props = %s;\n' + '  <%s key={someKey} {...props} />', beforeExample, componentName, afterExample, componentName);
+
+          didWarnAboutKeySpread[componentName + beforeExample] = true;
+        }
+      }
+    }
+
+    if (type === REACT_FRAGMENT_TYPE) {
+      validateFragmentProps(element);
+    } else {
+      validatePropTypes(element);
+    }
+
+    return element;
+  }
+} // These two functions exist to still get child warnings in dev
+// even with the prod transform. This means that jsxDEV is purely
+// opt-in behavior for better messages but that we won't stop
+// giving you warnings if you use production apis.
+
+function jsxWithValidationStatic(type, props, key) {
+  {
+    return jsxWithValidation(type, props, key, true);
+  }
+}
+function jsxWithValidationDynamic(type, props, key) {
+  {
+    return jsxWithValidation(type, props, key, false);
+  }
+}
+
+var jsx =  jsxWithValidationDynamic ; // we may want to special case jsxs internally to take advantage of static children.
+// for now we can ship identical prod functions
+
+var jsxs =  jsxWithValidationStatic ;
+
+exports.Fragment = REACT_FRAGMENT_TYPE;
+exports.jsx = jsx;
+exports.jsxs = jsxs;
+  })();
+}
+
+
+/***/ },
+
+/***/ "./node_modules/react/jsx-runtime.js"
+/*!*******************************************!*\
+  !*** ./node_modules/react/jsx-runtime.js ***!
+  \*******************************************/
+(module, __unused_webpack_exports, __webpack_require__) {
+
+
+
+if (false) // removed by dead control flow
+{} else {
+  module.exports = __webpack_require__(/*! ./cjs/react-jsx-runtime.development.js */ "./node_modules/react/cjs/react-jsx-runtime.development.js");
+}
+
+
+/***/ },
+
+/***/ "./src/playground/playground.css"
+/*!***************************************!*\
+  !*** ./src/playground/playground.css ***!
+  \***************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_playground_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./playground.css */ "./node_modules/css-loader/dist/cjs.js!./src/playground/playground.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_playground_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_playground_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_playground_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_playground_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ },
+
+/***/ "./src/styles/clausekit.css"
+/*!**********************************!*\
+  !*** ./src/styles/clausekit.css ***!
+  \**********************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clausekit_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./clausekit.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/clausekit.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clausekit_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clausekit_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_clausekit_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_clausekit_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ },
+
+/***/ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js"
+/*!****************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js ***!
+  \****************************************************************************/
+(module) {
+
+
+
+var stylesInDOM = [];
+function getIndexByIdentifier(identifier) {
+  var result = -1;
+  for (var i = 0; i < stylesInDOM.length; i++) {
+    if (stylesInDOM[i].identifier === identifier) {
+      result = i;
+      break;
+    }
+  }
+  return result;
+}
+function modulesToDom(list, options) {
+  var idCountMap = {};
+  var identifiers = [];
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i];
+    var id = options.base ? item[0] + options.base : item[0];
+    var count = idCountMap[id] || 0;
+    var identifier = "".concat(id, " ").concat(count);
+    idCountMap[id] = count + 1;
+    var indexByIdentifier = getIndexByIdentifier(identifier);
+    var obj = {
+      css: item[1],
+      media: item[2],
+      sourceMap: item[3],
+      supports: item[4],
+      layer: item[5]
+    };
+    if (indexByIdentifier !== -1) {
+      stylesInDOM[indexByIdentifier].references++;
+      stylesInDOM[indexByIdentifier].updater(obj);
+    } else {
+      var updater = addElementStyle(obj, options);
+      options.byIndex = i;
+      stylesInDOM.splice(i, 0, {
+        identifier: identifier,
+        updater: updater,
+        references: 1
+      });
+    }
+    identifiers.push(identifier);
+  }
+  return identifiers;
+}
+function addElementStyle(obj, options) {
+  var api = options.domAPI(options);
+  api.update(obj);
+  var updater = function updater(newObj) {
+    if (newObj) {
+      if (newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap && newObj.supports === obj.supports && newObj.layer === obj.layer) {
+        return;
+      }
+      api.update(obj = newObj);
+    } else {
+      api.remove();
+    }
+  };
+  return updater;
+}
+module.exports = function (list, options) {
+  options = options || {};
+  list = list || [];
+  var lastIdentifiers = modulesToDom(list, options);
+  return function update(newList) {
+    newList = newList || [];
+    for (var i = 0; i < lastIdentifiers.length; i++) {
+      var identifier = lastIdentifiers[i];
+      var index = getIndexByIdentifier(identifier);
+      stylesInDOM[index].references--;
+    }
+    var newLastIdentifiers = modulesToDom(newList, options);
+    for (var _i = 0; _i < lastIdentifiers.length; _i++) {
+      var _identifier = lastIdentifiers[_i];
+      var _index = getIndexByIdentifier(_identifier);
+      if (stylesInDOM[_index].references === 0) {
+        stylesInDOM[_index].updater();
+        stylesInDOM.splice(_index, 1);
+      }
+    }
+    lastIdentifiers = newLastIdentifiers;
+  };
+};
+
+/***/ },
+
+/***/ "./node_modules/style-loader/dist/runtime/insertBySelector.js"
+/*!********************************************************************!*\
+  !*** ./node_modules/style-loader/dist/runtime/insertBySelector.js ***!
+  \********************************************************************/
+(module) {
+
+
+
+var memo = {};
+
+/* istanbul ignore next  */
+function getTarget(target) {
+  if (typeof memo[target] === "undefined") {
+    var styleTarget = document.querySelector(target);
+
+    // Special case to return head of iframe instead of iframe itself
+    if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {
+      try {
+        // This will throw an exception if access to iframe is blocked
+        // due to cross-origin restrictions
+        styleTarget = styleTarget.contentDocument.head;
+      } catch (e) {
+        // istanbul ignore next
+        styleTarget = null;
+      }
+    }
+    memo[target] = styleTarget;
+  }
+  return memo[target];
+}
+
+/* istanbul ignore next  */
+function insertBySelector(insert, style) {
+  var target = getTarget(insert);
+  if (!target) {
+    throw new Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");
+  }
+  target.appendChild(style);
+}
+module.exports = insertBySelector;
+
+/***/ },
+
+/***/ "./node_modules/style-loader/dist/runtime/insertStyleElement.js"
+/*!**********************************************************************!*\
+  !*** ./node_modules/style-loader/dist/runtime/insertStyleElement.js ***!
+  \**********************************************************************/
+(module) {
+
+
+
+/* istanbul ignore next  */
+function insertStyleElement(options) {
+  var element = document.createElement("style");
+  options.setAttributes(element, options.attributes);
+  options.insert(element, options.options);
+  return element;
+}
+module.exports = insertStyleElement;
+
+/***/ },
+
+/***/ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js"
+/*!**********************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js ***!
+  \**********************************************************************************/
+(module, __unused_webpack_exports, __webpack_require__) {
+
+
+
+/* istanbul ignore next  */
+function setAttributesWithoutAttributes(styleElement) {
+  var nonce =  true ? __webpack_require__.nc : 0;
+  if (nonce) {
+    styleElement.setAttribute("nonce", nonce);
+  }
+}
+module.exports = setAttributesWithoutAttributes;
+
+/***/ },
+
+/***/ "./node_modules/style-loader/dist/runtime/styleDomAPI.js"
+/*!***************************************************************!*\
+  !*** ./node_modules/style-loader/dist/runtime/styleDomAPI.js ***!
+  \***************************************************************/
+(module) {
+
+
+
+/* istanbul ignore next  */
+function apply(styleElement, options, obj) {
+  var css = "";
+  if (obj.supports) {
+    css += "@supports (".concat(obj.supports, ") {");
+  }
+  if (obj.media) {
+    css += "@media ".concat(obj.media, " {");
+  }
+  var needLayer = typeof obj.layer !== "undefined";
+  if (needLayer) {
+    css += "@layer".concat(obj.layer.length > 0 ? " ".concat(obj.layer) : "", " {");
+  }
+  css += obj.css;
+  if (needLayer) {
+    css += "}";
+  }
+  if (obj.media) {
+    css += "}";
+  }
+  if (obj.supports) {
+    css += "}";
+  }
+  var sourceMap = obj.sourceMap;
+  if (sourceMap && typeof btoa !== "undefined") {
+    css += "\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))), " */");
+  }
+
+  // For old IE
+  /* istanbul ignore if  */
+  options.styleTagTransform(css, styleElement, options.options);
+}
+function removeStyleElement(styleElement) {
+  // istanbul ignore if
+  if (styleElement.parentNode === null) {
+    return false;
+  }
+  styleElement.parentNode.removeChild(styleElement);
+}
+
+/* istanbul ignore next  */
+function domAPI(options) {
+  if (typeof document === "undefined") {
+    return {
+      update: function update() {},
+      remove: function remove() {}
+    };
+  }
+  var styleElement = options.insertStyleElement(options);
+  return {
+    update: function update(obj) {
+      apply(styleElement, options, obj);
+    },
+    remove: function remove() {
+      removeStyleElement(styleElement);
+    }
+  };
+}
+module.exports = domAPI;
+
+/***/ },
+
+/***/ "./node_modules/style-loader/dist/runtime/styleTagTransform.js"
+/*!*********************************************************************!*\
+  !*** ./node_modules/style-loader/dist/runtime/styleTagTransform.js ***!
+  \*********************************************************************/
+(module) {
+
+
+
+/* istanbul ignore next  */
+function styleTagTransform(css, styleElement) {
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = css;
+  } else {
+    while (styleElement.firstChild) {
+      styleElement.removeChild(styleElement.firstChild);
+    }
+    styleElement.appendChild(document.createTextNode(css));
+  }
+}
+module.exports = styleTagTransform;
+
+/***/ },
+
+/***/ "./src/playground/playground.tsx"
+/*!***************************************!*\
+  !*** ./src/playground/playground.tsx ***!
+  \***************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
+/* harmony import */ var _taskpane_components_App__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../taskpane/components/App */ "./src/taskpane/components/App.tsx");
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../services */ "./src/services/index.ts");
+/* harmony import */ var _services_mock_documentModel__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../services/mock/documentModel */ "./src/services/mock/documentModel.ts");
+/* harmony import */ var _services_mock_MockDocumentService__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../services/mock/MockDocumentService */ "./src/services/mock/MockDocumentService.ts");
+/* harmony import */ var _fixtures_lease__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../fixtures/lease */ "./src/fixtures/lease/index.ts");
+/* harmony import */ var _styles_clausekit_css__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../styles/clausekit.css */ "./src/styles/clausekit.css");
+/* harmony import */ var _playground_css__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./playground.css */ "./src/playground/playground.css");
+
+
+
+
+
+
+
+
+
+
+/* global document */
+/**
+ * Browser playground: the real task pane (reused, not reimplemented) running
+ * next to the seeded lease, now wired to a live MockDocumentService. Applying a
+ * redline from the pane mutates the shared model; the canvas subscribes and
+ * re-renders the tracked change. No Office host — React mounts directly.
+ */
+const model = new _services_mock_documentModel__WEBPACK_IMPORTED_MODULE_5__.DocumentModel();
+const documentService = new _services_mock_MockDocumentService__WEBPACK_IMPORTED_MODULE_6__.MockDocumentService(model);
+function useWorkingClauses() {
+    return (0,react__WEBPACK_IMPORTED_MODULE_1__.useSyncExternalStore)(model.subscribe, model.getSnapshot, model.getSnapshot);
+}
+function LeaseDocument() {
+    const clauses = useWorkingClauses();
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("article", { className: "pg-doc", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", { className: "pg-doc-title", children: _fixtures_lease__WEBPACK_IMPORTED_MODULE_7__.LEASE_TITLE }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "pg-recitals", children: _fixtures_lease__WEBPACK_IMPORTED_MODULE_7__.leaseRecitals }), clauses.map((clause) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("section", { className: "pg-clause", id: (0,_services_mock_documentModel__WEBPACK_IMPORTED_MODULE_5__.clauseDomId)(clause.ref), children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", { className: "pg-clause-head", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "pg-ref", children: clause.ref }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { children: clause.heading })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "pg-clause-text", children: clause.segments.map((seg, i) => seg.kind === "text" ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { children: seg.text }, i)) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("del", { className: "pg-del", children: seg.original }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("ins", { className: "pg-ins", children: seg.proposed })] }, i))) })] }, clause.ref)))] }));
+}
+function Playground() {
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "pg-root", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "pg-doc-pane", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(LeaseDocument, {}) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "pg-pane-host", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_services__WEBPACK_IMPORTED_MODULE_4__.DocumentServiceProvider, { service: documentService, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_taskpane_components_App__WEBPACK_IMPORTED_MODULE_3__["default"], { title: "ClauseKit" }) }) })] }));
+}
+const rootElement = document.getElementById("root");
+if (rootElement) {
+    (0,react_dom_client__WEBPACK_IMPORTED_MODULE_2__.createRoot)(rootElement).render((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(Playground, {}));
+}
+
+
+/***/ },
+
+/***/ "./src/services/DocumentServiceContext.tsx"
+/*!*************************************************!*\
+  !*** ./src/services/DocumentServiceContext.tsx ***!
+  \*************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DocumentServiceProvider: () => (/* binding */ DocumentServiceProvider),
+/* harmony export */   useDocumentService: () => (/* binding */ useDocumentService)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+
+
+/**
+ * React context carrying the active {@link DocumentService}. Defaults to `null`
+ * so {@link useDocumentService} can detect use outside a provider. The concrete
+ * implementation (mock or real Word) is injected by whoever mounts the tree —
+ * the playground supplies the mock, the add-in supplies the Word one.
+ */
+const DocumentServiceContext = (0,react__WEBPACK_IMPORTED_MODULE_1__.createContext)(null);
+/** Provides a {@link DocumentService} to everything beneath it. */
+function DocumentServiceProvider({ service, children }) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(DocumentServiceContext.Provider, { value: service, children: children });
+}
+/**
+ * Consumes the injected {@link DocumentService}.
+ *
+ * @throws if called outside a {@link DocumentServiceProvider}, so a missing
+ * implementation fails loudly at the point of use rather than silently no-op'ing.
+ */
+function useDocumentService() {
+    const service = (0,react__WEBPACK_IMPORTED_MODULE_1__.useContext)(DocumentServiceContext);
+    if (!service) {
+        throw new Error("useDocumentService must be used within a <DocumentServiceProvider>. " +
+            "Wrap the app in a provider with a mock or Word DocumentService.");
+    }
+    return service;
+}
+
+
+/***/ },
+
+/***/ "./src/taskpane/components/ActionCard.tsx"
+/*!************************************************!*\
+  !*** ./src/taskpane/components/ActionCard.tsx ***!
+  \************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ ActionCard)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services */ "./src/services/index.ts");
+
+
+
+/**
+ * Renders a single model-proposed redline and applies it as a tracked change
+ * through the DocumentService seam. Driven entirely by the `edit` prop — no
+ * hardcoded content.
+ */
+function ActionCard({ edit }) {
+    const service = (0,_services__WEBPACK_IMPORTED_MODULE_2__.useDocumentService)();
+    const [state, setState] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("idle");
+    const [errorMsg, setErrorMsg] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+    const [dismissed, setDismissed] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+    if (dismissed)
+        return null;
+    const handleApply = async () => {
+        setState("applying");
+        setErrorMsg("");
+        try {
+            const result = await service.applyTrackedChange(edit);
+            switch (result.status) {
+                case "applied":
+                    setState("applied");
+                    await service.scrollTo({ clauseRef: result.clauseRef ?? edit.clauseRef });
+                    break;
+                case "not-found":
+                    setState("error");
+                    setErrorMsg(`Couldn't find the original text in ${edit.clauseRef} to redline.`);
+                    break;
+                case "ambiguous":
+                    setState("error");
+                    setErrorMsg(`Found ${result.matchCount} matches in ${edit.clauseRef}; can't redline unambiguously.`);
+                    break;
+            }
+        }
+        catch (err) {
+            setState("error");
+            setErrorMsg(err instanceof Error ? err.message : "Failed to apply the change.");
+        }
+    };
+    const applyLabel = state === "applying" ? "Applying…" : state === "error" ? "Retry" : "Apply Change";
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: `ck-action sev-${edit.severity}`, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "a-head", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "a-badge", children: "Suggested edit" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "a-clause", children: edit.clauseRef }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: `a-sev sev-${edit.severity}`, children: edit.severity })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "a-body", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "a-desc", children: edit.rationale }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-diff", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "d-line d-del", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "t", children: edit.originalText }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "d-line d-add", children: edit.proposedText })] }), state === "error" && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "a-error", children: errorMsg })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "a-foot", children: [state === "applied" ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", { className: "ck-btn applied", disabled: true, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "chk" }), " Applied to document"] })) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", { className: "ck-btn primary", onClick: handleApply, disabled: state === "applying", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "chk" }), " ", applyLabel] })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "spacer" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: "ck-btn danger-ghost", onClick: () => setDismissed(true), children: "Dismiss" })] })] }));
+}
+
+
+/***/ },
+
+/***/ "./src/taskpane/components/App.tsx"
+/*!*****************************************!*\
+  !*** ./src/taskpane/components/App.tsx ***!
+  \*****************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ App)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _CKHeader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CKHeader */ "./src/taskpane/components/CKHeader.tsx");
+/* harmony import */ var _EmptyState__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./EmptyState */ "./src/taskpane/components/EmptyState.tsx");
+/* harmony import */ var _ChatPane__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ChatPane */ "./src/taskpane/components/ChatPane.tsx");
+/* harmony import */ var _ChatInput__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ChatInput */ "./src/taskpane/components/ChatInput.tsx");
+/* harmony import */ var _Simulator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Simulator */ "./src/taskpane/components/Simulator.tsx");
+/* harmony import */ var _useChat__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./useChat */ "./src/taskpane/components/useChat.ts");
+/* harmony import */ var _useNegotiate__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./useNegotiate */ "./src/taskpane/components/useNegotiate.ts");
+
+
+
+
+
+
+
+
+
+function App({ showHeader = true }) {
+    const [mode, setMode] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("ask");
+    const [theme, setTheme] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("light");
+    const chat = (0,_useChat__WEBPACK_IMPORTED_MODULE_7__.useChat)();
+    const negotiate = (0,_useNegotiate__WEBPACK_IMPORTED_MODULE_8__.useNegotiate)();
+    const chatOpen = chat.messages.length > 0;
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-pane", "data-theme": theme, children: [showHeader && ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_CKHeader__WEBPACK_IMPORTED_MODULE_2__["default"], { theme: theme, onToggleTheme: () => setTheme((t) => (t === "light" ? "dark" : "light")) })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-tabs", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: `ck-tab${mode === "ask" ? " on" : ""}`, onClick: () => setMode("ask"), children: "Ask" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: `ck-tab${mode === "simulator" ? " on" : ""}`, onClick: () => setMode("simulator"), children: "Simulator" })] }), mode === "ask" ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, { children: [chatOpen ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ChatPane__WEBPACK_IMPORTED_MODULE_4__["default"], { messages: chat.messages, loading: chat.loading, error: chat.error, onRetry: chat.retry })) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_EmptyState__WEBPACK_IMPORTED_MODULE_3__["default"], { onPrompt: chat.send })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ChatInput__WEBPACK_IMPORTED_MODULE_5__["default"], { onSend: chat.send, chatOpen: chatOpen, disabled: chat.loading })] })) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Simulator__WEBPACK_IMPORTED_MODULE_6__["default"], { ...negotiate }))] }));
+}
+
+
+/***/ },
+
+/***/ "./src/taskpane/components/CKHeader.tsx"
+/*!**********************************************!*\
+  !*** ./src/taskpane/components/CKHeader.tsx ***!
+  \**********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ CKHeader)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+
+function CKHeader({ theme, onToggleTheme }) {
+    const nextTheme = theme === "light" ? "dark" : "light";
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-header", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "h-txt", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "h-name", children: "ClauseKit" }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "h-actions", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: "ck-theme-btn", onClick: onToggleTheme, "aria-label": `Switch to ${nextTheme} mode`, title: `Switch to ${nextTheme} mode`, style: { display: "none" }, children: theme === "light" ? (
+                    // Moon — click to go dark
+                    (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", { viewBox: "0 0 24 24", width: "12", height: "12", "aria-hidden": "true", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", { d: "M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round" }) })) : (
+                    // Sun — click to go light
+                    (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("svg", { viewBox: "0 0 24 24", width: "12", height: "12", "aria-hidden": "true", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("circle", { cx: "12", cy: "12", r: "4", fill: "none", stroke: "currentColor", strokeWidth: "1.8" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", { d: "M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round" })] })) }) })] }));
+}
+
+
+/***/ },
+
+/***/ "./src/taskpane/components/ChatInput.tsx"
+/*!***********************************************!*\
+  !*** ./src/taskpane/components/ChatInput.tsx ***!
+  \***********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ ChatInput)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+
+
+const MIN_HEIGHT = 40;
+const MAX_HEIGHT = 240;
+const DEFAULT_HEIGHT = 40;
+function ChatInput({ onSend, chatOpen, disabled = false }) {
+    const [value, setValue] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+    const [height, setHeight] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(DEFAULT_HEIGHT);
+    const textareaRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
+    const handleSend = () => {
+        const trimmed = value.trim();
+        if (!trimmed || disabled)
+            return;
+        onSend(trimmed);
+        setValue("");
+    };
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+        }
+    };
+    const handleResizeStart = (e) => {
+        e.preventDefault();
+        const startY = e.clientY;
+        const startHeight = height;
+        const handle = e.currentTarget;
+        handle.setPointerCapture(e.pointerId);
+        const onMove = (ev) => {
+            // Drag up grows the box, drag down shrinks it.
+            const next = startHeight + (startY - ev.clientY);
+            setHeight(Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, next)));
+        };
+        const onUp = (ev) => {
+            handle.releasePointerCapture(ev.pointerId);
+            handle.removeEventListener("pointermove", onMove);
+            handle.removeEventListener("pointerup", onUp);
+        };
+        handle.addEventListener("pointermove", onMove);
+        handle.addEventListener("pointerup", onUp);
+    };
+    const canSend = value.trim().length > 0 && !disabled;
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-input-wrap", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-input-resize", onPointerDown: handleResizeStart, role: "separator", "aria-orientation": "horizontal", "aria-label": "Resize input", title: "Drag to resize", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "ck-input-grip" }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-input", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("textarea", { ref: textareaRef, placeholder: chatOpen ? "Ask a follow-up…" : "Ask about this contract…", value: value, onChange: (e) => setValue(e.target.value), onKeyDown: handleKeyDown, style: { height } }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: `ck-send${canSend ? "" : " disabled"}`, onClick: handleSend, disabled: !canSend, "aria-label": "Send", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", { viewBox: "0 0 24 24", width: "17", height: "17", "aria-hidden": "true", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", { d: "M12 19V6M12 6l-6 6M12 6l6 6", fill: "none", stroke: "currentColor", strokeWidth: "2.2", strokeLinecap: "round", strokeLinejoin: "round" }) }) })] })] }) }));
+}
+
+
+/***/ },
+
+/***/ "./src/taskpane/components/ChatPane.tsx"
+/*!**********************************************!*\
+  !*** ./src/taskpane/components/ChatPane.tsx ***!
+  \**********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ ChatPane)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services */ "./src/services/index.ts");
+/* harmony import */ var _ActionCard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ActionCard */ "./src/taskpane/components/ActionCard.tsx");
+
+
+
+
+/** Minimal inline rendering: **bold** spans, with line breaks preserved as
+ *  separate paragraphs so lists in the model's answer stay readable. */
+function renderContent(text) {
+    return text.split("\n").map((line, lineIdx) => {
+        if (line.trim() === "")
+            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-gap" }, lineIdx);
+        const parts = line.split(/(\*\*[^*]+\*\*)/g).filter(Boolean);
+        return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { children: parts.map((part, i) => part.startsWith("**") && part.endsWith("**") ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("strong", { children: part.slice(2, -2) }, i)) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { children: part }, i))) }, lineIdx));
+    });
+}
+function ChatPane({ messages, loading, error, onRetry }) {
+    const ref = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
+    const service = (0,_services__WEBPACK_IMPORTED_MODULE_2__.useDocumentService)();
+    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+        if (ref.current)
+            ref.current.scrollTop = ref.current.scrollHeight;
+    }, [messages, loading, error]);
+    // Jump to a cited clause; no-op gracefully if it can't be located.
+    const handleJump = (clauseRef) => {
+        void service.scrollTo({ clauseRef });
+    };
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-chat", ref: ref, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-daydiv", children: "Today" }), messages.map((m, i) => m.role === "user" ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-row user", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-bubble user", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { children: m.content }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-time", children: "Just now" })] }) }, i)) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-row", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-avatar", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", { src: "assets/ck-mark.svg", alt: "ClauseKit" }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { style: { flex: 1, minWidth: 0 }, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-bubble ai", children: renderContent(m.content) }), m.citations && m.citations.length > 0 && ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-cites", children: m.citations.map((ref) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", { className: "ck-cite", onClick: () => handleJump(ref), children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "pin" }), "Jump to ", ref, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "cite-arr", children: "\u203A" })] }, ref))) })), m.edit && ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-action-wrap", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ActionCard__WEBPACK_IMPORTED_MODULE_3__["default"], { edit: m.edit }) })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-time", children: "Just now" })] })] }, i))), loading && ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-row ck-thinking", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-avatar", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", { src: "assets/ck-mark.svg", alt: "ClauseKit" }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "t-bubble", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("i", {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("i", {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("i", {})] })] })), error && ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-row", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-avatar", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", { src: "assets/ck-mark.svg", alt: "ClauseKit" }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { style: { flex: 1, minWidth: 0 }, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-error-bubble", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { children: error }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: "ck-retry", onClick: onRetry, children: "Retry" })] }) })] }))] }));
+}
+
+
+/***/ },
+
+/***/ "./src/taskpane/components/EmptyState.tsx"
+/*!************************************************!*\
+  !*** ./src/taskpane/components/EmptyState.tsx ***!
+  \************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ EmptyState)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+
+const PROMPTS = [
+    "Is the 5% rent escalation off-market?",
+    "Are the tenant's repair obligations standard?",
+    "Is the personal guaranty unusual?",
+];
+function EmptyState({ onPrompt }) {
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-empty", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "e-sub", children: "Ask anything about this contract or pick a starting point below." }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "ck-suggest", children: PROMPTS.map((p) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", { className: "s-btn", onClick: () => onPrompt(p), children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "s-txt", children: p }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "s-ar", children: "\u203A" })] }, p))) })] }));
+}
+
+
+/***/ },
+
+/***/ "./src/taskpane/components/Simulator.tsx"
+/*!***********************************************!*\
+  !*** ./src/taskpane/components/Simulator.tsx ***!
+  \***********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Simulator)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _TermCard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TermCard */ "./src/taskpane/components/TermCard.tsx");
+
+
+function Simulator({ side, setSide, terms, headings, loading, error, run, ranSide, }) {
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-sim", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "sim-setup", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "sim-title", children: "Negotiation Simulator" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "sim-sub", children: "Pick your side:" })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "sim-side", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "sim-side-label", children: "I represent the" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "sim-toggle", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: `sim-seg${side === "tenant" ? " on" : ""}`, onClick: () => setSide("tenant"), disabled: loading, children: "Tenant" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: `sim-seg${side === "landlord" ? " on" : ""}`, onClick: () => setSide("landlord"), disabled: loading, children: "Landlord" })] })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: "ck-btn primary sim-run", onClick: run, disabled: loading, children: loading ? "War-gaming the lease…" : terms ? "Re-run war-game" : "War-game the lease" })] }), loading && ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "sim-loading", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "t-bubble", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("i", {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("i", {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("i", {})] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "sim-loading-text", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", { children: ["War-gaming the lease as the ", side, "\u2026"] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "sim-loading-hint", children: "This takes ~30 seconds \u2014 analyzing every term from both sides." })] })] })), error && !loading && ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "ck-error-bubble sim-error", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { children: error }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: "ck-retry", onClick: run, children: "Retry" })] })), !loading && !error && terms && terms.length === 0 && ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", { className: "sim-empty", children: ["No off-market terms surfaced for the ", ranSide, ". Try the other side."] })), !loading && terms && terms.length > 0 && ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "sim-brief", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", { className: "sim-count", children: [terms.length, " term", terms.length > 1 ? "s" : "", " to negotiate as the ", ranSide] }), terms.map((term, i) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_TermCard__WEBPACK_IMPORTED_MODULE_1__["default"], { term: term, heading: headings[term.clauseRef], side: ranSide ?? side }, i)))] })), !loading && !error && !terms && ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "sim-placeholder", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { children: "Run the war-game to see your fallback ladders and the counterparty's likely pushback." }) }))] }));
+}
+
+
+/***/ },
+
+/***/ "./src/taskpane/components/TermCard.tsx"
+/*!**********************************************!*\
+  !*** ./src/taskpane/components/TermCard.tsx ***!
+  \**********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ TermCard)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services */ "./src/services/index.ts");
+
+
+
+const TIER_LABELS = { ideal: "Ideal", market: "Market", floor: "Floor" };
+function TermCard({ term, heading, side }) {
+    const service = (0,_services__WEBPACK_IMPORTED_MODULE_2__.useDocumentService)();
+    const [appliedTier, setAppliedTier] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
+    const [pendingTier, setPendingTier] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
+    const [error, setError] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
+    const counterpartyName = side === "tenant" ? "landlord" : "tenant";
+    const applyRung = async (rung) => {
+        setPendingTier(rung.tier);
+        setError(null);
+        try {
+            const edit = {
+                clauseRef: term.clauseRef,
+                originalText: term.currentText,
+                proposedText: rung.proposedText,
+                rationale: rung.rationale,
+                severity: "high",
+            };
+            const result = await service.applyTrackedChange(edit);
+            switch (result.status) {
+                case "applied":
+                    setAppliedTier(rung.tier);
+                    await service.scrollTo({ clauseRef: result.clauseRef ?? term.clauseRef });
+                    break;
+                case "not-found":
+                    setError(`Couldn't find the ${term.clauseRef} language to redline` +
+                        (appliedTier ? " — a position was already applied here." : "."));
+                    break;
+                case "ambiguous":
+                    setError(`Found ${result.matchCount} matches in ${term.clauseRef}; can't redline unambiguously.`);
+                    break;
+            }
+        }
+        catch (e) {
+            setError(e instanceof Error ? e.message : "Failed to apply the change.");
+        }
+        finally {
+            setPendingTier(null);
+        }
+    };
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "sim-card", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "sim-card-head", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "sim-ref", children: term.clauseRef }), heading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "sim-heading", children: heading }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", { className: `sim-favors ${term.favoredParty}`, children: ["favors ", term.favoredParty] })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("details", { className: "sim-current", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("summary", { children: "Current language" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "sim-current-text", children: term.currentText })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "sim-ladder", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { className: "sim-ladder-label", children: "Your fallback ladder" }), term.yourLadder.map((rung) => {
+                        const isApplied = appliedTier === rung.tier;
+                        const isPending = pendingTier === rung.tier;
+                        const otherApplied = appliedTier !== null && !isApplied;
+                        return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: `sim-rung tier-${rung.tier}${isApplied ? " applied" : ""}`, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "sim-tier", children: TIER_LABELS[rung.tier] ?? rung.tier }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "sim-rung-text", children: rung.proposedText }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "sim-rung-rat", children: rung.rationale }), isApplied ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", { className: "ck-btn applied sim-apply", disabled: true, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "chk" }), " Applied"] })) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", { className: "ck-btn primary sim-apply", onClick: () => applyRung(rung), disabled: isPending || otherApplied, children: isPending ? "Applying…" : "Apply this position" }))] }, rung.tier));
+                    }), error && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "a-error", children: error })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "sim-counter", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", { className: "sim-counter-head", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", { className: "sim-counter-icon" }), "How the ", counterpartyName, " fights back"] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "sim-counter-pred", children: term.counterparty.predictedCounter }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", { className: "sim-counter-arg", children: term.counterparty.argument })] })] }));
+}
+
+
+/***/ }
+
+},
+/******/ __webpack_require__ => { // webpackRuntimeModules
+/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+/******/ var __webpack_exports__ = (__webpack_exec__("./src/playground/playground.tsx"), __webpack_exec__("./src/playground/playground.html"));
+/******/ }
+]);
 //# sourceMappingURL=playground.js.map

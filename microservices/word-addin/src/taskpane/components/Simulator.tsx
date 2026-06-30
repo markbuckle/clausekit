@@ -51,7 +51,12 @@ export default function Simulator({
             <i />
             <i />
           </div>
-          <span>War-gaming the lease as the {side}…</span>
+          <div className="sim-loading-text">
+            <span>War-gaming the lease as the {side}…</span>
+            <span className="sim-loading-hint">
+              This takes ~30 seconds — analyzing every term from both sides.
+            </span>
+          </div>
         </div>
       )}
 

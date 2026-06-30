@@ -1,0 +1,9 @@
+# Never bake secrets or local cruft into the image.
+.env
+.env.*
+node_modules
+npm-debug.log*
+Dockerfile
+.dockerignore
+*.md
+scripts

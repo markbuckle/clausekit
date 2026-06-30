@@ -7,6 +7,7 @@ import express from "express";
 // where the real env var is used instead.
 dotenv.config({ override: true });
 import cors from "cors";
+import rateLimit from "express-rate-limit";
 import Anthropic from "@anthropic-ai/sdk";
 
 /**
@@ -41,6 +42,41 @@ const NEGOTIATE_MODEL = process.env.NEGOTIATE_MODEL || "claude-haiku-4-5";
 const NEGOTIATE_MAX_TOKENS = 8000;
 const MAX_TERMS = 6;
 
+// ── Production hardening config (env-driven; localhost defaults for dev) ──
+
+// CORS allowlist. In prod set ALLOWED_ORIGINS to the deployed frontend/playground
+// origin(s), comma-separated. Defaults cover local dev: vite (5173/5174) and the
+// HTTPS add-in + playground dev servers (3000/3001).
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS ?? "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+const DEV_ORIGINS = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://localhost:3000",
+  "https://localhost:3001",
+];
+const ORIGIN_ALLOWLIST = ALLOWED_ORIGINS.length > 0 ? ALLOWED_ORIGINS : DEV_ORIGINS;
+
+// Per-IP rate limits: /api/ask generous, /api/negotiate tight (each negotiate is
+// ~4k+ tokens) with a low daily cap too.
+const ASK_PER_MIN = Number(process.env.ASK_RATE_PER_MIN) || 30;
+const NEGOTIATE_PER_MIN = Number(process.env.NEGOTIATE_RATE_PER_MIN) || 5;
+const NEGOTIATE_PER_DAY = Number(process.env.NEGOTIATE_RATE_PER_DAY) || 25;
+
+// App-level spend backstop: refuse new LLM requests once cumulative token usage
+// crosses this DAILY ceiling (resets each UTC day and on restart). The hard cap
+// in the Anthropic Console is the ultimate backstop; this just stops a stranger
+// running up the bill before that cap trips. ~1M tokens/day is generous for the
+// demo (hundreds of calls) while capping worst-case daily spend.
+// Explicit parse (not `|| default`) so DAILY_TOKEN_CEILING=0 works as an
+// emergency "halt all LLM requests" kill switch rather than coalescing to default.
+const DAILY_TOKEN_CEILING =
+  process.env.DAILY_TOKEN_CEILING !== undefined && process.env.DAILY_TOKEN_CEILING.trim() !== ""
+    ? Number(process.env.DAILY_TOKEN_CEILING)
+    : 10_000;
+
 if (!process.env.ANTHROPIC_API_KEY) {
   console.error("Missing ANTHROPIC_API_KEY. Set it in backend/.env (see .env.example).");
   process.exit(1);
@@ -48,6 +84,34 @@ if (!process.env.ANTHROPIC_API_KEY) {
 
 // Reads ANTHROPIC_API_KEY from the environment.
 const anthropic = new Anthropic();
+
+// ── In-memory daily spend backstop ──
+let usageDayKey = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD" (UTC)
+let tokensToday = 0;
+
+function recordUsage(u: Anthropic.Usage): void {
+  tokensToday +=
+    (u.input_tokens ?? 0) +
+    (u.cache_creation_input_tokens ?? 0) +
+    (u.cache_read_input_tokens ?? 0) +
+    (u.output_tokens ?? 0);
+}
+
+/** Refuse new LLM work once the daily token ceiling is hit. */
+function spendGuard(_req: express.Request, res: express.Response, next: express.NextFunction): void {
+  const today = new Date().toISOString().slice(0, 10);
+  if (today !== usageDayKey) {
+    usageDayKey = today;
+    tokensToday = 0;
+  }
+  if (tokensToday >= DAILY_TOKEN_CEILING) {
+    res
+      .status(503)
+      .json({ error: "ClauseKit's demo has hit its daily usage limit. Please check back tomorrow." });
+    return;
+  }
+  next();
+}
 
 type Severity = "low" | "medium" | "high";
 interface SuggestedEdit {
@@ -319,15 +383,46 @@ function validateTerms(raw: unknown, documentText: string): AnalyzedTerm[] {
 
 type HistoryTurn = { role: "user" | "assistant"; content: string };
 
+const rateLimitOptions = { standardHeaders: true as const, legacyHeaders: false as const };
+const askLimiter = rateLimit({
+  ...rateLimitOptions,
+  windowMs: 60_000,
+  max: ASK_PER_MIN,
+  message: { error: "Too many requests — please slow down and try again shortly." },
+});
+const negotiateMinuteLimiter = rateLimit({
+  ...rateLimitOptions,
+  windowMs: 60_000,
+  max: NEGOTIATE_PER_MIN,
+  message: { error: "Too many simulator runs — please wait a minute and try again." },
+});
+const negotiateDayLimiter = rateLimit({
+  ...rateLimitOptions,
+  windowMs: 24 * 60 * 60 * 1000,
+  max: NEGOTIATE_PER_DAY,
+  message: { error: "Daily limit for the negotiation simulator reached. Please try again tomorrow." },
+});
+
 const app = express();
-app.use(cors());
+// Behind a single proxy in prod (Cloud Run etc.) so req.ip reflects the real
+// client for rate limiting (not the proxy).
+app.set("trust proxy", 1);
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Allow non-browser clients (curl, health checks) that send no Origin.
+      if (!origin || ORIGIN_ALLOWLIST.includes(origin)) return callback(null, true);
+      return callback(null, false);
+    },
+  })
+);
 app.use(express.json({ limit: "1mb" }));
 
 app.get("/health", (_req, res) => {
-  res.json({ ok: true, model: MODEL });
+  res.json({ ok: true, model: MODEL, tokensToday });
 });
 
-app.post("/api/ask", async (req, res) => {
+app.post("/api/ask", askLimiter, spendGuard, async (req, res) => {
   const body = (req.body ?? {}) as {
     documentText?: unknown;
     message?: unknown;
@@ -414,6 +509,7 @@ app.post("/api/ask", async (req, res) => {
     }
 
     const u = response.usage;
+    recordUsage(u);
     console.log(
       `[ask] model=${MODEL} input=${u.input_tokens} ` +
         `cache_creation=${u.cache_creation_input_tokens ?? 0} ` +
@@ -434,7 +530,7 @@ app.post("/api/ask", async (req, res) => {
   }
 });
 
-app.post("/api/negotiate", async (req, res) => {
+app.post("/api/negotiate", negotiateDayLimiter, negotiateMinuteLimiter, spendGuard, async (req, res) => {
   const body = (req.body ?? {}) as { documentText?: unknown; side?: unknown };
 
   if (typeof body.documentText !== "string" || !body.documentText.trim()) {
@@ -481,6 +577,7 @@ app.post("/api/negotiate", async (req, res) => {
     }
 
     const u = response.usage;
+    recordUsage(u);
     console.log(
       `[negotiate] model=${NEGOTIATE_MODEL} side=${side} input=${u.input_tokens} ` +
         `cache_creation=${u.cache_creation_input_tokens ?? 0} ` +

@@ -1,1 +1,95 @@
-<!doctype html><html lang="en" data-framework="typescript"><head><meta charset="UTF-8"/><meta http-equiv="X-UA-Compatible" content="IE=Edge"/><meta name="viewport" content="width=device-width,initial-scale=1"><title>ClauseKit</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet"><script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script><script defer="defer" src="polyfill.js"></script><script defer="defer" src="react.js"></script><script defer="defer" src="taskpane.js"></script></head><body style="width:100%;height:100%;margin:0;padding:0"><div id="container"></div><div id="tridentmessage" style="display:none;padding:10">This add-in will not run in your version of Office. Please upgrade either to perpetual Office 2021 (or later) or to a Microsoft 365 account.</div><script>if(-1!==navigator.userAgent.indexOf("Trident")||-1!==navigator.userAgent.indexOf("Edge")){var tridentMessage=document.getElementById("tridentmessage"),normalContainer=document.getElementById("container");tridentMessage.style.display="block",normalContainer.style.display="none"}</script></body></html>
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license. -->
+<!-- See LICENSE in the project root for license information -->
+
+<!doctype html>
+<html lang="en" data-framework="typescript">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ClauseKit</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+
+    <!-- Design-system styles are imported by src/taskpane/index.tsx from
+         src/styles/clausekit.css (the single source of truth shared with the
+         browser playground). -->
+
+    <!-- Boot splash, shown until React mounts. Office's built-in task-pane
+         spinner runs on the WebView main thread, so it freezes while the JS
+         bundle parses/executes. This one animates only `transform`, which the
+         browser runs on the compositor thread — it keeps spinning during that
+         load. React clears #container's contents on mount, removing it. -->
+    <style>
+        #ck-boot {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            background: #fff;
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        #ck-boot .ck-boot-spinner {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 3px solid rgba(19, 19, 24, 0.12);
+            border-top-color: #131318;
+            animation: ck-boot-spin 0.7s linear infinite;
+            will-change: transform;
+        }
+        #ck-boot .ck-boot-text {
+            margin: 0;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            color: #6b7280;
+        }
+        @keyframes ck-boot-spin {
+            to { transform: rotate(360deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #ck-boot .ck-boot-spinner { animation-duration: 1.6s; }
+        }
+    </style>
+<script defer src="polyfill.js"></script><script defer src="react.js"></script><script defer src="taskpane.js"></script></head>
+
+<body style="width: 100%; height: 100%; margin: 0; padding: 0;">
+    <div id="container">
+        <div id="ck-boot" role="status" aria-label="Loading ClauseKit">
+            <div class="ck-boot-spinner"></div>
+            <p class="ck-boot-text">Loading ClauseKit&hellip;</p>
+        </div>
+    </div>
+
+    <!--
+        Fluent UI React v. 9 uses modern JavaScript syntax that is not supported in
+        Trident (Internet Explorer) or EdgeHTML (Edge Legacy), so this add-in won't
+        work in Office versions that use these webviews. The script below makes the
+        following div display when an unsupported webview is in use, and hides the
+        React container div.
+    -->
+    <div id="tridentmessage" style="display: none; padding: 10;">
+        This add-in will not run in your version of Office. Please upgrade either to perpetual Office 2021 (or later)
+        or to a Microsoft 365 account.
+    </div>
+    <script>
+        if ((navigator.userAgent.indexOf("Trident") !== -1) || (navigator.userAgent.indexOf("Edge") !== -1)) {
+            var tridentMessage = document.getElementById("tridentmessage");
+            var normalContainer = document.getElementById("container");
+            tridentMessage.style.display = "block";
+            normalContainer.style.display = "none";
+        }
+    </script>
+</body>
+
+</html>

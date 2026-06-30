@@ -216,6 +216,8 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .sim-run { justify-content: center; }
 
 .sim-loading { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: 12.5px; padding: 4px 2px; }
+.sim-loading-text { display: flex; flex-direction: column; gap: 2px; }
+.sim-loading-hint { font-size: 11px; color: var(--text-secondary); opacity: .8; }
 .sim-error { border-radius: 8px; }
 .sim-empty { text-align: center; color: var(--text-secondary); font-size: 12.5px; line-height: 1.55; padding: 20px 18px; }
 .sim-placeholder { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; color: var(--text-secondary); font-size: 12.5px; line-height: 1.55; padding: 0px 22px; }
