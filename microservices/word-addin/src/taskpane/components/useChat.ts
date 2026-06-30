@@ -54,7 +54,15 @@ export function useChat(): UseChat {
           }),
         });
         if (!res.ok) {
-          throw new Error(`The assistant is unavailable (error ${res.status}).`);
+          // Prefer the server's user-facing message (rate limit, spend cap, …).
+          let serverError: string | null = null;
+          try {
+            const body = (await res.json()) as { error?: unknown };
+            if (typeof body.error === "string") serverError = body.error;
+          } catch {
+            /* no JSON body */
+          }
+          throw new Error(serverError || `The assistant is unavailable (error ${res.status}).`);
         }
         const data = (await res.json()) as {
           answer?: string;

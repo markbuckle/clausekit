@@ -277,7 +277,15 @@ function useChat() {
         })
       });
       if (!res.ok) {
-        throw new Error(`The assistant is unavailable (error ${res.status}).`);
+        // Prefer the server's user-facing message (rate limit, spend cap, …).
+        let serverError = null;
+        try {
+          const body = await res.json();
+          if (typeof body.error === "string") serverError = body.error;
+        } catch {
+          /* no JSON body */
+        }
+        throw new Error(serverError || `The assistant is unavailable (error ${res.status}).`);
       }
       const data = await res.json();
       const answer = (data.answer ?? "").trim();
@@ -388,7 +396,15 @@ function useNegotiate() {
         })
       });
       if (!res.ok) {
-        throw new Error(`The simulator is unavailable (error ${res.status}).`);
+        // Prefer the server's user-facing message (rate limit, spend cap, …).
+        let serverError = null;
+        try {
+          const body = await res.json();
+          if (typeof body.error === "string") serverError = body.error;
+        } catch {
+          /* no JSON body */
+        }
+        throw new Error(serverError || `The simulator is unavailable (error ${res.status}).`);
       }
       const data = await res.json();
       setTerms(Array.isArray(data.terms) ? data.terms : []);
