@@ -491,7 +491,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 
 /* Scroll-down chevron near the bottom of the intro viewport (no chrome — just a
    white/grey gradient arrow that bounces to invite a scroll). */
-.tut-scroll { position: absolute; left: 50%; bottom: 60px; transform: translateX(-50%); display: block; line-height: 0; opacity: .92; transition: opacity .2s ease; }
+.tut-scroll { position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%); display: block; line-height: 0; opacity: .92; transition: opacity .2s ease; }
 .tut-scroll:hover { opacity: 1; }
 
 /* Gentle scroll-snap so each section frames itself (scoped to this page via the
