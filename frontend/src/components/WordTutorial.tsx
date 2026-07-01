@@ -93,7 +93,7 @@ export default function WordTutorial() {
               <div className="tut-step-text">
                 <span className="tut-num">{i + 1}</span>
                 <div>
-                  <h3 className="tut-step-title">{s.title}</h3>
+                  <h3 className="tut-step-title serif-grad">{s.title}</h3>
                   <p className="tut-step-body">{s.body}</p>
                 </div>
               </div>
@@ -104,7 +104,7 @@ export default function WordTutorial() {
             <div className="tut-step-text">
               <span className="tut-num">6</span>
               <div>
-                <h3 className="tut-step-title">Run it</h3>
+                <h3 className="tut-step-title serif-grad">Run it</h3>
                 <p className="tut-step-body">
                   The <b>ClauseKit</b> button appears on the Home tab. Click it, ask &ldquo;is the 5%
                   escalation off-market?&rdquo;, and hit <b>Apply</b> — the §5 edit lands as a native
