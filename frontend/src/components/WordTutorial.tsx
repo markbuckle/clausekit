@@ -8,79 +8,23 @@ import wordstep3 from '../../assets/tutorial/wordstep3.jpg';
 import wordstep4 from '../../assets/tutorial/wordstep4.jpg';
 import wordstep5 from '../../assets/tutorial/wordstep5.jpg';
 import wordstep6 from '../../assets/tutorial/wordstep6.jpg';
+import wordstep7 from '../../assets/tutorial/wordstep7.jpg';
 
 /**
  * "Run in Word" opens the hosted sample lease in Word for the web via the Office
- * Online viewer, which shows it with an "Edit a Copy" button (tutorial step 1) —
- * that saves an editable copy to the user's OneDrive (prompting sign-in if needed).
- * Requires the lease to be publicly reachable, i.e. deployed — not on localhost.
+ * Online viewer, which shows it with an "Edit a Copy" button — that saves an
+ * editable copy to the user's OneDrive (prompting sign-in if needed). Requires
+ * the lease to be publicly reachable, i.e. deployed — not on localhost.
  */
 const OFFICE_VIEWER = 'https://view.officeapps.live.com/op/view.aspx?src=';
 
 interface Step {
-  img: string;
-  alt: string;
   title: string;
   body: ReactNode;
+  img?: string;
+  alt?: string;
+  cta?: ReactNode;
 }
-
-const STEPS: Step[] = [
-  {
-    img: wordstep1,
-    alt: 'Word for the web showing the "Edit a Copy" button',
-    title: 'Open the sample lease, then click "Edit a Copy"',
-    body: (
-      <>
-        A downloaded doc opens read-only in Word for the web — click <b>Edit a Copy</b> (top right) so
-        you can edit it.
-      </>
-    ),
-  },
-  {
-    img: wordstep2,
-    alt: 'The Add-ins button near the right end of the Home ribbon',
-    title: 'On the Home tab, click "Add-ins"',
-    body: <>It sits near the right end of the <b>Home</b> ribbon.</>,
-  },
-  {
-    img: wordstep3,
-    alt: 'The "More Add-ins" button at the bottom of the Add-ins panel',
-    title: 'Click "More Add-ins"',
-    body: <>At the bottom of the Add-ins panel that opens.</>,
-  },
-  {
-    img: wordstep4,
-    alt: 'The "Manage My Add-ins" dropdown in the Office Add-ins dialog',
-    title: 'Open "Manage My Add-ins"',
-    body: (
-      <>
-        Top-right of the Office Add-ins dialog. A &ldquo;Cannot connect to catalog&rdquo; note is
-        harmless — ignore it.
-      </>
-    ),
-  },
-  {
-    img: wordstep5,
-    alt: 'The "Upload My Add-in" option',
-    title: 'Choose "Upload My Add-in" and pick the manifest',
-    body: (
-      <>
-        Browse to the <code>clausekit-manifest.xml</code> you downloaded and upload it.
-      </>
-    ),
-  },
-  {
-    img: wordstep6,
-    alt: 'The ClauseKit pane applying a tracked change in Word',
-    title: 'Run it',
-    body: (
-      <>
-        The <b>ClauseKit</b> button appears on the Home tab. Click it, ask &ldquo;is the 5% escalation
-        off-market?&rdquo;, and hit <b>Apply</b> — the §5 edit lands as a native tracked change.
-      </>
-    ),
-  },
-];
 
 export default function WordTutorial() {
   // Absolute, public URL to the hosted lease (same origin as this landing page),
@@ -88,26 +32,111 @@ export default function WordTutorial() {
   const leaseSrc = `${window.location.origin}${LEASE_DOCX_URL}`;
   const runInWordUrl = `${OFFICE_VIEWER}${encodeURIComponent(leaseSrc)}`;
 
+  const steps: Step[] = [
+    {
+      title: 'Download the ClauseKit add-in',
+      body: <>Grab the add-in — a small manifest file you&apos;ll load into Word in a moment.</>,
+      cta: (
+        <div className="tut-step-cta">
+          <a className="btn demo" href={MANIFEST_URL} download="clausekit-manifest.xml">
+            Download the add-in
+          </a>
+        </div>
+      ),
+    },
+    {
+      img: wordstep1,
+      alt: 'The sample lease open in Word for the web with an "Edit a Copy" button',
+      title: 'Open the sample lease in Word, then "Edit a Copy"',
+      body: (
+        <>
+          Click <b>Run in Word</b> to open the lease in Word for the web, then <b>Edit a Copy</b> (top
+          right) so you can edit it. Or download the lease and open it in Word yourself.
+        </>
+      ),
+      cta: (
+        <div className="tut-step-cta">
+          <a className="btn demo" href={runInWordUrl} target="_blank" rel="noopener noreferrer">
+            Run in Word
+          </a>
+          <span className="tut-or">or</span>
+          <a className="btn demo" href={LEASE_DOCX_URL} download>
+            Download the sample lease
+          </a>
+        </div>
+      ),
+    },
+    {
+      img: wordstep2,
+      alt: 'The Add-ins button near the right end of the Home ribbon',
+      title: 'On the Home tab, click "Add-ins"',
+      body: <>It sits near the right end of the <b>Home</b> ribbon.</>,
+    },
+    {
+      img: wordstep3,
+      alt: 'The "More Add-ins" button at the bottom of the Add-ins panel',
+      title: 'Click "More Add-ins"',
+      body: <>At the bottom of the Add-ins panel that opens.</>,
+    },
+    {
+      img: wordstep4,
+      alt: 'The "Manage My Add-ins" dropdown in the Office Add-ins dialog',
+      title: 'Open "Manage My Add-ins"',
+      body: (
+        <>
+          Top-right of the Office Add-ins dialog. A &ldquo;Cannot connect to catalog&rdquo; note is
+          harmless — ignore it.
+        </>
+      ),
+    },
+    {
+      img: wordstep5,
+      alt: 'The "Upload My Add-in" option',
+      title: 'Choose "Upload My Add-in" and pick the manifest',
+      body: (
+        <>
+          Browse to the <code>clausekit-manifest.xml</code> you downloaded in step 1 and upload it.
+        </>
+      ),
+    },
+    {
+      img: wordstep6,
+      alt: 'The ClauseKit button on the Home tab opening the task pane',
+      title: 'Open the ClauseKit pane',
+      body: (
+        <>
+          The <b>ClauseKit</b> button appears on the Home tab — click it to open the review pane.
+        </>
+      ),
+    },
+    {
+      img: wordstep7,
+      alt: 'ClauseKit applying a redline as a native tracked change',
+      title: 'Ask a question, then Apply',
+      body: (
+        <>
+          Ask &ldquo;is the 5% escalation off-market?&rdquo; and hit <b>Apply</b> — the §5 edit lands
+          as a native tracked change.
+        </>
+      ),
+    },
+  ];
+
   return (
     <section className="section" id="word-tutorial">
       <div className="wrap">
         <div className="tut-head">
-          <h2 className="serif-grad">
-            Add <span className="text-gold-grad">ClauseKit</span> to your <span className="text-blue-grad">Word</span> in minutes
-          </h2>
+          <h1 className="serif-grad">
+            Add <span className="text-gold-grad">ClauseKit</span> to your{' '}
+            <span className="text-blue-grad">Word</span> in minutes
+          </h1>
           <p className="tut-intro">
-            Works in Word for the web or desktop with a Microsoft&nbsp;365 account. Download the
-            add-in, then follow the steps.
+            Works in Word for the web or desktop with a Microsoft&nbsp;365 account.
           </p>
-          <div className="cta-btns">
-            <a className="btn demo lg" href={MANIFEST_URL} download="clausekit-manifest.xml">
-              Download the add-in
-            </a>
-          </div>
         </div>
 
         <ol className="tut-steps">
-          {STEPS.map((s, i) => (
+          {steps.map((s, i) => (
             <li className="tut-step" key={i}>
               <div className="tut-step-text">
                 <span className="tut-num">{i + 1}</span>
@@ -116,28 +145,11 @@ export default function WordTutorial() {
                   <p className="tut-step-body">{s.body}</p>
                 </div>
               </div>
-              <img className="tut-shot" src={s.img} alt={s.alt} loading="lazy" />
+              {s.img && <img className="tut-shot" src={s.img} alt={s.alt} loading="lazy" />}
+              {s.cta}
             </li>
           ))}
         </ol>
-
-        <div className="tut-foot">
-          <p className="tut-foot-lead">You can</p>
-          <div className="cta-btns">
-            <a className="btn demo lg blue" href={LEASE_DOCX_URL} download>
-              Download the sample lease
-            </a>
-            <span className="tut-or">or</span>
-            <a
-              className="btn demo lg blue"
-              href={runInWordUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Run in Word
-            </a>
-          </div>
-        </div>
       </div>
     </section>
   );
