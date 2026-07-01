@@ -442,6 +442,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 
 /* "Add ClauseKit to your Word" tutorial */
 .tut-head { text-align: center; }
+.tut-head h1 { font-size: clamp(36px, 5.2vw, 54px); line-height: 1.08; }
 .tut-intro { max-width: 560px; margin: 10px auto 24px; color: var(--muted, #5b6472); line-height: 1.55; }
 .tut-steps { list-style: none; max-width: 740px; margin: 48px auto 0; padding: 0; display: flex; flex-direction: column; gap: 44px; }
 .tut-step-text { display: flex; gap: 14px; align-items: flex-start; }
