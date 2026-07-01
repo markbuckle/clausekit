@@ -153,7 +153,7 @@ export default function WordTutorial() {
           <p className="tut-alt-lead">Alternatively,</p>
           <div className="tut-step-cta">
             <a className="btn demo" href={LEASE_DOCX_URL} download>
-              Download the sample lease
+              Download the external .docx
             </a>
           </div>
         </div>
