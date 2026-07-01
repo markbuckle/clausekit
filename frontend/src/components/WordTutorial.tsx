@@ -1,8 +1,13 @@
 import type { ReactNode } from 'react';
 import { LEASE_DOCX_URL, MANIFEST_URL } from '../config';
 
-/** Opens Word for the web (a new tab). Users then open the sample lease there. */
-const WORD_ONLINE_URL = 'https://www.office.com/launch/word';
+/**
+ * "Run in Word" opens the hosted sample lease in Word for the web via the Office
+ * Online viewer, which shows it with an "Edit a Copy" button (tutorial step 1) —
+ * that saves an editable copy to the user's OneDrive (prompting sign-in if needed).
+ * Requires the lease to be publicly reachable, i.e. deployed — not on localhost.
+ */
+const OFFICE_VIEWER = 'https://view.officeapps.live.com/op/view.aspx?src=';
 
 interface Step {
   img: string;
@@ -59,6 +64,11 @@ const STEPS: Step[] = [
 ];
 
 export default function WordTutorial() {
+  // Absolute, public URL to the hosted lease (same origin as this landing page),
+  // fed to the Office viewer so "Run in Word" opens the actual document.
+  const leaseSrc = `${window.location.origin}${LEASE_DOCX_URL}`;
+  const runInWordUrl = `${OFFICE_VIEWER}${encodeURIComponent(leaseSrc)}`;
+
   return (
     <section className="section" id="word-tutorial">
       <div className="wrap">
@@ -111,7 +121,7 @@ export default function WordTutorial() {
           </a>
           <a
             className="btn demo lg blue"
-            href={WORD_ONLINE_URL}
+            href={runInWordUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
