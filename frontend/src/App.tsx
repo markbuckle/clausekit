@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import Nav from './components/Nav';
 import Hero from './components/Hero';
 import ProductShot from './components/ProductShot';
@@ -99,13 +99,20 @@ function useScrollAnimations() {
       cleanups.push(() => window.clearTimeout(heroTimer));
     }
 
-    // ---- Run-in-Word page: fade the tutorial in after the nav drops, mirroring
-    //      the hero's timed reveal (this section only exists on /run-in-word). ----
-    const tutorial = document.querySelector<HTMLElement>('#word-tutorial');
-    if (tutorial) {
-      arm(tutorial, ['ck-up', 'ck-hero']);
-      const tutTimer = window.setTimeout(() => enter(tutorial), HERO_REVEAL_DELAY);
+    // ---- Run-in-Word page: full-viewport sections. The intro reveals on load
+    //      (after the nav drops, mirroring the hero); each step and the closing
+    //      card reveal as they scroll to the centre of the viewport. ----
+    const introInner = document.querySelector<HTMLElement>('.tut-head-inner');
+    if (introInner) {
+      arm(introInner, ['ck-up', 'ck-hero']);
+      const tutTimer = window.setTimeout(() => enter(introInner), HERO_REVEAL_DELAY);
       cleanups.push(() => window.clearTimeout(tutTimer));
+
+      q('.tut-step-inner, .tut-alt-inner').forEach((inner) => {
+        const section = inner.closest('.tut-step, .tut-alt') ?? inner;
+        arm(inner, ['ck-up', 'ck-slow']);
+        onEnter(section, () => enter(inner), { threshold: 0, rootMargin: '-30% 0px -30% 0px' });
+      });
     }
 
     // ---- Pillars heading (only the eyebrow-row renders) ----
@@ -246,6 +253,15 @@ export default function App() {
   // rewrite (frontend/vercel.json) so /run-in-word serves index.html.
   const path = window.location.pathname.replace(/\/+$/, '');
   const isTutorial = path === '/run-in-word';
+
+  // Enable gentle scroll-snap only on the Run-in-Word page (the class lives on
+  // <html>, so it must be scoped by route rather than in static CSS).
+  useEffect(() => {
+    if (!isTutorial) return;
+    const el = document.documentElement;
+    el.classList.add('tut-snap');
+    return () => el.classList.remove('tut-snap');
+  }, [isTutorial]);
 
   return (
     <>

@@ -122,39 +122,47 @@ export default function WordTutorial() {
     <section className="section" id="word-tutorial">
       <div className="wrap">
         <div className="tut-head">
-          <h1 className="serif-grad">
-            Add <span className="text-gold-grad">ClauseKit</span> to your{' '}
-            <span className="text-blue-grad">Word</span> in minutes
-          </h1>
-          <p className="tut-intro">
-            Works in Word for the web or desktop with a Microsoft&nbsp;365 account.
-          </p>
+          <div className="tut-head-inner">
+            <h1 className="serif-grad">
+              Add <span className="text-gold-grad">ClauseKit</span> to your{' '}
+              <span className="text-blue-grad">Word</span> in minutes
+            </h1>
+            <p className="tut-intro">
+              Works in Word for the web or desktop with a Microsoft&nbsp;365 account.
+            </p>
+          </div>
+          <a className="tut-scroll" href="#step-1" aria-label="Scroll to step 1">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor"
+              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 8.5 12 15l7-6.5" />
+            </svg>
+          </a>
         </div>
 
         <ol className="tut-steps">
           {steps.map((s, i) => (
-            <li className="tut-step" key={i}>
-              <div className="tut-step-text">
+            <li className="tut-step" id={`step-${i + 1}`} key={i}>
+              <div className="tut-step-inner">
                 <span className="tut-num">
                   <span>{i + 1}</span>
                 </span>
-                <div>
-                  <h3 className="tut-step-title serif-grad">{s.title}</h3>
-                  <p className="tut-step-body">{s.body}</p>
-                </div>
+                <h3 className="tut-step-title serif-grad">{s.title}</h3>
+                <p className="tut-step-body">{s.body}</p>
+                {s.cta}
+                {s.img && <img className="tut-shot" src={s.img} alt={s.alt} loading="lazy" />}
               </div>
-              {s.cta}
-              {s.img && <img className="tut-shot" src={s.img} alt={s.alt} loading="lazy" />}
             </li>
           ))}
         </ol>
 
         <div className="tut-alt">
-          <p className="tut-alt-lead">Alternatively,</p>
-          <div className="tut-step-cta">
-            <a className="btn demo" href={LEASE_DOCX_URL} download>
-              Download the external .docx
-            </a>
+          <div className="tut-alt-inner">
+            <p className="tut-alt-lead">Alternatively,</p>
+            <div className="tut-step-cta">
+              <a className="btn demo" href={LEASE_DOCX_URL} download>
+                Download the external .docx
+              </a>
+            </div>
           </div>
         </div>
       </div>
