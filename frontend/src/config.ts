@@ -14,3 +14,9 @@ export const PLAYGROUND_URL =
 
 /** The sample lease offered on the "run in real Word" path (served from public/). */
 export const LEASE_DOCX_URL = import.meta.env.VITE_LEASE_DOCX_URL ?? "/lease.docx";
+
+/**
+ * The add-in manifest for "Upload My Add-in" (served from public/). Its
+ * SourceLocation points at the hosted task pane, which calls the deployed backend.
+ */
+export const MANIFEST_URL = "/manifest.xml";

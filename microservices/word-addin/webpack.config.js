@@ -6,7 +6,10 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 
 const urlDev = "https://localhost:3000/";
-const urlProd = "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
+// Production host for the add-in's manifest URLs (taskpane, icons). The canonical
+// prod manifest is frontend/public/manifest.xml; this keeps a webpack-built
+// dist/manifest.xml consistent too. Override via ADDIN_BASE_URL.
+const urlProd = process.env.ADDIN_BASE_URL || "https://clausekit-delta.vercel.app/";
 
 async function getHttpsOptions() {
   const httpsOptions = await devCerts.getHttpsServerOptions();
