@@ -11,6 +11,7 @@ import Security from './components/Security';
 import Stats from './components/Stats';
 import Testimonial from './components/Testimonial';
 import RunInWord from './components/RunInWord';
+import WordTutorial from './components/WordTutorial';
 import FinalCta from './components/FinalCta';
 import FooterWordmark from './components/FooterWordmark';
 import Footer from './components/Footer';
@@ -247,6 +248,9 @@ export default function App() {
         {/* <Stats /> */}
         {/* <Testimonial /> */}
         <FinalCta />
+        {/* Visual walk-through for adding the add-in to real Word (Upload My Add-in),
+            with the manifest download. Sits under the demo CTA. */}
+        <WordTutorial />
         {/* RunInWord section retired: the "Run in Word" CTA in FinalCta now
             downloads the sample lease (.docx) directly instead of scrolling here. */}
         {/* <RunInWord /> */}
