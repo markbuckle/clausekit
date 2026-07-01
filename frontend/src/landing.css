@@ -459,7 +459,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
   padding: 84px 0 48px; /* clear the sticky nav, keep content roughly centred */
 }
 /* Intro heading sits a touch higher than the steps. */
-.tut-head { padding-top: 52px; }
+.tut-head { padding-top: 16px; }
 .tut-head-inner,
 .tut-step-inner,
 .tut-alt-inner {
