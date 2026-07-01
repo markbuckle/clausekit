@@ -74,7 +74,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
   background: linear-gradient(90deg, #f2cb3a 0%, #dd8a1a 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-
+.text-blue-grad {
+  background: linear-gradient(90deg, #3a8df2 0%, #0f76cf 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
 /* ============================================================
    NAV
    ============================================================ */
@@ -448,8 +451,18 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 .tut-step-body code { font-family: 'Roboto Mono', ui-monospace, monospace; font-size: 12.5px; background: rgba(0,0,0,.06); border-radius: 5px; padding: 2px 6px; }
 .tut-shot { display: block; width: 100%; max-width: 640px; margin: 16px 0 0 44px; border: 1px solid #e3e6ea; border-radius: 10px; box-shadow: 0 6px 26px rgba(17,24,39,.10); }
 @media (max-width: 640px) { .tut-shot { margin-left: 0; } }
-.tut-foot-btns { margin-top: 48px; }
-#word-tutorial .cta-btns { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; }
+.tut-foot { margin-top: 48px; text-align: center; }
+.tut-foot-lead { font-size: 15px; color: var(--muted); margin: 0 0 16px; }
+.tut-or { color: var(--faint); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; }
+#word-tutorial .cta-btns { display: flex; justify-content: center; align-items: center; gap: 18px; flex-wrap: wrap; }
+
+/* Tutorial buttons: drop the amber accent line + glow, blue hover for all. */
+#word-tutorial .cta-btns .btn.demo::before { background: #0b0b0d; }
+#word-tutorial .cta-btns .btn.demo::after { display: none; }
+#word-tutorial .cta-btns .btn.demo:hover {
+  border-color: rgba(125, 185, 245, 0.5);
+  box-shadow: 0 0 20px rgba(125, 185, 245, 0.45);
+}
 
 /* Footer wordmark */
 .footer-wordmark {

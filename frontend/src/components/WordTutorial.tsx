@@ -74,7 +74,7 @@ export default function WordTutorial() {
       <div className="wrap">
         <div className="tut-head">
           <h2 className="serif-grad">
-            Add ClauseKit to your Word in <span className="text-gold-grad">2 minutes</span>
+            Add <span className="text-gold-grad">ClauseKit</span> to your <span className="text-blue-grad">Word</span> in minutes
           </h2>
           <p className="tut-intro">
             Works in Word for the web or desktop with a Microsoft&nbsp;365 account. Download the
@@ -115,18 +115,22 @@ export default function WordTutorial() {
           </li>
         </ol>
 
-        <div className="cta-btns tut-foot-btns">
-          <a className="btn demo lg blue" href={LEASE_DOCX_URL} download>
-            Download the sample lease
-          </a>
-          <a
-            className="btn demo lg blue"
-            href={runInWordUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Run in Word
-          </a>
+        <div className="tut-foot">
+          <p className="tut-foot-lead">You can</p>
+          <div className="cta-btns">
+            <a className="btn demo lg blue" href={LEASE_DOCX_URL} download>
+              Download the sample lease
+            </a>
+            <span className="tut-or">or</span>
+            <a
+              className="btn demo lg blue"
+              href={runInWordUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Run in Word
+            </a>
+          </div>
         </div>
       </div>
     </section>
