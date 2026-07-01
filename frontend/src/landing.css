@@ -454,8 +454,9 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 @media (max-width: 640px) { .tut-shot { margin-left: 0; } }
 .tut-or { color: var(--faint); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; }
 /* Per-step action buttons — aligned under the step text, left. */
-.tut-step-cta { margin: 18px 0 0 44px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-@media (max-width: 640px) { .tut-step-cta { margin-left: 0; } }
+.tut-step-cta { margin: 16px 0; display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; }
+.tut-alt { margin-top: 44px; text-align: center; }
+.tut-alt-lead { font-size: 15px; color: var(--muted); margin: 0; }
 
 /* Tutorial buttons: no amber glow, blue hover (base .btn.demo is already amber-free). */
 #word-tutorial .btn.demo:hover {

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { LEASE_DOCX_URL, MANIFEST_URL } from '../config';
 // Imported so Vite bundles + hashes them (files under frontend/assets/ aren't
-// served by URL — only frontend/public/ is). Same pattern as Nav/Footer/Hero.
+// served by URL - only frontend/public/ is). Same pattern as Nav/Footer/Hero.
 import wordstep1 from '../../assets/tutorial/wordstep1.jpg';
 import wordstep2 from '../../assets/tutorial/wordstep2.jpg';
 import wordstep3 from '../../assets/tutorial/wordstep3.jpg';
@@ -11,10 +11,10 @@ import wordstep6 from '../../assets/tutorial/wordstep6.jpg';
 import wordstep7 from '../../assets/tutorial/wordstep7.jpg';
 
 /**
- * "Run in Word" opens the hosted sample lease in Word for the web via the Office
- * Online viewer, which shows it with an "Edit a Copy" button — that saves an
+ * "Open in Word" opens the hosted sample lease in Word for the web via the Office
+ * Online viewer, which shows it with an "Edit a Copy" button - that saves an
  * editable copy to the user's OneDrive (prompting sign-in if needed). Requires
- * the lease to be publicly reachable, i.e. deployed — not on localhost.
+ * the lease to be publicly reachable, i.e. deployed - not on localhost.
  */
 const OFFICE_VIEWER = 'https://view.officeapps.live.com/op/view.aspx?src=';
 
@@ -28,14 +28,14 @@ interface Step {
 
 export default function WordTutorial() {
   // Absolute, public URL to the hosted lease (same origin as this landing page),
-  // fed to the Office viewer so "Run in Word" opens the actual document.
+  // fed to the Office viewer so "Open in Word" opens the actual document.
   const leaseSrc = `${window.location.origin}${LEASE_DOCX_URL}`;
-  const runInWordUrl = `${OFFICE_VIEWER}${encodeURIComponent(leaseSrc)}`;
+  const openInWordUrl = `${OFFICE_VIEWER}${encodeURIComponent(leaseSrc)}`;
 
   const steps: Step[] = [
     {
       title: 'Download the ClauseKit add-in',
-      body: <>Grab the add-in — a small manifest file you&apos;ll load into Word in a moment.</>,
+      body: <>Grab the add-in - a small manifest file you&apos;ll load into Word in a moment.</>,
       cta: (
         <div className="tut-step-cta">
           <a className="btn demo" href={MANIFEST_URL} download="clausekit-manifest.xml">
@@ -50,18 +50,14 @@ export default function WordTutorial() {
       title: 'Open the sample lease in Word, then "Edit a Copy"',
       body: (
         <>
-          Click <b>Run in Word</b> to open the lease in Word for the web, then <b>Edit a Copy</b> (top
-          right) so you can edit it. Or download the lease and open it in Word yourself.
+          Click <b>Open in Word</b> to open the lease in Word for the web, then <b>Edit a Copy</b> (top
+          right) so you can edit it.
         </>
       ),
       cta: (
         <div className="tut-step-cta">
-          <a className="btn demo" href={runInWordUrl} target="_blank" rel="noopener noreferrer">
-            Run in Word
-          </a>
-          <span className="tut-or">or</span>
-          <a className="btn demo" href={LEASE_DOCX_URL} download>
-            Download the sample lease
+          <a className="btn demo" href={openInWordUrl} target="_blank" rel="noopener noreferrer">
+            Open in Word
           </a>
         </div>
       ),
@@ -85,7 +81,7 @@ export default function WordTutorial() {
       body: (
         <>
           Top-right of the Office Add-ins dialog. A &ldquo;Cannot connect to catalog&rdquo; note is
-          harmless — ignore it.
+          harmless - ignore it.
         </>
       ),
     },
@@ -105,7 +101,7 @@ export default function WordTutorial() {
       title: 'Open the ClauseKit pane',
       body: (
         <>
-          The <b>ClauseKit</b> button appears on the Home tab — click it to open the review pane.
+          The <b>ClauseKit</b> button appears on the Home tab - click it to open the review pane.
         </>
       ),
     },
@@ -115,7 +111,7 @@ export default function WordTutorial() {
       title: 'Ask a question, then Apply',
       body: (
         <>
-          Ask &ldquo;is the 5% escalation off-market?&rdquo; and hit <b>Apply</b> — the §5 edit lands
+          Ask &ldquo;is the 5% escalation off-market?&rdquo; and hit <b>Apply</b> - the §5 edit lands
           as a native tracked change.
         </>
       ),
@@ -147,11 +143,20 @@ export default function WordTutorial() {
                   <p className="tut-step-body">{s.body}</p>
                 </div>
               </div>
-              {s.img && <img className="tut-shot" src={s.img} alt={s.alt} loading="lazy" />}
               {s.cta}
+              {s.img && <img className="tut-shot" src={s.img} alt={s.alt} loading="lazy" />}
             </li>
           ))}
         </ol>
+
+        <div className="tut-alt">
+          <p className="tut-alt-lead">Alternatively,</p>
+          <div className="tut-step-cta">
+            <a className="btn demo" href={LEASE_DOCX_URL} download>
+              Download the sample lease
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   );
