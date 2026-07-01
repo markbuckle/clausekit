@@ -448,6 +448,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 .tut-step-body code { font-family: 'Roboto Mono', ui-monospace, monospace; font-size: 12.5px; background: rgba(0,0,0,.06); border-radius: 5px; padding: 2px 6px; }
 .tut-shot { display: block; width: 100%; max-width: 640px; margin: 16px 0 0 44px; border: 1px solid #e3e6ea; border-radius: 10px; box-shadow: 0 6px 26px rgba(17,24,39,.10); }
 @media (max-width: 640px) { .tut-shot { margin-left: 0; } }
+.tut-foot-btns { margin-top: 48px; }
 
 /* Footer wordmark */
 .footer-wordmark {

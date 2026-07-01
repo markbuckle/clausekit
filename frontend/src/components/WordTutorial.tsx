@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react';
 import { LEASE_DOCX_URL, MANIFEST_URL } from '../config';
 
+/** Opens Word for the web (a new tab). Users then open the sample lease there. */
+const WORD_ONLINE_URL = 'https://www.office.com/launch/word';
+
 interface Step {
   img: string;
   alt: string;
@@ -64,15 +67,12 @@ export default function WordTutorial() {
             Add ClauseKit to your Word in <span className="text-gold-grad">2 minutes</span>
           </h2>
           <p className="tut-intro">
-            Works in Word for the web or desktop with a Microsoft&nbsp;365 account. Grab both files,
-            then follow the steps.
+            Works in Word for the web or desktop with a Microsoft&nbsp;365 account. Download the
+            add-in, then follow the steps.
           </p>
           <div className="cta-btns">
-            <a className="btn primary lg" href={MANIFEST_URL} download="clausekit-manifest.xml">
+            <a className="btn demo lg" href={MANIFEST_URL} download="clausekit-manifest.xml">
               Download the add-in
-            </a>
-            <a className="btn dark lg" href={LEASE_DOCX_URL} download>
-              Download sample lease (.docx)
             </a>
           </div>
         </div>
@@ -104,6 +104,20 @@ export default function WordTutorial() {
             </div>
           </li>
         </ol>
+
+        <div className="cta-btns tut-foot-btns">
+          <a className="btn demo lg blue" href={LEASE_DOCX_URL} download>
+            Download the sample lease
+          </a>
+          <a
+            className="btn demo lg blue"
+            href={WORD_ONLINE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Run in Word
+          </a>
+        </div>
       </div>
     </section>
   );
