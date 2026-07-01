@@ -99,6 +99,15 @@ function useScrollAnimations() {
       cleanups.push(() => window.clearTimeout(heroTimer));
     }
 
+    // ---- Run-in-Word page: fade the tutorial in after the nav drops, mirroring
+    //      the hero's timed reveal (this section only exists on /run-in-word). ----
+    const tutorial = document.querySelector<HTMLElement>('#word-tutorial');
+    if (tutorial) {
+      arm(tutorial, ['ck-up', 'ck-hero']);
+      const tutTimer = window.setTimeout(() => enter(tutorial), HERO_REVEAL_DELAY);
+      cleanups.push(() => window.clearTimeout(tutTimer));
+    }
+
     // ---- Pillars heading (only the eyebrow-row renders) ----
     animateHeading(document.querySelector('#features'));
 
