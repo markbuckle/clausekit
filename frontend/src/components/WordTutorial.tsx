@@ -139,7 +139,9 @@ export default function WordTutorial() {
           {steps.map((s, i) => (
             <li className="tut-step" key={i}>
               <div className="tut-step-text">
-                <span className="tut-num">{i + 1}</span>
+                <span className="tut-num">
+                  <span>{i + 1}</span>
+                </span>
                 <div>
                   <h3 className="tut-step-title serif-grad">{s.title}</h3>
                   <p className="tut-step-body">{s.body}</p>
