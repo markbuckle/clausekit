@@ -132,9 +132,15 @@ export default function WordTutorial() {
             </p>
           </div>
           <a className="tut-scroll" href="#step-1" aria-label="Scroll to step 1">
-            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor"
-              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M5 8.5 12 15l7-6.5" />
+            <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="url(#tutArrowGrad)"
+              strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <defs>
+                <linearGradient id="tutArrowGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stopColor="#ffffff" />
+                  <stop offset="1" stopColor="#9aa0aa" />
+                </linearGradient>
+              </defs>
+              <path d="M3 9l9 6.5 9-6.5" />
             </svg>
           </a>
         </div>

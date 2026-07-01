@@ -468,7 +468,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
   width: 100%;
   max-width: 820px;
 }
-.tut-head h1 { font-size: clamp(36px, 5.2vw, 54px); line-height: 1.08; margin: 0; }
+.tut-head h1 { font-size: clamp(28px, 4.6vw, 54px); line-height: 1.08; margin: 0; white-space: nowrap; }
+@media (max-width: 560px) { .tut-head h1 { white-space: normal; font-size: clamp(28px, 8vw, 38px); } }
 .tut-intro { max-width: 760px; margin: 0; color: var(--muted, #5b6472); font-size: 17.5px; line-height: 1.55; }
 
 .tut-num { flex: none; width: 33px; height: 33px; border-radius: 50%; background: linear-gradient(180deg, #1d1d24, #101015); border: 1px solid rgba(255,255,255,.6); display: grid; place-items: center; font-weight: 700; font-size: 15.5px; }
@@ -486,9 +487,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 .tut-or { color: var(--faint); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; }
 .tut-alt-lead { font-size: 16.5px; color: var(--muted); margin: 0; }
 
-/* Scroll-down chevron pinned to the bottom of the intro viewport. */
-.tut-scroll { position: absolute; left: 50%; bottom: 34px; transform: translateX(-50%); display: grid; place-items: center; width: 46px; height: 46px; border-radius: 999px; color: var(--muted, #5b6472); border: 1px solid var(--border, #e3e6ea); background: rgba(255, 255, 255, .55); transition: color .2s ease, border-color .2s ease; }
-.tut-scroll:hover { color: var(--text, #11151b); border-color: rgba(125, 185, 245, .6); }
+/* Scroll-down chevron near the bottom of the intro viewport (no chrome — just a
+   white/grey gradient arrow that bounces to invite a scroll). */
+.tut-scroll { position: absolute; left: 50%; bottom: 60px; transform: translateX(-50%); display: block; line-height: 0; opacity: .92; transition: opacity .2s ease; }
+.tut-scroll:hover { opacity: 1; }
 
 /* Gentle scroll-snap so each section frames itself (scoped to this page via the
    html.tut-snap class toggled in App.tsx). */
@@ -498,9 +500,9 @@ html.tut-snap { scroll-snap-type: y proximity; }
 .tut-snap .tut-alt { scroll-snap-align: center; }
 
 @media (prefers-reduced-motion: no-preference) {
-  .tut-scroll svg { animation: tut-bounce 1.7s ease-in-out infinite; }
+  .tut-scroll svg { animation: tut-bounce 1.5s ease-in-out infinite; }
 }
-@keyframes tut-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+@keyframes tut-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(9px); } }
 
 /* Tutorial buttons: no amber glow, blue hover (base .btn.demo is already amber-free). */
 #word-tutorial .btn.demo:hover {
