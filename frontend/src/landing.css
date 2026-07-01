@@ -443,21 +443,22 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 /* "Add ClauseKit to your Word" tutorial */
 .tut-head { text-align: center; }
 .tut-head h1 { font-size: clamp(36px, 5.2vw, 54px); line-height: 1.08; }
-.tut-intro { max-width: 560px; margin: 10px auto 24px; color: var(--muted, #5b6472); line-height: 1.55; }
+.tut-intro { max-width: 560px; margin: 10px auto 24px; color: var(--muted, #5b6472); font-size: 17.5px; line-height: 1.55; }
 .tut-steps { list-style: none; max-width: 740px; margin: 48px auto 0; padding: 0; display: flex; flex-direction: column; gap: 44px; }
 .tut-step-text { display: flex; gap: 14px; align-items: flex-start; }
-.tut-num { flex: none; width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(180deg, #1d1d24, #101015); border: 1px solid rgba(255,255,255,.6); display: grid; place-items: center; font-weight: 700; font-size: 14px; margin-top: 2px; }
+.tut-num { flex: none; width: 33px; height: 33px; border-radius: 50%; background: linear-gradient(180deg, #1d1d24, #101015); border: 1px solid rgba(255,255,255,.6); display: grid; place-items: center; font-weight: 700; font-size: 15.5px; margin-top: 2px; }
 .tut-num span { background: var(--amber-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.tut-step-title { font-family: var(--font-display); font-size: 21px; font-weight: 500; letter-spacing: -.01em; margin: 3px 0 6px; }
-.tut-step-body { color: var(--muted, #5b6472); line-height: 1.55; margin: 0; }
-.tut-step-body code { font-family: 'Roboto Mono', ui-monospace, monospace; font-size: 12.5px; background: rgba(0,0,0,.06); border-radius: 5px; padding: 2px 6px; }
+.tut-step-title { font-family: var(--font-display); font-size: 23px; font-weight: 500; letter-spacing: -.01em; margin: 3px 0 6px; }
+.tut-step-body { color: var(--muted, #5b6472); font-size: 17px; line-height: 1.55; margin: 0; }
+.tut-step-body code { font-family: 'Roboto Mono', ui-monospace, monospace; font-size: 13.5px; background: rgba(0,0,0,.06); border-radius: 5px; padding: 2px 6px; }
 .tut-shot { display: block; width: 100%; max-width: 640px; margin: 16px 0 0 44px; border: 1px solid #e3e6ea; border-radius: 10px; box-shadow: 0 6px 26px rgba(17,24,39,.10); }
 @media (max-width: 640px) { .tut-shot { margin-left: 0; } }
 .tut-or { color: var(--faint); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; }
 /* Per-step action buttons — aligned under the step text, left. */
 .tut-step-cta { margin: 16px 0; display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; }
+.tut-step-cta .btn { font-size: 15px; }
 .tut-alt { margin-top: 44px; text-align: center; }
-.tut-alt-lead { font-size: 15px; color: var(--muted); margin: 0; }
+.tut-alt-lead { font-size: 16.5px; color: var(--muted); margin: 0; }
 
 /* Tutorial buttons: no amber glow, blue hover (base .btn.demo is already amber-free). */
 #word-tutorial .btn.demo:hover {
