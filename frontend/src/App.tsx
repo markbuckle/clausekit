@@ -231,30 +231,37 @@ function useScrollAnimations() {
 
 export default function App() {
   useScrollAnimations();
+  // Lightweight 2-page routing: "/run-in-word" is a dedicated tutorial page,
+  // everything else is the landing. Real navigation (full page load) — fine for
+  // a marketing site, and avoids a router dependency. Needs the Vercel SPA
+  // rewrite (frontend/vercel.json) so /run-in-word serves index.html.
+  const path = window.location.pathname.replace(/\/+$/, '');
+  const isTutorial = path === '/run-in-word';
+
   return (
     <>
-      <Nav />
-      <main id="top">
-        <Hero />
-        {/* <TrustedBy /> */}
-        <Pillars />
-        <SpotlightApply />
-        <SpotlightGrounded />
-        <RiskFlags />
-        <ProductShot />
-        <Security />
-        {/* TODO: when re-enabled, wire these into useScrollAnimations()
-            (e.g. Stats count-up cascade, Testimonial fade, RunInWord steps). */}
-        {/* <Stats /> */}
-        {/* <Testimonial /> */}
-        <FinalCta />
-        {/* Visual walk-through for adding the add-in to real Word (Upload My Add-in),
-            with the manifest download. Sits under the demo CTA. */}
-        <WordTutorial />
-        {/* RunInWord section retired: the "Run in Word" CTA in FinalCta now
-            downloads the sample lease (.docx) directly instead of scrolling here. */}
-        {/* <RunInWord /> */}
-      </main>
+      <Nav homeHref={isTutorial ? '/' : '#top'} showDemoCta={!isTutorial} />
+      {isTutorial ? (
+        <main id="top">
+          <WordTutorial />
+        </main>
+      ) : (
+        <main id="top">
+          <Hero />
+          {/* <TrustedBy /> */}
+          <Pillars />
+          <SpotlightApply />
+          <SpotlightGrounded />
+          <RiskFlags />
+          <ProductShot />
+          <Security />
+          {/* TODO: when re-enabled, wire these into useScrollAnimations()
+              (e.g. Stats count-up cascade, Testimonial fade). */}
+          {/* <Stats /> */}
+          {/* <Testimonial /> */}
+          <FinalCta />
+        </main>
+      )}
       <FooterWordmark />
       <Footer />
     </>

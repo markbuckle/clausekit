@@ -1,8 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import ckMark from '../../assets/ck-mark.svg';
-import { PLAYGROUND_URL } from '../config';
 
-export default function Nav() {
+interface NavProps {
+  /** Where the brand click goes. '#top' on the landing, '/' on a sub-page. */
+  homeHref?: string;
+  /** Hide the "Try the demo" button (e.g. on the Run-in-Word page). */
+  showDemoCta?: boolean;
+}
+
+export default function Nav({ homeHref = '#top', showDemoCta = true }: NavProps) {
   const [hidden, setHidden] = useState(false);
   // Intro: the nav starts off-screen and drops in shortly after load.
   // Reduced-motion users skip the intro and see it in place immediately.
@@ -30,7 +36,7 @@ export default function Nav() {
   return (
     <header className={`nav${intro || hidden ? ' nav-hidden' : ''}`}>
       <div className="wrap nav-inner">
-        <a className="brand" href="#top">
+        <a className="brand" href={homeHref}>
           <span className="mark logo"><img src={ckMark} alt="ClauseKit" /></span>
           <span className="wordmark">Clause<b>Kit</b></span>
         </a>
@@ -41,9 +47,11 @@ export default function Nav() {
           {/* <a href="#resources">Resources <span className="car" /></a> */}
         </nav>
         <div className="nav-cta">
-          <a className="btn demo" href="#demo">
-            Try the demo
-          </a>
+          {showDemoCta && (
+            <a className="btn demo" href="#demo">
+              Try the demo
+            </a>
+          )}
         </div>
       </div>
     </header>
