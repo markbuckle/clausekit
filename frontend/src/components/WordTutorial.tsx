@@ -1,5 +1,13 @@
 import type { ReactNode } from 'react';
 import { LEASE_DOCX_URL, MANIFEST_URL } from '../config';
+// Imported so Vite bundles + hashes them (files under frontend/assets/ aren't
+// served by URL — only frontend/public/ is). Same pattern as Nav/Footer/Hero.
+import wordstep1 from '../../assets/tutorial/wordstep1.jpg';
+import wordstep2 from '../../assets/tutorial/wordstep2.jpg';
+import wordstep3 from '../../assets/tutorial/wordstep3.jpg';
+import wordstep4 from '../../assets/tutorial/wordstep4.jpg';
+import wordstep5 from '../../assets/tutorial/wordstep5.jpg';
+import wordstep6 from '../../assets/tutorial/wordstep6.jpg';
 
 /**
  * "Run in Word" opens the hosted sample lease in Word for the web via the Office
@@ -18,7 +26,7 @@ interface Step {
 
 const STEPS: Step[] = [
   {
-    img: '/tutorial/1-edit-a-copy.png',
+    img: wordstep1,
     alt: 'Word for the web showing the "Edit a Copy" button',
     title: 'Open the sample lease, then click "Edit a Copy"',
     body: (
@@ -29,19 +37,19 @@ const STEPS: Step[] = [
     ),
   },
   {
-    img: '/tutorial/2-add-ins.png',
+    img: wordstep2,
     alt: 'The Add-ins button near the right end of the Home ribbon',
     title: 'On the Home tab, click "Add-ins"',
     body: <>It sits near the right end of the <b>Home</b> ribbon.</>,
   },
   {
-    img: '/tutorial/3-more-add-ins.png',
+    img: wordstep3,
     alt: 'The "More Add-ins" button at the bottom of the Add-ins panel',
     title: 'Click "More Add-ins"',
     body: <>At the bottom of the Add-ins panel that opens.</>,
   },
   {
-    img: '/tutorial/4-manage-my-add-ins.png',
+    img: wordstep4,
     alt: 'The "Manage My Add-ins" dropdown in the Office Add-ins dialog',
     title: 'Open "Manage My Add-ins"',
     body: (
@@ -52,12 +60,23 @@ const STEPS: Step[] = [
     ),
   },
   {
-    img: '/tutorial/5-upload-my-add-in.png',
+    img: wordstep5,
     alt: 'The "Upload My Add-in" option',
     title: 'Choose "Upload My Add-in" and pick the manifest',
     body: (
       <>
         Browse to the <code>clausekit-manifest.xml</code> you downloaded and upload it.
+      </>
+    ),
+  },
+  {
+    img: wordstep6,
+    alt: 'The ClauseKit pane applying a tracked change in Word',
+    title: 'Run it',
+    body: (
+      <>
+        The <b>ClauseKit</b> button appears on the Home tab. Click it, ask &ldquo;is the 5% escalation
+        off-market?&rdquo;, and hit <b>Apply</b> — the §5 edit lands as a native tracked change.
       </>
     ),
   },
@@ -100,19 +119,6 @@ export default function WordTutorial() {
               <img className="tut-shot" src={s.img} alt={s.alt} loading="lazy" />
             </li>
           ))}
-          <li className="tut-step">
-            <div className="tut-step-text">
-              <span className="tut-num">6</span>
-              <div>
-                <h3 className="tut-step-title serif-grad">Run it</h3>
-                <p className="tut-step-body">
-                  The <b>ClauseKit</b> button appears on the Home tab. Click it, ask &ldquo;is the 5%
-                  escalation off-market?&rdquo;, and hit <b>Apply</b> — the §5 edit lands as a native
-                  tracked change.
-                </p>
-              </div>
-            </div>
-          </li>
         </ol>
 
         <div className="tut-foot">
