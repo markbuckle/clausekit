@@ -102,16 +102,34 @@ function useScrollAnimations() {
     // ---- Run-in-Word page: full-viewport sections. The intro reveals on load
     //      (after the nav drops, mirroring the hero); each step and the closing
     //      card reveal as they scroll to the centre of the viewport. ----
+    // The scroll-arrows are hidden up front and fade in LAST — a beat after
+    // their section's content has begun revealing — so each arrow reads as the
+    // final cue to move on rather than appearing before the content.
+    const armArrow = (el: HTMLElement | null) => el && el.classList.add('ck-arrow-armed');
+    const revealArrow = (el: HTMLElement | null, delay: number) => {
+      if (!el) return;
+      const t = window.setTimeout(() => el.classList.remove('ck-arrow-armed'), delay);
+      cleanups.push(() => window.clearTimeout(t));
+    };
+
     const introInner = document.querySelector<HTMLElement>('.tut-head-inner');
     if (introInner) {
+      const introArrow = document.querySelector<HTMLElement>('.tut-head .tut-scroll');
       arm(introInner, ['ck-up', 'ck-hero']);
-      const tutTimer = window.setTimeout(() => enter(introInner), HERO_REVEAL_DELAY);
+      armArrow(introArrow);
+      const tutTimer = window.setTimeout(() => {
+        enter(introInner);
+        revealArrow(introArrow, 1400);
+      }, HERO_REVEAL_DELAY);
       cleanups.push(() => window.clearTimeout(tutTimer));
 
       q('.tut-step-inner, .tut-alt-inner').forEach((inner) => {
         const section = inner.closest('.tut-step, .tut-alt') ?? inner;
+        const arrow = section.querySelector<HTMLElement>('.tut-scroll');
         arm(inner, ['ck-up', 'ck-slow']);
-        onEnter(section, () => enter(inner), { threshold: 0, rootMargin: '-30% 0px -30% 0px' });
+        armArrow(arrow);
+        onEnter(section, () => { enter(inner); revealArrow(arrow, 1200); },
+          { threshold: 0, rootMargin: '-30% 0px -30% 0px' });
       });
     }
 

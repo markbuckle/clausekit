@@ -24,6 +24,23 @@ interface Step {
   img?: string;
   alt?: string;
   cta?: ReactNode;
+  /** Top-align this step's content instead of centring it — for tall steps
+   *  (extra button or a tall screenshot) that otherwise overflow the viewport. */
+  alignTop?: boolean;
+}
+
+// Bouncing down-chevron (white -> grey gradient) shown near the bottom of the
+// intro and every step to invite the next scroll. The gradient is defined once
+// in <WordTutorial> and referenced here by id (#tutArrowGrad).
+function ScrollArrow({ href, label = 'Scroll down' }: { href: string; label?: string }) {
+  return (
+    <a className="tut-scroll" href={href} aria-label={label}>
+      <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="url(#tutArrowGrad)"
+        strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M3 9l9 6.5 9-6.5" />
+      </svg>
+    </a>
+  );
 }
 
 export default function WordTutorial() {
@@ -35,7 +52,7 @@ export default function WordTutorial() {
   const steps: Step[] = [
     {
       title: 'Download the ClauseKit add-in',
-      body: <>Grab the add-in - a small manifest file you&apos;ll load into Word in a moment.</>,
+      body: <>Grab the add-in: a small manifest file you&apos;ll load into Word in a moment</>,
       cta: (
         <div className="tut-step-cta">
           <a className="btn demo" href={MANIFEST_URL} download="clausekit-manifest.xml">
@@ -45,13 +62,13 @@ export default function WordTutorial() {
       ),
     },
     {
+      alignTop: true,
       img: wordstep1,
       alt: 'The sample lease open in Word for the web with an "Edit a Copy" button',
-      title: 'Open the sample lease in Word, then "Edit a Copy"',
+      title: 'Open the sample lease in Word',
       body: (
         <>
-          Click <b>Open in Word</b> to open the lease in Word for the web, then <b>Edit a Copy</b> (top
-          right) so you can edit it.
+          then <b>Edit a Copy</b> (top right) so you can edit it.
         </>
       ),
       cta: (
@@ -63,12 +80,14 @@ export default function WordTutorial() {
       ),
     },
     {
+      alignTop: true,
       img: wordstep2,
       alt: 'The Add-ins button near the right end of the Home ribbon',
       title: 'On the Home tab, click "Add-ins"',
       body: <>It sits near the right end of the <b>Home</b> ribbon.</>,
     },
     {
+      alignTop: true,
       img: wordstep3,
       alt: 'The "More Add-ins" button at the bottom of the Add-ins panel',
       title: 'Click "More Add-ins"',
@@ -77,21 +96,21 @@ export default function WordTutorial() {
     {
       img: wordstep5,
       alt: 'The "Manage My Add-ins" menu with the "Upload My Add-in" option',
-      title: 'Open "Manage My Add-ins" and choose "Upload My Add-in"',
+      title: 'Upload the ClauseKit Add-in',
       body: (
         <>
-          Open <b>Manage My Add-ins</b> (top-right of the Office Add-ins dialog), then choose{' '}
-          <b>Upload My Add-in</b>. A &ldquo;Cannot connect to catalog&rdquo; note is harmless - ignore it.
+          Open <b>Manage My Add-ins</b> (top-right of the Office Add-ins dialog),<br></br> then choose{' '}
+          <b>Upload My Add-in</b>.<br></br> A &ldquo;Cannot connect to catalog&rdquo; note is harmless - ignore it.
         </>
       ),
     },
     {
       img: wordstep6,
       alt: 'The Upload Add-in dialog with a Browse button',
-      title: 'Click browse then choose the manifest',
+      title: 'Click Browse',
       body: (
         <>
-          In the <b>Upload Add-in</b> dialog, click <b>Browse…</b> to open the file picker.
+          In the <b>Upload Add-in</b> dialog, click <b>Browse</b> to open the file picker.
         </>
       ),
     },
@@ -101,19 +120,19 @@ export default function WordTutorial() {
       title: 'Choose the manifest you downloaded earlier',
       body: (
         <>
-          Select the <code>clausekit-manifest.xml</code> file you downloaded in step 1, then confirm to
+          Select the <code>clausekit-manifest.xml</code> file you downloaded in step 1,<br></br> then confirm to
           upload it.
         </>
       ),
     },
     {
+      alignTop: true,
       img: wordstep8,
       alt: 'ClauseKit applying a redline as a native tracked change',
-      title: 'Ask a question, then Apply',
+      title: 'Get started',
       body: (
         <>
-          Ask &ldquo;is the 5% escalation off-market?&rdquo; and hit <b>Apply</b> - the §5 edit lands
-          as a native tracked change.
+          Ask any question or select the suggested prompts<br></br> and let ClauseKit do its magic
         </>
       ),
     },
@@ -122,6 +141,16 @@ export default function WordTutorial() {
   return (
     <section className="section" id="word-tutorial">
       <div className="wrap">
+        {/* Gradient for every scroll-arrow, defined once and referenced by id. */}
+        <svg width="0" height="0" aria-hidden="true" style={{ position: 'absolute' }}>
+          <defs>
+            <linearGradient id="tutArrowGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#ffffff" />
+              <stop offset="1" stopColor="#9aa0aa" />
+            </linearGradient>
+          </defs>
+        </svg>
+
         <div className="tut-head">
           <div className="tut-head-inner">
             <h1 className="serif-grad">
@@ -129,26 +158,15 @@ export default function WordTutorial() {
               <span className="text-blue-grad">Word</span> in minutes
             </h1>
             <p className="tut-intro">
-              Works in Word for the web or desktop with a Microsoft&nbsp;365 account.
+              Works in Word for the web or desktop with a Microsoft&nbsp;365 account
             </p>
           </div>
-          <a className="tut-scroll" href="#step-1" aria-label="Scroll to step 1">
-            <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="url(#tutArrowGrad)"
-              strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <defs>
-                <linearGradient id="tutArrowGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stopColor="#ffffff" />
-                  <stop offset="1" stopColor="#9aa0aa" />
-                </linearGradient>
-              </defs>
-              <path d="M3 9l9 6.5 9-6.5" />
-            </svg>
-          </a>
+          <ScrollArrow href="#step-1" label="Scroll to step 1" />
         </div>
 
         <ol className="tut-steps">
           {steps.map((s, i) => (
-            <li className="tut-step" id={`step-${i + 1}`} key={i}>
+            <li className={`tut-step${s.alignTop ? ' tut-step--top' : ''}`} id={`step-${i + 1}`} key={i}>
               <div className="tut-step-inner">
                 <span className="tut-num">
                   <span>{i + 1}</span>
@@ -158,11 +176,12 @@ export default function WordTutorial() {
                 {s.cta}
                 {s.img && <img className="tut-shot" src={s.img} alt={s.alt} loading="lazy" />}
               </div>
+              <ScrollArrow href={i < steps.length - 1 ? `#step-${i + 2}` : '#tut-alt'} />
             </li>
           ))}
         </ol>
 
-        <div className="tut-alt">
+        <div className="tut-alt" id="tut-alt">
           <div className="tut-alt-inner">
             <p className="tut-alt-lead">Alternatively,</p>
             <div className="tut-step-cta">
