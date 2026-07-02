@@ -1,5 +1,5 @@
 import { PLAYGROUND_URL } from '../config';
-import ckCustom from '../../assets/ck-custom.svg';
+import AnimatedLogo from './AnimatedLogo';
 
 export default function Hero() {
   return (
@@ -11,7 +11,7 @@ export default function Hero() {
         <p className="lede reveal">
           Review and redline contracts then simulate the negotiation
         </p>
-        <img className="pill-img" src={ckCustom} />
+        <AnimatedLogo className="pill-img" />
         <div className="hero-cta reveal">
           <a className="btn demo lg" href="#demo">
             Try the demo
