@@ -96,7 +96,7 @@ export default function WordTutorial() {
       ),
     },
     {
-      img: wordstep8,
+      img: wordstep7,
       alt: 'The file picker with clausekit-manifest.xml selected',
       title: 'Choose the manifest you downloaded earlier',
       body: (
@@ -107,7 +107,7 @@ export default function WordTutorial() {
       ),
     },
     {
-      img: wordstep7,
+      img: wordstep8,
       alt: 'ClauseKit applying a redline as a native tracked change',
       title: 'Ask a question, then Apply',
       body: (
