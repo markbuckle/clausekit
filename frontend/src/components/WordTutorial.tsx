@@ -5,10 +5,10 @@ import { LEASE_DOCX_URL, MANIFEST_URL } from '../config';
 import wordstep1 from '../../assets/tutorial/wordstep1.jpg';
 import wordstep2 from '../../assets/tutorial/wordstep2.jpg';
 import wordstep3 from '../../assets/tutorial/wordstep3.jpg';
-import wordstep4 from '../../assets/tutorial/wordstep4.jpg';
 import wordstep5 from '../../assets/tutorial/wordstep5.jpg';
 import wordstep6 from '../../assets/tutorial/wordstep6.jpg';
 import wordstep7 from '../../assets/tutorial/wordstep7.jpg';
+import wordstep8 from '../../assets/tutorial/wordstep8.jpg';
 
 /**
  * "Open in Word" opens the hosted sample lease in Word for the web via the Office
@@ -75,33 +75,34 @@ export default function WordTutorial() {
       body: <>At the bottom of the Add-ins panel that opens.</>,
     },
     {
-      img: wordstep4,
-      alt: 'The "Manage My Add-ins" dropdown in the Office Add-ins dialog',
-      title: 'Open "Manage My Add-ins"',
-      body: (
-        <>
-          Top-right of the Office Add-ins dialog. A &ldquo;Cannot connect to catalog&rdquo; note is
-          harmless - ignore it.
-        </>
-      ),
-    },
-    {
       img: wordstep5,
-      alt: 'The "Upload My Add-in" option',
-      title: 'Choose "Upload My Add-in" and pick the manifest',
+      alt: 'The "Manage My Add-ins" menu with the "Upload My Add-in" option',
+      title: 'Open "Manage My Add-ins" and choose "Upload My Add-in"',
       body: (
         <>
-          Browse to the <code>clausekit-manifest.xml</code> you downloaded in step 1 and upload it.
+          Open <b>Manage My Add-ins</b> (top-right of the Office Add-ins dialog), then choose{' '}
+          <b>Upload My Add-in</b>. A &ldquo;Cannot connect to catalog&rdquo; note is harmless - ignore it.
         </>
       ),
     },
     {
       img: wordstep6,
-      alt: 'The ClauseKit button on the Home tab opening the task pane',
-      title: 'Open the ClauseKit pane',
+      alt: 'The Upload Add-in dialog with a Browse button',
+      title: 'Click browse then choose the manifest',
       body: (
         <>
-          The <b>ClauseKit</b> button appears on the Home tab - click it to open the review pane.
+          In the <b>Upload Add-in</b> dialog, click <b>Browse…</b> to open the file picker.
+        </>
+      ),
+    },
+    {
+      img: wordstep8,
+      alt: 'The file picker with clausekit-manifest.xml selected',
+      title: 'Choose the manifest you downloaded earlier',
+      body: (
+        <>
+          Select the <code>clausekit-manifest.xml</code> file you downloaded in step 1, then confirm to
+          upload it.
         </>
       ),
     },
