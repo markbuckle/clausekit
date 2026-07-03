@@ -60,7 +60,7 @@ export default function Security() {
           <span className="kicker"></span>
           <h2 className="serif-grad">Your clients privacy,<br></br>our priority</h2>
           <p className="sub">
-            ClauseKit is designed for documents under privilege<br></br>Your contracts stay yours
+            ClauseKit is designed for <br className="br-sm" />documents under privilege<br></br>Your contracts stay yours
           </p>
         </div>
         <div className="seccards">

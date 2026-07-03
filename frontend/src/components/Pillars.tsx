@@ -10,7 +10,7 @@ export default function Pillars() {
           <span className="kicker">Review · Draft · Ask · Negotiate</span>
           <h2 className="serif-grad">A sharper first read<br></br></h2>
           <p className="sub">
-ClauseKit takes the tedious work off your plate<br></br>so your time goes to the judgment calls that matter          </p>
+ClauseKit takes the tedious work off your plate<br></br>so your time goes to the <br className="br-sm" />judgment calls that matter          </p>
         </div>
         {/* <div className="pillars">
 

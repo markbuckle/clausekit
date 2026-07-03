@@ -316,7 +316,9 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 #features { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
 .eyebrow-row { text-align: center; margin-bottom: 56px; }
 .eyebrow-row h2 { font-size: clamp(32px, 4.5vw, 50px); line-height: 1.04; letter-spacing: -.025em; max-width: 18ch; margin: 18px auto 0; }
-.eyebrow-row .sub { font-size: 17px; color: var(--muted); max-width: 56ch; margin: 18px auto 0; line-height: 1.55; }
+.eyebrow-row .sub { font-size: 17px; color: var(--muted); max-width: 56ch; margin: 18px auto 0; line-height: 1.55; text-wrap: balance; }
+/* Conditional line break: only forces a wrap on phones (see 560px block). */
+.br-sm { display: none; }
 /* Risk-review heading: let the title and subtitle run full width so each stays
    on a single line (they still wrap naturally on narrow viewports). */
 #risk .eyebrow-row h2,
@@ -721,7 +723,10 @@ html.ck-snap { scroll-snap-type: y proximity; scroll-padding-top: 64px; }
   .nav-links { display: none; }
   .pillars, .seccards { grid-template-columns: 1fr; }
   .stats { grid-template-columns: repeat(2, 1fr); }
-  .split { grid-template-columns: 1fr; gap: 32px; }
+  .split,
+  /* .split.rev has a two-column base rule (0,2,0) that would otherwise beat this
+     single-column one — match its specificity so Grounded stacks like Apply. */
+  .split.rev { grid-template-columns: 1fr; gap: 32px; }
   .split.rev .copy { order: 0; }
   .foot-grid { grid-template-columns: 1fr 1fr; }
   .host-body { height: auto; flex-direction: column; }
@@ -730,6 +735,7 @@ html.ck-snap { scroll-snap-type: y proximity; scroll-padding-top: 64px; }
 }
 @media (max-width: 560px) {
   .wrap { padding: 0 20px; }
+  .br-sm { display: inline; }
   .stats { grid-template-columns: 1fr 1fr; }
   .foot-grid { grid-template-columns: 1fr; gap: 28px; }
   /* The heart is bottom-anchored and ~as wide as the phone; lift + shrink it so
