@@ -272,13 +272,17 @@ export default function App() {
   const path = window.location.pathname.replace(/\/+$/, '');
   const isTutorial = path === '/run-in-word';
 
-  // Enable gentle scroll-snap only on the Run-in-Word page (the class lives on
-  // <html>, so it must be scoped by route rather than in static CSS).
+  // Enable gentle scroll-snap: `tut-snap` on the Run-in-Word page (full-viewport
+  // steps, snap to centre), `ck-snap` on the landing (variable-height sections,
+  // snap each top under the nav). Both use `proximity`, so they only pull the
+  // viewport into place when the user comes to rest near a section — never
+  // fighting a deliberate scroll. The class lives on <html>, so it's scoped by
+  // route here rather than in static CSS.
   useEffect(() => {
-    if (!isTutorial) return;
     const el = document.documentElement;
-    el.classList.add('tut-snap');
-    return () => el.classList.remove('tut-snap');
+    const cls = isTutorial ? 'tut-snap' : 'ck-snap';
+    el.classList.add(cls);
+    return () => el.classList.remove(cls);
   }, [isTutorial]);
 
   return (
