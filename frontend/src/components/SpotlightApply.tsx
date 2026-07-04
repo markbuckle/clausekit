@@ -55,7 +55,7 @@ export default function SpotlightApply() {
                     <div className="action">
                       <div className="ah">
                         <span className="ab">Suggested edit</span>
-                        <span className="at">Add a 60-day non-renewal notice right</span>
+                        <span className="at">Add a 60-day non-renewal notice</span>
                       </div>
                       <div className="diff">
                         <div className="dl del">
