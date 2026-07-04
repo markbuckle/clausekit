@@ -1,12 +1,12 @@
 <div align="center">
 
-<img src="frontend/assets/ck-custom.svg" width="120" alt="ClauseKit logo" />
+<img src="frontend/assets/ck-mark.svg" width="90" alt="ClauseKit logo" />
 
 # ClauseKit
 
 **AI legal assistant for Microsoft Word.**
 
-Review and redline contracts, then simulate the negotiation — without leaving the document.
+Review and redline contracts, then simulate the negotiation - without leaving the document.
 
 <br/>
 
@@ -24,37 +24,58 @@ Review and redline contracts, then simulate the negotiation — without leaving 
 
 ---
 
-## ✨ What it does
+## What it does
 
-- 🔍 **Grounded contract Q&A** — answers come from the document in front of you, cited by clause (`§`), never invented.
-- ✏️ **One-click redlines** — proposes exact replacement language and applies it as a native tracked change in Word.
-- ⚖️ **Negotiation simulator** — builds a fallback ladder (ideal → market → floor) per off-market term and role-plays opposing counsel.
+- **Grounded contract Q&A** - answers come from the document in front of you, cited by clause (`§`), never invented.
+- **One-click redlines** - proposes exact replacement language and applies it as a native tracked change in Word.
+- **Negotiation simulator** - builds a fallback ladder (ideal → market → floor) per off-market term and role-plays opposing counsel.
 
-## 🏗 Architecture
+## Architecture
 
 ```mermaid
 flowchart LR
-    A["🌐 Marketing site<br/><i>frontend/</i> · Vercel"] -->|Try the demo| B["🧪 Playground + Word task pane<br/><i>microservices/word-addin/</i> · Vercel"]
-    W["📄 Microsoft Word<br/>(Office.js)"] --- B
-    B -->|"/api/ask · /api/negotiate"| C["⚙️ Backend API<br/><i>backend/</i> · Cloud Run"]
-    C -->|Anthropic SDK| D["🤖 Claude"]
+    subgraph vercel["Vercel"]
+        direction TB
+        A["<b>Landing page</b><br/><i>frontend/</i>"]
+        B["<b>Playground + task pane</b><br/><i>microservices/word-addin/</i>"]
+    end
+
+    subgraph gcr["Google Cloud Run"]
+        C["<b>Backend API</b><br/><i>backend/</i>"]
+    end
+
+    subgraph anthropic["Anthropic"]
+        D["<b>Claude</b>"]
+    end
+
+    W["<b>Microsoft Word</b><br/><i>Office.js host</i>"]
+
+    A -- "Try the demo" --> B
+    W -.->|loads task pane| B
+    B -- "POST /api/ask<br/>POST /api/negotiate" --> C
+    C -- "Anthropic SDK" --> D
+
+    classDef node fill:#0e0e12,stroke:#3a3a44,color:#f5f5f6
+    classDef box fill:transparent,stroke:#6b7280,color:#9a9aa4
+    class A,B,C,D,W node
+    class vercel,gcr,anthropic box
 ```
 
-## 📁 Repository structure
+## Repository structure
 
 | Folder | What it is |
 |--------|-----------|
-| 🧩 `microservices/word-addin/` | Word Office Add-in — React + TypeScript task pane running inside Microsoft Word via Office.js. Entry point: `src/taskpane/index.tsx`. Build with `npm start` (from that folder). Owns its `package.json`, `webpack.config.js`, `tsconfig.json`, `manifest.xml`, and `assets/`. |
-| 📦 `microservices/` | Container for ClauseKit's microservices — currently just the Word add-in, with more to come. Each microservice owns its own dependencies and build config. |
-| 🌐 `frontend/` | Marketing website — React + TypeScript, built with Vite (plain CSS, no framework). `npm run dev` to serve locally, `npm run build` to bundle. |
-| ⚙️ `backend/` | Backend API — Node.js + Express + TypeScript, calling Claude via the Anthropic SDK. Serves `/api/ask` (document-grounded Q&A) and `/api/negotiate` (negotiation brief). Entry point: `backend/src/index.ts`. |
+| `microservices/word-addin/` | Word Office Add-in - React + TypeScript task pane running inside Microsoft Word via Office.js. Entry point: `src/taskpane/index.tsx`. Build with `npm start` (from that folder). Owns its `package.json`, `webpack.config.js`, `tsconfig.json`, `manifest.xml`, and `assets/`. |
+| `microservices/` | Container for ClauseKit's microservices - currently just the Word add-in, with more to come. Each microservice owns its own dependencies and build config. |
+| `frontend/` | Landing page - React + TypeScript, built with Vite (plain CSS, no framework). `npm run dev` to serve locally, `npm run build` to bundle. |
+| `backend/` | Backend API - Node.js + Express + TypeScript, calling Claude via the Anthropic SDK. Serves `/api/ask` (document-grounded Q&A) and `/api/negotiate` (negotiation brief). Entry point: `backend/src/index.ts`. |
 
-## 🛠 Tech stack
+## Tech stack
 
-Mostly TypeScript. Each area owns its own dependencies and build config — there is no shared root `package.json`.
+Mostly TypeScript. Each area owns its own dependencies and build config - there is no shared root `package.json`.
 
 <details open>
-<summary><b>🌐 Frontend</b> — <code>frontend/</code></summary>
+<summary><b>Frontend</b> - <code>frontend/</code></summary>
 <br/>
 
 - **React** + **TypeScript**, bundled with **Vite** (`@vitejs/plugin-react`).
@@ -64,7 +85,7 @@ Mostly TypeScript. Each area owns its own dependencies and build config — ther
 </details>
 
 <details open>
-<summary><b>🧩 Word add-in</b> — <code>microservices/word-addin/</code></summary>
+<summary><b>Word add-in</b> - <code>microservices/word-addin/</code></summary>
 <br/>
 
 - **React** + **TypeScript** task pane running inside Word via **Office.js**.
@@ -75,11 +96,11 @@ Mostly TypeScript. Each area owns its own dependencies and build config — ther
 </details>
 
 <details open>
-<summary><b>⚙️ Backend</b> — <code>backend/</code></summary>
+<summary><b>Backend</b> - <code>backend/</code></summary>
 <br/>
 
 - **Node.js** + **Express** + **TypeScript**, run directly with **tsx** (ESM).
-- **Anthropic SDK** (`@anthropic-ai/sdk`) for all LLM calls — **Claude Haiku 4.5** by default, model swappable via env (Sonnet/Opus for heavier reasoning).
+- **Anthropic SDK** (`@anthropic-ai/sdk`) for all LLM calls - **Claude Haiku 4.5** by default, model swappable via env (Sonnet/Opus for heavier reasoning).
 - Structured outputs via **tool use**, with server-side verbatim validation so a suggested edit's original text is always an exact substring of the contract.
 - **Prompt caching** on the stable system prompt + contract prefix to cut cost/latency.
 - Hardening: **CORS** allowlist, **express-rate-limit** (per-minute + daily caps), and an in-memory daily token spend backstop.
@@ -88,7 +109,7 @@ Mostly TypeScript. Each area owns its own dependencies and build config — ther
 </details>
 
 <details open>
-<summary><b>🤖 AI / model layer</b></summary>
+<summary><b>AI / model layer</b></summary>
 <br/>
 
 - **Claude** (Anthropic) is the single model provider, called only from the backend so the API key never reaches the client.
@@ -96,12 +117,12 @@ Mostly TypeScript. Each area owns its own dependencies and build config — ther
 
 </details>
 
-## 🚀 Deployment
+## Deployment
 
 | Piece | Platform | How |
 |-------|----------|-----|
-| 🌐 `frontend/` + 🧪 `microservices/word-addin/` | **Vercel** | Two static deployments, each built and served from its own `vercel.json`. |
-| ⚙️ `backend/` | **Google Cloud Run** | Docker container (`backend/Dockerfile`); the platform injects `PORT` and secrets (`ANTHROPIC_API_KEY`, `ALLOWED_ORIGINS`, …). See `backend/.env.example`. |
+| `frontend/` + `microservices/word-addin/` | **Vercel** | Two static deployments, each built and served from its own `vercel.json`. |
+| `backend/` | **Google Cloud Run** | Docker container (`backend/Dockerfile`); the platform injects `PORT` and secrets (`ANTHROPIC_API_KEY`, `ALLOWED_ORIGINS`, ...). See `backend/.env.example`. |
 
 ---
 
