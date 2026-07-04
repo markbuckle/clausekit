@@ -720,7 +720,10 @@ html.ck-snap { scroll-snap-type: y proximity; scroll-padding-top: 64px; }
 
 /* Responsive */
 @media (max-width: 920px) {
+  /* .nav-links (which carries margin-right:auto) is hidden here, so push the
+     CTA to the far right itself. */
   .nav-links { display: none; }
+  .nav-cta { margin-left: auto; }
   .pillars, .seccards { grid-template-columns: 1fr; }
   .stats { grid-template-columns: repeat(2, 1fr); }
   .split,
@@ -744,4 +747,64 @@ html.ck-snap { scroll-snap-type: y proximity; scroll-padding-top: 64px; }
   /* Nudge the diamond logo up a touch to sit higher above the heart. */
   .foot .mark.logo { top: -24px; }
   .shot-head h2 { white-space: normal; font-size: 28px; max-width: 20ch; margin: 0 auto; }
+}
+
+/* ============================================================
+   DESKTOP-ONLY MODAL  (DesktopOnlyModal.tsx)
+   Shown when the "Run in browser" / "Run in Word" CTAs are tapped on a
+   phone-sized screen — the live demo is desktop-class, so we redirect the
+   visitor rather than degrade it. Styled to match the .cta / landing look.
+   ============================================================ */
+.ck-modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  /* Track the *dynamic* viewport so the card sits dead-centre on mobile even
+     when the browser chrome (URL bar) is showing/hiding. Falls back to 100vh. */
+  height: 100vh; height: 100dvh;
+  padding: 24px;
+  background: rgba(4, 4, 6, .72);
+  backdrop-filter: saturate(120%) blur(6px);
+  animation: ck-modal-fade .2s ease-out;
+}
+.ck-modal-card {
+  position: relative;
+  width: 100%; max-width: 440px;
+  text-align: center;
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 40px 28px 32px;
+  overflow: hidden;
+  box-shadow: 0 40px 90px rgba(0, 0, 0, .6), 0 8px 24px rgba(0, 0, 0, .45);
+  animation: ck-modal-rise .28s cubic-bezier(.2, .7, .2, 1);
+}
+/* Amber wash + top hairline, mirroring the .cta card. */
+.ck-modal-card::before {
+  content: ""; position: absolute; left: 50%; top: -30%; transform: translateX(-50%);
+  width: 70%; height: 80%;
+  background: radial-gradient(ellipse at center, rgba(245, 158, 11, .16), transparent 65%);
+  filter: blur(50px); pointer-events: none;
+}
+.ck-modal-card::after {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; pointer-events: none;
+  background: linear-gradient(90deg, transparent 28%, rgba(245, 158, 11, .55) 50%, transparent 72%);
+}
+.ck-modal-card > * { position: relative; }
+.ck-modal-card h2 { font-size: clamp(26px, 7vw, 32px); line-height: 1.08; letter-spacing: -.02em; margin: 10px auto 0; max-width: 16ch; }
+.ck-modal-card .kicker { display: inline-block; }
+.ck-modal-card p { font-size: 15px; color: var(--muted); line-height: 1.6; margin: 16px auto 0; max-width: 42ch; }
+.ck-modal-cta { margin-top: 26px; justify-content: center; }
+.ck-modal-close {
+  position: absolute; top: 14px; right: 14px; z-index: 2;
+  width: 32px; height: 32px; display: grid; place-items: center;
+  border-radius: 8px; border: 1px solid transparent;
+  background: transparent; color: var(--faint); cursor: pointer;
+  transition: color .14s, background .14s, border-color .14s;
+}
+.ck-modal-close:hover { color: var(--text); background: #141418; border-color: #2c2c33; }
+
+@keyframes ck-modal-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ck-modal-rise { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .ck-modal-overlay, .ck-modal-card { animation: none; }
 }
