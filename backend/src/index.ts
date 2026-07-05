@@ -6,7 +6,8 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "./router";
 import { askInputSchema, negotiateInputSchema } from "./schemas";
 import { runAsk, runNegotiate, ModelCallError, MODEL } from "./handlers";
-import { spendGuard, tokensUsedToday } from "./spend";
+import { spendGuard, tokensUsedToday, seedSpendFromDb } from "./spend";
+import { initDb, dbConnected } from "./db";
 
 /**
  * ClauseKit backend. The API is served twice from the same handlers:
@@ -105,7 +106,7 @@ app.use(
 app.use(express.json({ limit: "1mb" }));
 
 app.get("/health", (_req, res) => {
-  res.json({ ok: true, model: MODEL, tokensToday: tokensUsedToday() });
+  res.json({ ok: true, model: MODEL, tokensToday: tokensUsedToday(), db: dbConnected() });
 });
 
 // ── tRPC (canonical surface) ────────────────────────────────────────────────
@@ -169,6 +170,12 @@ app.post("/api/negotiate", negotiateDayLimiter, negotiateMinuteLimiter, spendGua
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`ClauseKit backend listening on http://localhost:${PORT} (model: ${MODEL})`);
-});
+// Connect to Mongo (best-effort — the API serves regardless), seed the spend
+// counter from the persisted total, then start listening.
+void initDb()
+  .then(() => seedSpendFromDb())
+  .finally(() => {
+    app.listen(PORT, () => {
+      console.log(`ClauseKit backend listening on http://localhost:${PORT} (model: ${MODEL})`);
+    });
+  });

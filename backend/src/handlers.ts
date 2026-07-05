@@ -13,6 +13,7 @@ import {
   type LadderRung,
 } from "./schemas";
 import { recordUsage } from "./spend";
+import { logSession } from "./db";
 
 /**
  * The model layer: prompts, tool definitions, response validation, and the two
@@ -349,6 +350,20 @@ export async function runAsk(input: AskInput): Promise<AskOutput> {
       `cache_read=${u.cache_read_input_tokens ?? 0} output=${u.output_tokens} ` +
       `citations=${citations.length} edit=${edit ? edit.clauseRef : "none"}`
   );
+  // Usage-history record (metadata only — never the contract text).
+  logSession({
+    ts: new Date(),
+    route: "ask",
+    model: MODEL,
+    usage: {
+      input: u.input_tokens ?? 0,
+      cacheCreation: u.cache_creation_input_tokens ?? 0,
+      cacheRead: u.cache_read_input_tokens ?? 0,
+      output: u.output_tokens ?? 0,
+    },
+    editReturned: Boolean(edit),
+    citations: citations.length,
+  });
 
   const payload: AskOutput = { answer, citations };
   if (edit) payload.edit = edit;
@@ -406,6 +421,20 @@ export async function runNegotiate(input: NegotiateInput): Promise<NegotiateOutp
       `cache_read=${u.cache_read_input_tokens ?? 0} output=${u.output_tokens} ` +
       `terms=${terms.length}`
   );
+  // Usage-history record (metadata only — never the contract text).
+  logSession({
+    ts: new Date(),
+    route: "negotiate",
+    model: NEGOTIATE_MODEL,
+    usage: {
+      input: u.input_tokens ?? 0,
+      cacheCreation: u.cache_creation_input_tokens ?? 0,
+      cacheRead: u.cache_read_input_tokens ?? 0,
+      output: u.output_tokens ?? 0,
+    },
+    side,
+    terms: terms.length,
+  });
 
   return { side, terms };
 }

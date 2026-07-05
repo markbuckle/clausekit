@@ -104,7 +104,8 @@ Mostly TypeScript. Each area owns its own dependencies and build config - there 
 - **Anthropic SDK** (`@anthropic-ai/sdk`) for all LLM calls - **Claude Haiku 4.5** by default, model swappable via env (Sonnet/Opus for heavier reasoning).
 - Structured outputs via **tool use**, with server-side verbatim validation so a suggested edit's original text is always an exact substring of the contract.
 - **Prompt caching** on the stable system prompt + contract prefix to cut cost/latency.
-- Hardening: **CORS** allowlist, **express-rate-limit** (per-minute + daily caps), and an in-memory daily token spend backstop.
+- Hardening: **CORS** allowlist, **express-rate-limit** (per-minute + daily caps), and a daily token spend backstop.
+- **MongoDB** (optional, e.g. Atlas M0): persists the spend counter across container restarts (atomic `$inc` per UTC day - essential on scale-to-zero Cloud Run) and records per-call usage metadata (`sessions`; never contract text). Degrades gracefully to in-memory state when unset/unreachable.
 - **Docker** (`backend/Dockerfile`) for deployment.
 
 </details>
