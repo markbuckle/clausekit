@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useDocumentService } from "../../services";
 import type { SuggestedEdit } from "../../services";
-import { API_BASE_URL } from "../../config";
+import { trpc } from "../../services/trpc";
 
 export interface ChatMessage {
   role: "user" | "assistant";
@@ -44,32 +44,17 @@ export function useChat(): UseChat {
       setError(null);
       try {
         const documentText = await service.getFullText();
-        const res = await fetch(`${API_BASE_URL}/api/ask`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            documentText,
-            message,
-            history: history.slice(-HISTORY_TURNS),
-          }),
+        // Fully typed end to end: input and response types are inferred from
+        // the backend's AppRouter (zod schemas) — no hand-written response
+        // types, and drift fails at compile time. Server errors (rate limit,
+        // spend cap, model failure) surface as TRPCClientError with the
+        // server's user-facing message.
+        const data = await trpc.ask.mutate({
+          documentText,
+          message,
+          history: history.slice(-HISTORY_TURNS).map(({ role, content }) => ({ role, content })),
         });
-        if (!res.ok) {
-          // Prefer the server's user-facing message (rate limit, spend cap, …).
-          let serverError: string | null = null;
-          try {
-            const body = (await res.json()) as { error?: unknown };
-            if (typeof body.error === "string") serverError = body.error;
-          } catch {
-            /* no JSON body */
-          }
-          throw new Error(serverError || `The assistant is unavailable (error ${res.status}).`);
-        }
-        const data = (await res.json()) as {
-          answer?: string;
-          citations?: string[];
-          edit?: SuggestedEdit;
-        };
-        const answer = (data.answer ?? "").trim();
+        const answer = data.answer.trim();
         setMessages((prev) => [
           ...prev,
           {

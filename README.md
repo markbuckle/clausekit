@@ -68,7 +68,7 @@ flowchart LR
 | `microservices/word-addin/` | Word Office Add-in - React + TypeScript task pane running inside Microsoft Word via Office.js. Entry point: `src/taskpane/index.tsx`. Build with `npm start` (from that folder). Owns its `package.json`, `webpack.config.js`, `tsconfig.json`, `manifest.xml`, and `assets/`. |
 | `microservices/` | Container for ClauseKit's microservices - currently just the Word add-in, with more to come. Each microservice owns its own dependencies and build config. |
 | `frontend/` | Landing page - React + TypeScript, built with Vite (plain CSS, no framework). `npm run dev` to serve locally, `npm run build` to bundle. |
-| `backend/` | Backend API - Node.js + Express + TypeScript, calling Claude via the Anthropic SDK. Serves `/api/ask` (document-grounded Q&A) and `/api/negotiate` (negotiation brief). Entry point: `backend/src/index.ts`. |
+| `backend/` | Backend API - Node.js + Express + tRPC + TypeScript, calling Claude via the Anthropic SDK. Typed procedures `ask` (document-grounded Q&A) and `negotiate` (negotiation brief) served at `/trpc`; deprecated REST mirrors at `/api/*`. Entry point: `backend/src/index.ts`. |
 
 ## Tech stack
 
@@ -100,6 +100,7 @@ Mostly TypeScript. Each area owns its own dependencies and build config - there 
 <br/>
 
 - **Node.js** + **Express** + **TypeScript**, run directly with **tsx** (ESM).
+- **tRPC** (Express adapter at `/trpc`) with **zod** schemas as the single source of truth for the wire contract - the Word add-in's client infers full request/response types from `AppRouter`, so contract drift fails at compile time. Deprecated REST mirrors kept at `/api/*` for curl-based smoke tests.
 - **Anthropic SDK** (`@anthropic-ai/sdk`) for all LLM calls - **Claude Haiku 4.5** by default, model swappable via env (Sonnet/Opus for heavier reasoning).
 - Structured outputs via **tool use**, with server-side verbatim validation so a suggested edit's original text is always an exact substring of the contract.
 - **Prompt caching** on the stable system prompt + contract prefix to cut cost/latency.
