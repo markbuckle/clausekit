@@ -4,14 +4,14 @@
   "themeVariables": {
     "fontFamily": "Arial, Helvetica, sans-serif",
     "fontSize": "14px",
-    "primaryColor": "#0d0d12",
-    "primaryTextColor": "#f5f5f6",
-    "primaryBorderColor": "#3a3a44",
-    "lineColor": "#565b66",
+    "primaryColor": "#f8f9fa",
+    "primaryTextColor": "#111827",
+    "primaryBorderColor": "#cbd5e1",
+    "lineColor": "#9ca3af",
     "clusterBkg": "transparent",
-    "clusterBorder": "#26262e",
-    "edgeLabelBackground": "#101014",
-    "tertiaryTextColor": "#9a9aa4"
+    "clusterBorder": "#e5e7eb",
+    "edgeLabelBackground": "#f3f4f6",
+    "tertiaryTextColor": "#6b7280"
   },
   "flowchart": { "curve": "basis", "nodeSpacing": 45, "rankSpacing": 75, "padding": 14 }
 }}%%
@@ -42,11 +42,11 @@ flowchart LR
     C -->|Anthropic SDK| D
     C -->|"token spend counter · usage records"| M
 
-    classDef app fill:#0d0d12,stroke:#3a3a44,stroke-width:1.5px,color:#f5f5f6
-    classDef word fill:#0a1220,stroke:#2b7cd3,stroke-width:1.5px,color:#dbeafe
-    classDef api fill:#16100a,stroke:#f59e0b,stroke-width:2px,color:#fde9c8
-    classDef llm fill:#170e08,stroke:#cc785c,stroke-width:1.5px,color:#f5d9cc
-    classDef data fill:#06130d,stroke:#10b981,stroke-width:1.5px,color:#d1fae5
+    classDef app fill:#f8f9fa,stroke:#cbd5e1,stroke-width:1.5px,color:#111827
+    classDef word fill:#eff6ff,stroke:#2b7cd3,stroke-width:1.5px,color:#1e3a8a
+    classDef api fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#92400e
+    classDef llm fill:#faf0ea,stroke:#cc785c,stroke-width:1.5px,color:#8a4b2f
+    classDef data fill:#ecfdf5,stroke:#10b981,stroke-width:1.5px,color:#065f46
 
     class A,B app
     class W word
@@ -54,10 +54,10 @@ flowchart LR
     class D llm
     class M data
 
-    style vercel fill:transparent,stroke:#26262e,color:#9a9aa4
-    style gcr fill:transparent,stroke:#26262e,color:#9a9aa4
-    style ai fill:transparent,stroke:#26262e,color:#9a9aa4
-    style atlas fill:transparent,stroke:#26262e,color:#9a9aa4
+    style vercel fill:transparent,stroke:#e5e7eb,color:#6b7280
+    style gcr fill:transparent,stroke:#e5e7eb,color:#6b7280
+    style ai fill:transparent,stroke:#e5e7eb,color:#6b7280
+    style atlas fill:transparent,stroke:#e5e7eb,color:#6b7280
 
     linkStyle 2 stroke:#f59e0b,stroke-width:2.5px
     linkStyle 3 stroke:#cc785c,stroke-width:1.5px
