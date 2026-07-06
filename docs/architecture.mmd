@@ -5,12 +5,13 @@
     "fontFamily": "Arial, Helvetica, sans-serif",
     "fontSize": "14px",
     "primaryColor": "#0d0d12",
-    "primaryTextColor": "#f5f5f6",
+    "primaryTextColor": "#374151",
+    "textColor": "#374151",
     "primaryBorderColor": "#3a3a44",
     "lineColor": "#6b7280",
     "clusterBkg": "transparent",
-    "clusterBorder": "#d1d5db",
-    "edgeLabelBackground": "#101014",
+    "clusterBorder": "#9ca3af",
+    "edgeLabelBackground": "#ffffff",
     "tertiaryTextColor": "#6b7280"
   },
   "flowchart": { "curve": "basis", "nodeSpacing": 45, "rankSpacing": 75, "padding": 14 }
@@ -38,7 +39,7 @@ flowchart LR
 
     A -->|Try the demo| B
     W -.->|loads task pane| B
-    B ==>|"<b>tRPC</b> · ask / negotiate<br/><i>typed end-to-end by AppRouter</i>"| C
+    B ==>|"<b>tRPC</b><br/><i>typed end-to-end by AppRouter</i>"| C
     C -->|Anthropic SDK| D
     C -->|"token spend counter · usage records"| M
 
@@ -54,10 +55,10 @@ flowchart LR
     class D llm
     class M data
 
-    style vercel fill:transparent,stroke:#d1d5db,color:#6b7280
-    style gcr fill:transparent,stroke:#d1d5db,color:#6b7280
-    style ai fill:transparent,stroke:#d1d5db,color:#6b7280
-    style atlas fill:transparent,stroke:#d1d5db,color:#6b7280
+    style vercel fill:transparent,stroke:#9ca3af,color:#4b5563
+    style gcr fill:transparent,stroke:#9ca3af,color:#4b5563
+    style ai fill:transparent,stroke:#9ca3af,color:#4b5563
+    style atlas fill:transparent,stroke:#9ca3af,color:#4b5563
 
     linkStyle 2 stroke:#f59e0b,stroke-width:2.5px
     linkStyle 3 stroke:#cc785c,stroke-width:1.5px
