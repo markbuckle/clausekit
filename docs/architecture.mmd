@@ -40,7 +40,7 @@ flowchart LR
     W -.->|loads task pane| B
     B ==>|"<b>tRPC</b> · ask / negotiate<br/><i>typed end-to-end by AppRouter</i>"| C
     C -->|Anthropic SDK| D
-    C -->|"$inc spend · session records"| M
+    C -->|"token spend counter · usage records"| M
 
     classDef app fill:#0d0d12,stroke:#3a3a44,stroke-width:1.5px,color:#f5f5f6
     classDef word fill:#0a1220,stroke:#2b7cd3,stroke-width:1.5px,color:#dbeafe
