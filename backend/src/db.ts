@@ -46,6 +46,11 @@ export interface SessionDoc {
   editReturned?: boolean;
   /** ask only: how many citations the answer carried */
   citations?: number;
+  /** ask only: the user's question, verbatim. Deliberately NOT paired with the
+   *  answer text or documentText — the answer routinely quotes/paraphrases
+   *  contract language, so persisting it would let confidential contract
+   *  content accumulate in Mongo indefinitely. */
+  message?: string;
 }
 
 let db: Db | null = null;

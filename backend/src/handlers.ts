@@ -363,6 +363,7 @@ export async function runAsk(input: AskInput): Promise<AskOutput> {
     },
     editReturned: Boolean(edit),
     citations: citations.length,
+    message,
   });
 
   const payload: AskOutput = { answer, citations };
