@@ -4,9 +4,9 @@
 
 # ClauseKit
 
-**AI legal assistant for Microsoft Word.**
+**AI legal assistant for Microsoft Word**
 
-Review and redline contracts, then simulate the negotiation - without leaving the document.
+Review and redline contracts, then simulate the negotiation - without leaving the document
 
 <br/>
 
@@ -26,40 +26,15 @@ Review and redline contracts, then simulate the negotiation - without leaving th
 
 ## What it does
 
-- **Grounded contract Q&A** - answers come from the document in front of you, cited by clause (`§`), never invented.
-- **One-click redlines** - proposes exact replacement language and applies it as a native tracked change in Word.
-- **Negotiation simulator** - builds a fallback ladder (ideal → market → floor) per off-market term and role-plays opposing counsel.
+- **Grounded contract Q&A** - answers come from the document in front of you, cited by the clause (`§`) number
+- **One-click redlines** - proposes exact replacement language and applies it as a native tracked change in Word
+- **Negotiation simulator** - builds a fallback ladder per off-market term and role-plays opposing counsel
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    subgraph vercel["Vercel"]
-        direction TB
-        A["<b>Landing page</b><br/><i>frontend/</i>"]
-        B["<b>Playground + task pane</b><br/><i>microservices/word-addin/</i>"]
-    end
-
-    subgraph gcr["Google Cloud Run"]
-        C["<b>Backend API</b><br/><i>backend/</i>"]
-    end
-
-    subgraph anthropic["Anthropic"]
-        D["<b>Claude</b>"]
-    end
-
-    W["<b>Microsoft Word</b><br/><i>Office.js host</i>"]
-
-    A -- "Try the demo" --> B
-    W -.->|loads task pane| B
-    B -- "POST /api/ask<br/>POST /api/negotiate" --> C
-    C -- "Anthropic SDK" --> D
-
-    classDef node fill:#0e0e12,stroke:#3a3a44,color:#f5f5f6
-    classDef box fill:transparent,stroke:#6b7280,color:#9a9aa4
-    class A,B,C,D,W node
-    class vercel,gcr,anthropic box
-```
+<!-- Static render (no GitHub mermaid pan/zoom controls). Source: docs/architecture.mmd
+     Regenerate after editing: npx -y @mermaid-js/mermaid-cli -i docs/architecture.mmd -o docs/architecture.svg -b transparent -->
+![ClauseKit architecture](docs/architecture.svg)
 
 ## Repository structure
 
