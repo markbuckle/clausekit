@@ -33,7 +33,7 @@ Review and redline contracts, then simulate the negotiation - without leaving th
 ## Architecture
 
 <!-- Static render (no GitHub mermaid pan/zoom controls). Source: docs/architecture.mmd
-     Regenerate after editing: npx -y @mermaid-js/mermaid-cli -i docs/architecture.mmd -o docs/architecture.svg -b "#ffffff" -->
+     Regenerate after editing: npx -y @mermaid-js/mermaid-cli -i docs/architecture.mmd -o docs/architecture.svg -b transparent -->
 ![ClauseKit architecture](docs/architecture.svg)
 
 ## Repository structure
