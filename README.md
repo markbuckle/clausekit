@@ -27,9 +27,9 @@ Review and redline contracts, then simulate the negotiation - without leaving th
 
 ## What it does
 
-ClauseKit sits in a panel next to the contract and answers questions about it. Answers are grounded in the document itself and cited by clause number, so you can click through and check rather than take the model's word for it. When a term is off-market, ClauseKit drafts replacement language and applies it as a tracked change - nothing touches the document without review.
-
-There's also a negotiation simulator: pick your side and it finds the terms stacked against you, builds a fallback ladder for each one (opening ask, market middle, walk-away floor), and plays opposing counsel so you can hear the pushback before the real call.
+- **Grounded contract Q&A** - answers come from the document in front of you, cited by the clause (`§`) number
+- **One-click redlines** - proposes exact replacement language and applies it as a native tracked change in Word
+- **Negotiation simulator** - builds a fallback ladder per off-market term and role-plays opposing counsel
 
 ## Architecture
 
@@ -37,36 +37,77 @@ There's also a negotiation simulator: pick your side and it finds the terms stac
      Regenerate after editing: npx -y @mermaid-js/mermaid-cli -i docs/architecture.mmd -o docs/architecture.svg -b transparent -->
 ![ClauseKit architecture](docs/architecture.svg)
 
-## Repository layout
+## Repository structure
 
-```text
-clausekit/
-├── frontend/              landing page - React + Vite, one hand-written CSS file
-├── backend/               API - Express + tRPC, calls Claude, optional MongoDB
-├── microservices/
-│   └── word-addin/        Word task pane - Office.js + Fluent UI, webpack build
-└── docs/                  architecture diagram (mermaid source + rendered SVG)
-```
+| Folder | What it is |
+|:-------|:-----------|
+| `microservices/`<br>`word-addin/` | **Word Office Add-in** - React + TypeScript task pane running inside Microsoft Word via Office.js<br><sub>Entry `src/taskpane/index.tsx` · build with `npm start` from that folder · owns its own `package.json`, `webpack.config.js`, `tsconfig.json`, `manifest.xml`, and `assets/`</sub> |
+| `microservices/` | **Microservices container** - each service owns its own dependencies and build config<br><sub>currently just the Word add-in, with more to come</sub> |
+| `frontend/` | **Landing page** - React + TypeScript, built with Vite, hand-authored CSS<br><sub>`npm run dev` to serve locally · `npm run build` to bundle</sub> |
+| `backend/` | **Backend API** - Node.js + Express + tRPC, calling Claude via the Anthropic SDK<br><sub>typed procedures `ask` (document-grounded Q&A) and `negotiate` (negotiation brief) at `/trpc` · deprecated REST mirrors at `/api/*` · entry `src/index.ts`</sub> |
 
-There's no root `package.json` - each app owns its own dependencies and build. The task pane boots from `src/taskpane/index.tsx` (run `npm start` from that folder to sideload it into Word); the API's entry point is `backend/src/index.ts`.
+## Tech stack
 
-## How it's built
+Mostly TypeScript. Each area owns its own dependencies and build config - there is no shared root `package.json`.
 
-**Frontend.** React 18 bundled with Vite. Styling is one hand-written CSS file (`frontend/src/landing.css`) - no framework.
+<details open>
+<summary><b>Frontend</b> - <code>frontend/</code></summary>
+<br/>
 
-**Word add-in.** A React task pane running on Office.js, styled with Fluent UI so it doesn't look out of place inside Word. Webpack and Babel do the bundling, the Office Add-in CLI handles sideloading and the manifest, and the sample lease is generated with `docx`.
+- **React** + **TypeScript**, bundled with **Vite** (`@vitejs/plugin-react`).
+- **Plain CSS** (hand-authored design system in `src/landing.css`).
+- Assets (SVG / MP4 / images) imported through Vite.
 
-**Backend.** Express + tRPC on Node, run straight from TypeScript with tsx. Two procedures, `ask` and `negotiate`, both call Claude through the Anthropic SDK (Haiku 4.5 by default, swappable via env) with prompt caching on the contract prefix, so repeat questions against the same document stay cheap. The zod schemas that validate requests also drive the client's types - the add-in imports the router type directly, which turns a renamed field into a compile error instead of a production surprise. Suggested edits are checked server-side: if the model's `originalText` isn't a verbatim substring of the contract, the edit is dropped rather than sent to a client that can't apply it. The old REST routes still answer at `/api/*` for curl, but they're deprecated.
+</details>
 
-Since the demo is public, there's a CORS allowlist, per-route rate limits, and a daily token ceiling. The ceiling's counter lives in MongoDB (a free Atlas cluster) so it survives Cloud Run restarts, and each call writes a small usage record - route, model, token counts, the question asked - but never the contract text. If Mongo is unreachable, the API logs it and keeps serving from memory.
+<details open>
+<summary><b>Word add-in</b> - <code>microservices/word-addin/</code></summary>
+<br/>
+
+- **React** + **TypeScript** task pane running inside Word via **Office.js**.
+- **Fluent UI** (`@fluentui/react-components`) for UI, **Less** for styling.
+- Bundled with **Webpack** + **Babel**; tooling via the **Office Add-in CLI** (`office-addin-*`). Loaded into Word through `manifest.xml`.
+- `docx` generates the sample lease document.
+
+</details>
+
+<details open>
+<summary><b>Backend</b> - <code>backend/</code></summary>
+<br/>
+
+- **Node.js** + **Express** + **TypeScript**, run directly with **tsx** (ESM).
+- **tRPC** (Express adapter at `/trpc`) with **zod** schemas as the single source of truth for the wire contract - the Word add-in's client infers full request/response types from `AppRouter`, so contract drift fails at compile time. Deprecated REST mirrors kept at `/api/*` for curl-based smoke tests.
+- **Anthropic SDK** (`@anthropic-ai/sdk`) for all LLM calls - **Claude Haiku 4.5** by default, model swappable via env (Sonnet/Opus for heavier reasoning).
+- Structured outputs via **tool use**, with server-side verbatim validation so a suggested edit's original text is always an exact substring of the contract.
+- **Prompt caching** on the stable system prompt + contract prefix to cut cost/latency.
+- Hardening: **CORS** allowlist, **express-rate-limit** (per-minute + daily caps), and a daily token spend backstop.
+- **MongoDB** (optional, e.g. Atlas M0): persists the spend counter across container restarts (atomic `$inc` per UTC day - essential on scale-to-zero Cloud Run) and records per-call usage metadata (`sessions`; never contract text). Degrades gracefully to in-memory state when unset/unreachable.
+- **Docker** (`backend/Dockerfile`) for deployment.
+
+</details>
+
+<details open>
+<summary><b>AI / model layer</b></summary>
+<br/>
+
+- **Claude** (Anthropic) is the single model provider, called only from the backend so the API key never reaches the client.
+- Two endpoints: contract-review Q&A (`/api/ask`) and the negotiation simulator (`/api/negotiate`).
+
+</details>
 
 ## Design
 
-The landing page's dark, typography-first look borrows from [Resend](https://resend.com/); the product patterns come from studying [Spellbook](https://www.spellbook.legal/), which ClauseKit sits alongside. The design system - ink-black surfaces, one amber accent, Newsreader for headlines, Inter for body text, Roboto Mono for § references - was built with Claude and lives in `frontend/src/landing.css`. Screens were prototyped in Figma before implementation, and inside Word the pane leans on Fluent UI so it feels like part of the host app.
+- **Inspiration** - benchmarked against the products ClauseKit lives beside: [Spellbook](https://www.spellbook.legal/) for AI contract-review UX patterns, [Resend](https://resend.com/) for the dark, typography-led aesthetic of the landing page.
+- **Design system** - built with **Claude**: near-black ink surfaces with a single amber accent, Newsreader serif display over Inter body text, Roboto Mono for section references and labels (source of truth in `frontend/src/landing.css`).
+- **Prototypes** - screens and flows finalized in **Figma** before implementation.
+- **Inside Word** - the task pane uses **Fluent UI** so ClauseKit reads as native Microsoft Word UI rather than a bolted-on web view.
 
 ## Deployment
 
-The two frontends deploy to Vercel as static builds, each from its own `vercel.json`. The backend ships as a Docker container to Google Cloud Run, which injects `PORT` and the secrets (`ANTHROPIC_API_KEY`, `MONGODB_URI`, `ALLOWED_ORIGINS`). The full list of environment variables is in `backend/.env.example`.
+| Piece | Platform | How |
+|:------|:---------|:----|
+| `frontend/` · `microservices/`<br>`word-addin/` | **Vercel** | Two static deployments<br><sub>each built and served from its own `vercel.json`</sub> |
+| `backend/` | **Google Cloud Run** | Docker container from `backend/Dockerfile`<br><sub>platform injects `PORT` + secrets (`ANTHROPIC_API_KEY`, `MONGODB_URI`, `ALLOWED_ORIGINS`) · see `.env.example`</sub> |
 
 ---
 
