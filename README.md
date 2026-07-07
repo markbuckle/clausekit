@@ -14,11 +14,12 @@ Review and redline contracts, then simulate the negotiation - without leaving th
 ![React](https://img.shields.io/badge/React_18-087EA4?logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-000000?logo=express&logoColor=white)
+![tRPC](https://img.shields.io/badge/tRPC-2596BE?logo=trpc&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?logo=mongodb&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-D97706?logo=anthropic&logoColor=white)
 ![Office.js](https://img.shields.io/badge/Office.js-D83B01?logo=microsoftword&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?logo=vercel&logoColor=white)
 ![Cloud Run](https://img.shields.io/badge/Cloud_Run-4285F4?logo=googlecloud&logoColor=white)
-![License: MIT](https://img.shields.io/badge/License-MIT-22c55e)
 
 </div>
 
@@ -39,11 +40,11 @@ Review and redline contracts, then simulate the negotiation - without leaving th
 ## Repository structure
 
 | Folder | What it is |
-|--------|-----------|
-| `microservices/word-addin/` | Word Office Add-in - React + TypeScript task pane running inside Microsoft Word via Office.js. Entry point: `src/taskpane/index.tsx`. Build with `npm start` (from that folder). Owns its `package.json`, `webpack.config.js`, `tsconfig.json`, `manifest.xml`, and `assets/`. |
-| `microservices/` | Container for ClauseKit's microservices - currently just the Word add-in, with more to come. Each microservice owns its own dependencies and build config. |
-| `frontend/` | Landing page - React + TypeScript, built with Vite (plain CSS, no framework). `npm run dev` to serve locally, `npm run build` to bundle. |
-| `backend/` | Backend API - Node.js + Express + tRPC + TypeScript, calling Claude via the Anthropic SDK. Typed procedures `ask` (document-grounded Q&A) and `negotiate` (negotiation brief) served at `/trpc`; deprecated REST mirrors at `/api/*`. Entry point: `backend/src/index.ts`. |
+|:-------|:-----------|
+| `microservices/`<br>`word-addin/` | **Word Office Add-in** - React + TypeScript task pane running inside Microsoft Word via Office.js<br><sub>Entry `src/taskpane/index.tsx` · build with `npm start` from that folder · owns its own `package.json`, `webpack.config.js`, `tsconfig.json`, `manifest.xml`, and `assets/`</sub> |
+| `microservices/` | **Microservices container** - each service owns its own dependencies and build config<br><sub>currently just the Word add-in, with more to come</sub> |
+| `frontend/` | **Landing page** - React + TypeScript, built with Vite, hand-authored CSS<br><sub>`npm run dev` to serve locally · `npm run build` to bundle</sub> |
+| `backend/` | **Backend API** - Node.js + Express + tRPC, calling Claude via the Anthropic SDK<br><sub>typed procedures `ask` (document-grounded Q&A) and `negotiate` (negotiation brief) at `/trpc` · deprecated REST mirrors at `/api/*` · entry `src/index.ts`</sub> |
 
 ## Tech stack
 
@@ -94,12 +95,19 @@ Mostly TypeScript. Each area owns its own dependencies and build config - there 
 
 </details>
 
+## Design
+
+- **Inspiration** - benchmarked against the products ClauseKit lives beside: [Spellbook](https://www.spellbook.legal/) for AI contract-review UX patterns, [Resend](https://resend.com/) for the dark, typography-led aesthetic of the landing page.
+- **Design system** - built with **Claude**: near-black ink surfaces with a single amber accent, Newsreader serif display over Inter body text, Roboto Mono for section references and labels (source of truth in `frontend/src/landing.css`).
+- **Prototypes** - screens and flows finalized in **Figma** before implementation.
+- **Inside Word** - the task pane uses **Fluent UI** so ClauseKit reads as native Microsoft Word UI rather than a bolted-on web view.
+
 ## Deployment
 
 | Piece | Platform | How |
-|-------|----------|-----|
-| `frontend/` + `microservices/word-addin/` | **Vercel** | Two static deployments, each built and served from its own `vercel.json`. |
-| `backend/` | **Google Cloud Run** | Docker container (`backend/Dockerfile`); the platform injects `PORT` and secrets (`ANTHROPIC_API_KEY`, `ALLOWED_ORIGINS`, ...). See `backend/.env.example`. |
+|:------|:---------|:----|
+| `frontend/` · `microservices/`<br>`word-addin/` | **Vercel** | Two static deployments<br><sub>each built and served from its own `vercel.json`</sub> |
+| `backend/` | **Google Cloud Run** | Docker container from `backend/Dockerfile`<br><sub>platform injects `PORT` + secrets (`ANTHROPIC_API_KEY`, `MONGODB_URI`, `ALLOWED_ORIGINS`) · see `.env.example`</sub> |
 
 ---
 
