@@ -60,10 +60,10 @@ export default function DesktopOnlyModal({ open, onClose }: DesktopOnlyModalProp
           ClauseKit is built for your laptop
         </h2>
         <p>
-          The live demo runs contracts side-by-side with the assistant — a
+          The live demo runs contracts side-by-side with the assistant - a
           desktop-class experience that needs the room only a laptop or larger
           screen can give. Head over to your computer and open this page there to
-          run ClauseKit in the browser or in Word.
+          run ClauseKit in the browser or in Word
         </p>
 
         <button className="btn demo lg ck-modal-cta" onClick={onClose}>
