@@ -49,7 +49,7 @@ export default function Nav({ homeHref = '#top', showDemoCta = true }: NavProps)
         <div className="nav-cta">
           {showDemoCta && (
             <a className="btn demo" href="#demo">
-              Try the demo
+              Demo
             </a>
           )}
         </div>

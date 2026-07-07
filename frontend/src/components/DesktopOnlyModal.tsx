@@ -57,7 +57,7 @@ export default function DesktopOnlyModal({ open, onClose }: DesktopOnlyModalProp
 
         <span className="kicker">Best on desktop</span>
         <h2 id="ck-modal-title" className="serif-grad">
-          ClauseKit is built for your <span className="text-gold-grad">laptop</span>
+          ClauseKit is built for your laptop
         </h2>
         <p>
           The live demo runs contracts side-by-side with the assistant — a
