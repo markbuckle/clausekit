@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import ckMark from '../../assets/ck-mark.svg';
+import { NAV_DROP_MS } from '../intro';
 
 interface NavProps {
   /** Where the brand click goes. '#top' on the landing, '/' on a sub-page. */
@@ -10,7 +11,8 @@ interface NavProps {
 
 export default function Nav({ homeHref = '#top', showDemoCta = true }: NavProps) {
   const [hidden, setHidden] = useState(false);
-  // Intro: the nav starts off-screen and drops in shortly after load.
+  // Intro: the nav starts off-screen and drops in on the shared timeline
+  // (behind the lifting entrance cover on first load, near-instantly after).
   // Reduced-motion users skip the intro and see it in place immediately.
   const [intro, setIntro] = useState(
     () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
@@ -29,7 +31,7 @@ export default function Nav({ homeHref = '#top', showDemoCta = true }: NavProps)
 
   useEffect(() => {
     if (!intro) return;
-    const t = window.setTimeout(() => setIntro(false), 1200);
+    const t = window.setTimeout(() => setIntro(false), NAV_DROP_MS);
     return () => window.clearTimeout(t);
   }, [intro]);
 

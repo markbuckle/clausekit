@@ -15,6 +15,8 @@ import WordTutorial from './components/WordTutorial';
 import FinalCta from './components/FinalCta';
 import FooterWordmark from './components/FooterWordmark';
 import Footer from './components/Footer';
+import EntranceReveal from './components/EntranceReveal';
+import { HERO_REVEAL_MS } from './intro';
 
 /**
  * Premium scroll-animation layer. Pure IntersectionObserver + a single
@@ -32,9 +34,11 @@ function useScrollAnimations() {
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
     ) return;
 
-    // Intro timeline (ms from load): the nav drops in (~1200ms, see Nav.tsx),
-    // then the hero fades up. Everything else reveals on scroll.
-    const HERO_REVEAL_DELAY = 1900;
+    // Intro timeline lives in intro.ts: on the first load of a session the
+    // entrance cover plays, the nav drops behind it, then the hero fades up as
+    // the cover lifts. On repeat loads everything reveals almost immediately.
+    // Everything below the fold reveals on scroll.
+    const HERO_REVEAL_DELAY = HERO_REVEAL_MS;
 
     const observers: IntersectionObserver[] = [];
     const cleanups: Array<() => void> = [];
@@ -126,9 +130,12 @@ function useScrollAnimations() {
       q('.tut-step-inner, .tut-alt-inner').forEach((inner) => {
         const section = inner.closest('.tut-step, .tut-alt') ?? inner;
         const arrow = section.querySelector<HTMLElement>('.tut-scroll');
-        arm(inner, ['ck-up', 'ck-slow']);
+        // Stagger the step's children (number badge → title → body → CTA →
+        // screenshot) instead of revealing the block in one piece.
+        const kids = Array.from(inner.children) as HTMLElement[];
+        kids.forEach((kid, i) => arm(kid, ['ck-up', 'ck-slow'], i * 110));
         armArrow(arrow);
-        onEnter(section, () => { enter(inner); revealArrow(arrow, 1200); },
+        onEnter(section, () => { kids.forEach(enter); revealArrow(arrow, 1200); },
           { threshold: 0, rootMargin: '-30% 0px -30% 0px' });
       });
     }
@@ -287,6 +294,7 @@ export default function App() {
 
   return (
     <>
+      <EntranceReveal />
       <Nav homeHref={isTutorial ? '/' : '#top'} showDemoCta={!isTutorial} />
       {isTutorial ? (
         <main id="top">

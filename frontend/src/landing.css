@@ -319,6 +319,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; letter-spacing:
 .eyebrow-row .sub { font-size: 17px; color: var(--muted); max-width: 56ch; margin: 18px auto 0; line-height: 1.55; text-wrap: balance; }
 /* Conditional line break: only forces a wrap on phones (see 560px block). */
 .br-sm { display: none; }
+/* Opposite of .br-sm: forces a break above phone width, hidden on phones so
+   the text instead wraps naturally to fill the narrower column (see
+   sub-pillars below, and the 560px block). */
+.br-lg { display: inline; }
 /* Risk-review heading: let the title and subtitle run full width so each stays
    on a single line (they still wrap naturally on narrow viewports). */
 #risk .eyebrow-row h2,
@@ -607,6 +611,82 @@ html.ck-snap { scroll-snap-type: y proximity; scroll-padding-top: 64px; }
 .foot-base .soc { margin-left: auto; display: flex; align-items: center; }
 .foot-base .soc img { height: 50px; width: auto; display: block; }
 
+/* ============================================================
+   ENTRANCE REVEAL  (EntranceReveal.tsx — plays once per session)
+   A fixed cover in the page background colour. The mark fades in
+   dark, then an amber sheen sweeps through it diagonally (echoing
+   the hero mp4's drifting orb); as the amber exits, the cover
+   lifts to reveal the page already rendered beneath it.
+   pointer-events: none throughout, so it can never trap a click
+   even if the unmount timer were delayed. Timeline mirrors
+   intro.ts — keep the two in sync.
+   ============================================================ */
+.ck-intro {
+  position: fixed; inset: 0; z-index: 120; /* above nav (50), below modal (200) */
+  display: grid; place-items: center;
+  background: var(--bg);
+  pointer-events: none;
+  animation: ck-intro-lift .55s ease 2.25s both;
+}
+/* Soft amber halo behind the mark that rises and falls with the sweep.
+   Lives on the cover (not the mark) because the mark's mask would clip it,
+   and animating opacity here stays on the compositor — animating a
+   drop-shadow filter on the masked mark would re-rasterize every frame. */
+.ck-intro::before {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: min(60vw, 480px); height: min(60vw, 480px);
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(245, 158, 11, .14), transparent 62%);
+  opacity: 0;
+  animation: ck-intro-halo 1.7s ease-in-out .55s both;
+}
+/* The CK shape is a mask (image URL set inline from the hashed asset); the
+   dark base gradient matches ck-mark-dark.svg, and the sheen child paints
+   the amber as it passes — everything stays clipped to the mark. */
+.ck-intro-mark {
+  position: relative;
+  width: clamp(110px, 24vw, 190px);
+  aspect-ratio: 671 / 400; /* ck-mark.svg viewBox */
+  background: linear-gradient(180deg, #33333b 0%, #5b5b66 50%, #33333b 100%);
+  -webkit-mask: center / contain no-repeat;
+  mask: center / contain no-repeat;
+  animation: ck-intro-mark .6s cubic-bezier(.2, .7, .2, 1) both;
+}
+/* Amber band, oversized and angled along the bottom-left → top-right travel;
+   the transform-only sweep keeps it off the layout entirely. The band's ends
+   fade to zero-alpha AMBER (plain `transparent` is rgba(0,0,0,0), which
+   muddies the fringe as it interpolates through dark tones). */
+.ck-intro-sheen {
+  position: absolute; inset: -75%;
+  background: linear-gradient(55deg,
+    rgba(217, 148, 0, 0) 20%,
+    rgba(217, 148, 0, .95) 38%,
+    #ffd75e 50%,
+    rgba(217, 148, 0, .95) 62%,
+    rgba(217, 148, 0, 0) 80%);
+  transform: translate(-60%, 60%);
+  will-change: transform;
+  animation: ck-intro-sweep 1.7s cubic-bezier(.15, .85, .85, .15) .55s forwards;
+}
+@keyframes ck-intro-mark {
+  from { opacity: 0; transform: scale(.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+/* One keyframe segment, one bezier: enters quickly from bottom-left, glides
+   slowly while the mark is golden, accelerates out top-right (the mp4 orb's
+   drift-pause-drift). A single curve keeps velocity continuous end to end —
+   intermediate keyframes would restart the easing at every joint. */
+@keyframes ck-intro-sweep {
+  to { transform: translate(60%, -60%); }
+}
+@keyframes ck-intro-halo {
+  0%, 100% { opacity: 0; }
+  45%, 60% { opacity: 1; }
+}
+@keyframes ck-intro-lift { to { opacity: 0; visibility: hidden; } }
+/* Reduced motion: never show the cover (the JS never mounts it either). */
+@media (prefers-reduced-motion: reduce) { .ck-intro { display: none; } }
+
 /* Reveal animation (legacy fallback — kept working) */
 @media (prefers-reduced-motion: no-preference) {
   .reveal.armed { opacity: 0; transform: translateY(16px); }
@@ -700,6 +780,15 @@ html.ck-snap { scroll-snap-type: y proximity; scroll-padding-top: 64px; }
   }
   .section.ck-section-lit::before { animation: ck-section-wash 1.2s ease-out; }
 
+  /* ---- Phones / stacked layouts: every reveal collapses to vertical-only
+          motion. Sideways slides read cramped at narrow widths and are the
+          only transforms that could ever nudge a horizontal scrollbar. ---- */
+  @media (max-width: 920px) {
+    .ck-left.ck-armed,
+    .ck-right.ck-armed { transform: translateY(20px); }
+    .ck-risk-row.ck-armed { transform: translateY(20px); }
+  }
+
   /* ---- Keyframes ---- */
   @keyframes ck-sev-pop {
     0%   { opacity: 0; transform: scale(.9); }
@@ -739,6 +828,10 @@ html.ck-snap { scroll-snap-type: y proximity; scroll-padding-top: 64px; }
 @media (max-width: 560px) {
   .wrap { padding: 0 20px; }
   .br-sm { display: inline; }
+  .br-lg { display: none; }
+  /* Let the sentence wrap naturally to the full column width instead of
+     the desktop's two short, narrow, independently-centred halves. */
+  .sub-pillars { max-width: none; }
   .stats { grid-template-columns: 1fr 1fr; }
   .foot-grid { grid-template-columns: 1fr; gap: 28px; }
   /* The heart is bottom-anchored and ~as wide as the phone; lift + shrink it so

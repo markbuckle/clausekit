@@ -9,8 +9,9 @@ export default function Pillars() {
         <div className="eyebrow-row">
           <span className="kicker">Review · Draft · Ask · Negotiate</span>
           <h2 className="serif-grad">A sharper first read<br></br></h2>
-          <p className="sub">
-ClauseKit takes the tedious work off your plate<br></br>so your time goes to the <br className="br-sm" />judgment calls that matter          </p>
+          <p className="sub sub-pillars">
+            ClauseKit takes the tedious work off your plate<br className="br-lg" /> so your time goes to the judgment calls that matter
+          </p>
         </div>
         {/* <div className="pillars">
 
