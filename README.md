@@ -37,12 +37,18 @@ Review and redline contracts, then simulate the negotiation - without leaving th
      Regenerate after editing: npx -y @mermaid-js/mermaid-cli -i docs/architecture.mmd -o docs/architecture.svg -b transparent -->
 ![ClauseKit architecture](docs/architecture.svg)
 
+## Design
+
+- **Inspiration** - benchmarked against the products ClauseKit lives beside: [Spellbook](https://www.spellbook.legal/) for AI contract-review UX patterns, [Resend](https://resend.com/home/) for the dark, typography-led aesthetic of the landing page.
+- **Design system** - built with **Claude**: near-black ink surfaces with a single amber accent, Newsreader serif display over Inter body text, Roboto Mono for section references and labels (source of truth in `frontend/src/landing.css`).
+- **Prototypes** - svg's finalized in **Figma** before implementation.
+- **Inside Word** - the task pane uses **Fluent UI** so ClauseKit reads as native Microsoft Word UI rather than a bolted-on web view.
+
 ## Repository structure
 
 | Folder | What it is |
 |:-------|:-----------|
 | `microservices/`<br>`word-addin/` | **Word Office Add-in** - React + TypeScript task pane running inside Microsoft Word via Office.js<br><sub>Entry `src/taskpane/index.tsx` · build with `npm start` from that folder · owns its own `package.json`, `webpack.config.js`, `tsconfig.json`, `manifest.xml`, and `assets/`</sub> |
-| `microservices/` | **Microservices container** - each service owns its own dependencies and build config<br><sub>currently just the Word add-in, with more to come</sub> |
 | `frontend/` | **Landing page** - React + TypeScript, built with Vite, hand-authored CSS<br><sub>`npm run dev` to serve locally · `npm run build` to bundle</sub> |
 | `backend/` | **Backend API** - Node.js + Express + tRPC, calling Claude via the Anthropic SDK<br><sub>typed procedures `ask` (document-grounded Q&A) and `negotiate` (negotiation brief) at `/trpc` · deprecated REST mirrors at `/api/*` · entry `src/index.ts`</sub> |
 
@@ -95,13 +101,6 @@ Mostly TypeScript. Each area owns its own dependencies and build config - there 
 
 </details>
 
-## Design
-
-- **Inspiration** - benchmarked against the products ClauseKit lives beside: [Spellbook](https://www.spellbook.legal/) for AI contract-review UX patterns, [Resend](https://resend.com/) for the dark, typography-led aesthetic of the landing page.
-- **Design system** - built with **Claude**: near-black ink surfaces with a single amber accent, Newsreader serif display over Inter body text, Roboto Mono for section references and labels (source of truth in `frontend/src/landing.css`).
-- **Prototypes** - screens and flows finalized in **Figma** before implementation.
-- **Inside Word** - the task pane uses **Fluent UI** so ClauseKit reads as native Microsoft Word UI rather than a bolted-on web view.
-
 ## Deployment
 
 | Piece | Platform | How |
@@ -112,5 +111,5 @@ Mostly TypeScript. Each area owns its own dependencies and build config - there 
 ---
 
 <div align="center">
-<sub>Built by <a href="https://github.com/markbuckle">Mark Buckle</a> · MIT License</sub>
+<sub>Built by <a href="https://github.com/markbuckle">Mark Buckle</a></sub>
 </div>
