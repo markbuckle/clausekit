@@ -14,9 +14,13 @@ import { PLAY_INTRO, INTRO_DONE_MS } from '../intro';
  * The mark is drawn as a CSS mask over gradient layers (rather than an <img>)
  * so the sweeping amber sheen stays clipped to the CK shape.
  */
+/* The url() MUST be quoted: in production Vite inlines this small SVG as a
+   data: URL containing raw spaces and single quotes, and an unquoted url()
+   with those characters is invalid CSS — the browser silently drops the
+   declaration and the mark renders as unmasked rectangles. */
 const markMask = {
-  WebkitMaskImage: `url(${ckMark})`,
-  maskImage: `url(${ckMark})`,
+  WebkitMaskImage: `url("${ckMark}")`,
+  maskImage: `url("${ckMark}")`,
 } as const;
 
 export default function EntranceReveal() {
