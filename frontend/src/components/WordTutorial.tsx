@@ -1,5 +1,12 @@
-import type { ReactNode } from 'react';
+import { useState } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 import { LEASE_DOCX_URL, MANIFEST_URL } from '../config';
+import DesktopOnlyModal from './DesktopOnlyModal';
+
+// Below this width the "Download the add-in" / "Open in Word" steps can't be
+// completed (Word sideloading is a desktop-class flow), so we intercept those
+// taps and point visitors to their desktop instead. Matches FinalCta's guard.
+const MOBILE_QUERY = '(max-width: 768px)';
 // Imported so Vite bundles + hashes them (files under frontend/assets/ aren't
 // served by URL - only frontend/public/ is). Same pattern as Nav/Footer/Hero.
 import wordstep1 from '../../assets/tutorial/wordstep1.jpg';
@@ -49,13 +56,24 @@ export default function WordTutorial() {
   const leaseSrc = `${window.location.origin}${LEASE_DOCX_URL}`;
   const openInWordUrl = `${OFFICE_VIEWER}${encodeURIComponent(leaseSrc)}`;
 
+  const [modalOpen, setModalOpen] = useState(false);
+
+  // On mobile, stop the action and show the "use your desktop" modal.
+  // On desktop, let the link behave normally.
+  const guardMobile = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (window.matchMedia(MOBILE_QUERY).matches) {
+      e.preventDefault();
+      setModalOpen(true);
+    }
+  };
+
   const steps: Step[] = [
     {
       title: 'Download the ClauseKit add-in',
       body: <>Grab the add-in: a small manifest file you&apos;ll load into Word in a moment</>,
       cta: (
         <div className="tut-step-cta">
-          <a className="btn demo" href={MANIFEST_URL} download="clausekit-manifest.xml">
+          <a className="btn demo" href={MANIFEST_URL} download="clausekit-manifest.xml" onClick={guardMobile}>
             Download the add-in
           </a>
         </div>
@@ -73,7 +91,7 @@ export default function WordTutorial() {
       ),
       cta: (
         <div className="tut-step-cta">
-          <a className="btn demo" href={openInWordUrl} target="_blank" rel="noopener noreferrer">
+          <a className="btn demo" href={openInWordUrl} target="_blank" rel="noopener noreferrer" onClick={guardMobile}>
             Open in Word
           </a>
         </div>
@@ -185,13 +203,14 @@ export default function WordTutorial() {
           <div className="tut-alt-inner">
             <p className="tut-alt-lead">Alternatively,</p>
             <div className="tut-step-cta">
-              <a className="btn demo" href={LEASE_DOCX_URL} download>
+              <a className="btn demo" href={LEASE_DOCX_URL} download onClick={guardMobile}>
                 Download the external .docx
               </a>
             </div>
           </div>
         </div>
       </div>
+      <DesktopOnlyModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </section>
   );
 }

@@ -32,7 +32,7 @@ export default function FinalCta() {
             <a className="btn demo lg" href={PLAYGROUND_URL} target="_blank" rel="noopener noreferrer" onClick={guardMobile}>
               Run in browser
             </a>
-            <a className="btn demo lg blue" href="/run-in-word" onClick={guardMobile}>
+            <a className="btn demo lg blue" href="/run-in-word">
               Run in Word
             </a>
           </div>
