@@ -12,13 +12,16 @@ type ApplyState = "idle" | "applying" | "applied" | "error";
 /**
  * Renders a single model-proposed redline and applies it as a tracked change
  * through the DocumentService seam. Driven entirely by the `edit` prop — no
- * hardcoded content.
+ * hardcoded content. The replacement wording can be tweaked inline before
+ * applying (originalText stays untouched — it anchors the redline).
  */
 export default function ActionCard({ edit }: ActionCardProps) {
   const service = useDocumentService();
   const [state, setState] = useState<ApplyState>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [dismissed, setDismissed] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [proposedText, setProposedText] = useState(edit.proposedText);
 
   if (dismissed) return null;
 
@@ -26,10 +29,11 @@ export default function ActionCard({ edit }: ActionCardProps) {
     setState("applying");
     setErrorMsg("");
     try {
-      const result = await service.applyTrackedChange(edit);
+      const result = await service.applyTrackedChange({ ...edit, proposedText });
       switch (result.status) {
         case "applied":
           setState("applied");
+          setEditing(false);
           await service.scrollTo({ clauseRef: result.clauseRef ?? edit.clauseRef });
           break;
         case "not-found":
@@ -49,6 +53,11 @@ export default function ActionCard({ edit }: ActionCardProps) {
     }
   };
 
+  const cancelEdit = () => {
+    setProposedText(edit.proposedText);
+    setEditing(false);
+  };
+
   const applyLabel =
     state === "applying" ? "Applying…" : state === "error" ? "Retry" : "Apply Change";
 
@@ -65,7 +74,19 @@ export default function ActionCard({ edit }: ActionCardProps) {
           <div className="d-line d-del">
             <span className="t">{edit.originalText}</span>
           </div>
-          <div className="d-line d-add">{edit.proposedText}</div>
+          <div className="d-line d-add">
+            {editing ? (
+              <textarea
+                className="d-add-input"
+                value={proposedText}
+                onChange={(e) => setProposedText(e.target.value)}
+                aria-label="Edit the proposed text"
+                autoFocus
+              />
+            ) : (
+              proposedText
+            )}
+          </div>
         </div>
         {state === "error" && <p className="a-error">{errorMsg}</p>}
       </div>
@@ -75,9 +96,18 @@ export default function ActionCard({ edit }: ActionCardProps) {
             <span className="chk" /> Applied to document
           </button>
         ) : (
-          <button className="ck-btn primary" onClick={handleApply} disabled={state === "applying"}>
-            <span className="chk" /> {applyLabel}
-          </button>
+          <>
+            <button className="ck-btn primary" onClick={handleApply} disabled={state === "applying"}>
+              <span className="chk" /> {applyLabel}
+            </button>
+            <button
+              className="ck-btn ghost"
+              onClick={editing ? cancelEdit : () => setEditing(true)}
+              disabled={state === "applying"}
+            >
+              {editing ? "Cancel" : "Edit"}
+            </button>
+          </>
         )}
         <span className="spacer" />
         <button className="ck-btn danger-ghost" onClick={() => setDismissed(true)}>

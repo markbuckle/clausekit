@@ -17,8 +17,27 @@ export default function TermCard({ term, heading, side }: TermCardProps) {
   const [appliedTier, setAppliedTier] = useState<string | null>(null);
   const [pendingTier, setPendingTier] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Inline wording tweaks, keyed by tier. A rung with no draft applies the
+  // model's proposal; cancelling an edit deletes the draft to revert.
+  const [editingTier, setEditingTier] = useState<string | null>(null);
+  const [drafts, setDrafts] = useState<Record<string, string>>({});
 
   const counterpartyName = side === "tenant" ? "landlord" : "tenant";
+
+  const proposedFor = (rung: LadderRung) => drafts[rung.tier] ?? rung.proposedText;
+
+  const toggleEdit = (rung: LadderRung) => {
+    if (editingTier === rung.tier) {
+      setDrafts((d) => {
+        const next = { ...d };
+        delete next[rung.tier];
+        return next;
+      });
+      setEditingTier(null);
+    } else {
+      setEditingTier(rung.tier);
+    }
+  };
 
   const applyRung = async (rung: LadderRung) => {
     setPendingTier(rung.tier);
@@ -27,7 +46,7 @@ export default function TermCard({ term, heading, side }: TermCardProps) {
       const edit: SuggestedEdit = {
         clauseRef: term.clauseRef,
         originalText: term.currentText,
-        proposedText: rung.proposedText,
+        proposedText: proposedFor(rung),
         rationale: rung.rationale,
         severity: term.severity,
       };
@@ -35,6 +54,7 @@ export default function TermCard({ term, heading, side }: TermCardProps) {
       switch (result.status) {
         case "applied":
           setAppliedTier(rung.tier);
+          setEditingTier(null);
           await service.scrollTo({ clauseRef: result.clauseRef ?? term.clauseRef });
           break;
         case "not-found":
@@ -74,24 +94,46 @@ export default function TermCard({ term, heading, side }: TermCardProps) {
           const isApplied = appliedTier === rung.tier;
           const isPending = pendingTier === rung.tier;
           const otherApplied = appliedTier !== null && !isApplied;
+          const isEditing = editingTier === rung.tier;
           return (
             <div className={`sim-rung tier-${rung.tier}${isApplied ? " applied" : ""}`} key={rung.tier}>
               <span className="sim-tier">{TIER_LABELS[rung.tier] ?? rung.tier}</span>
-              <p className="sim-rung-text">{rung.proposedText}</p>
-              <p className="sim-rung-rat">{rung.rationale}</p>
-              {isApplied ? (
-                <button className="ck-btn applied sim-apply" disabled>
-                  <span className="chk" /> Applied
-                </button>
+              {isEditing && !isApplied ? (
+                <textarea
+                  className="sim-rung-edit"
+                  value={proposedFor(rung)}
+                  onChange={(e) => setDrafts((d) => ({ ...d, [rung.tier]: e.target.value }))}
+                  aria-label={`Edit the ${TIER_LABELS[rung.tier] ?? rung.tier} proposal`}
+                  autoFocus
+                />
               ) : (
-                <button
-                  className="ck-btn primary sim-apply"
-                  onClick={() => applyRung(rung)}
-                  disabled={isPending || otherApplied}
-                >
-                  {isPending ? "Applying…" : "Apply this position"}
-                </button>
+                <p className="sim-rung-text">{proposedFor(rung)}</p>
               )}
+              <p className="sim-rung-rat">{rung.rationale}</p>
+              <div className="sim-rung-actions">
+                {isApplied ? (
+                  <button className="ck-btn applied sim-apply" disabled>
+                    <span className="chk" /> Applied
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      className="ck-btn primary sim-apply"
+                      onClick={() => applyRung(rung)}
+                      disabled={isPending || otherApplied}
+                    >
+                      {isPending ? "Applying…" : "Apply this position"}
+                    </button>
+                    <button
+                      className="ck-btn ghost sim-edit"
+                      onClick={() => toggleEdit(rung)}
+                      disabled={isPending || otherApplied}
+                    >
+                      {isEditing ? "Cancel" : "Edit"}
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           );
         })}
