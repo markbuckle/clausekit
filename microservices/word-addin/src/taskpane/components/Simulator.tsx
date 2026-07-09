@@ -54,7 +54,7 @@ export default function Simulator({
           <div className="sim-loading-text">
             <span>War-gaming the lease as the {side}…</span>
             <span className="sim-loading-hint">
-              This takes ~30 seconds — analyzing every term from both sides.
+              This takes ~30 seconds. Analyzing every term from both sides.
             </span>
           </div>
         </div>
