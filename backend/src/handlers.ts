@@ -4,6 +4,7 @@ import {
   suggestedEditSchema,
   ladderRungSchema,
   counterpartySchema,
+  severitySchema,
   type AskInput,
   type AskOutput,
   type NegotiateInput,
@@ -11,6 +12,7 @@ import {
   type SuggestedEdit,
   type AnalyzedTerm,
   type LadderRung,
+  type Severity,
 } from "./schemas";
 import { recordUsage } from "./spend";
 import { logSession } from "./db";
@@ -129,6 +131,7 @@ For each term provide:
 - clauseRef: the section reference (e.g. "§5").
 - currentText: the EXACT off-market language from the contract, copied verbatim character-for-character (including punctuation) — the minimal contiguous span a redline would replace. It MUST appear verbatim in the contract.
 - favoredParty: which side the current language favors (usually the side you do NOT represent).
+- severity: how damaging the current language is to the side you represent, as written — "high" (materially harmful, fight hard), "medium" (meaningfully off-market), or "low" (minor or easily lived with).
 - yourLadder: three positions ordered from your side — (1) tier "ideal": your aggressive but defensible opening ask; (2) tier "market": the reasonable, market-standard middle; (3) tier "floor": your walk-away minimum you can still live with. Each rung's proposedText is redline language that cleanly and grammatically replaces currentText (a drop-in substitute). rationale is one line.
 - counterparty: simulate opposing counsel. predictedCounter is how the other side most likely responds to your redline; argument is the reasoning they would give.
 
@@ -160,6 +163,12 @@ const NEGOTIATE_TOOL: Anthropic.Tool = {
               enum: ["tenant", "landlord"],
               description: "Which side the current language favors.",
             },
+            severity: {
+              type: "string",
+              enum: ["low", "medium", "high"],
+              description:
+                "How damaging the current language is to the represented side as written: high (materially harmful), medium (meaningfully off-market), low (minor).",
+            },
             yourLadder: {
               type: "array",
               description: "Ordered positions from the represented side: ideal ask, market middle, walk-away floor.",
@@ -189,7 +198,7 @@ const NEGOTIATE_TOOL: Anthropic.Tool = {
               required: ["predictedCounter", "argument"],
             },
           },
-          required: ["clauseRef", "currentText", "favoredParty", "yourLadder", "counterparty"],
+          required: ["clauseRef", "currentText", "favoredParty", "severity", "yourLadder", "counterparty"],
         },
       },
     },
@@ -232,11 +241,28 @@ function validateLadder(raw: unknown): LadderRung[] {
   return rungs;
 }
 
+const SEVERITY_RANK: Record<Severity, number> = { high: 0, medium: 1, low: 2 };
+
+/**
+ * Order the brief worst-first: high → medium → low. Within a tier, terms keep
+ * document order (position of currentText — always ≥ 0, validateTerms already
+ * enforced the verbatim guarantee), with the model's order as the final
+ * tiebreak via sort stability.
+ */
+function rankTerms(terms: AnalyzedTerm[], documentText: string): AnalyzedTerm[] {
+  return terms.sort(
+    (a, b) =>
+      SEVERITY_RANK[a.severity] - SEVERITY_RANK[b.severity] ||
+      documentText.indexOf(a.currentText) - documentText.indexOf(b.currentText)
+  );
+}
+
 /**
  * Validate the negotiation terms. Same verbatim guarantee as ask: a term's
  * currentText must be an EXACT substring of the document, else it's dropped, so
  * a rung can always locate what it replaces. Also requires a non-empty ladder
- * and a counterparty. Caps at MAX_TERMS.
+ * and a counterparty. A missing or invalid severity defaults to "medium"
+ * rather than dropping an otherwise-good term. Caps at MAX_TERMS.
  */
 function validateTerms(raw: unknown, documentText: string): AnalyzedTerm[] {
   if (!Array.isArray(raw)) return [];
@@ -259,10 +285,13 @@ function validateTerms(raw: unknown, documentText: string): AnalyzedTerm[] {
     const counterparty = counterpartySchema.safeParse(t.counterparty);
     if (!counterparty.success) continue;
 
+    const severity = severitySchema.safeParse(t.severity);
+
     terms.push({
       clauseRef: t.clauseRef,
       currentText: t.currentText,
       favoredParty: typeof t.favoredParty === "string" ? t.favoredParty : "",
+      severity: severity.success ? severity.data : "medium",
       yourLadder,
       counterparty: counterparty.data,
     });
@@ -411,7 +440,10 @@ export async function runNegotiate(input: NegotiateInput): Promise<NegotiateOutp
 
   let terms: AnalyzedTerm[] = [];
   if (toolUse && toolUse.input && typeof toolUse.input === "object") {
-    terms = validateTerms((toolUse.input as Record<string, unknown>).terms, documentText);
+    terms = rankTerms(
+      validateTerms((toolUse.input as Record<string, unknown>).terms, documentText),
+      documentText
+    );
   }
 
   const u = response.usage;

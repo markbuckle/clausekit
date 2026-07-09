@@ -71,11 +71,13 @@ export type Counterparty = z.infer<typeof counterpartySchema>;
 
 /** One off-market term analyzed for the negotiation brief.
  *  favoredParty is always a string here: validateTerms coerces a non-string
- *  from the model to "" before this shape is ever constructed. */
+ *  from the model to "" before this shape is ever constructed; likewise an
+ *  invalid or missing severity is defaulted to "medium" there. */
 export const analyzedTermSchema = z.object({
   clauseRef: z.string(),
   currentText: z.string().min(1),
   favoredParty: z.string(),
+  severity: severitySchema,
   yourLadder: z.array(ladderRungSchema).min(1),
   counterparty: counterpartySchema,
 });

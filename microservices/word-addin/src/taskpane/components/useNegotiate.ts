@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { useDocumentService } from "../../services";
+import type { Severity } from "../../services";
 import { trpc } from "../../services/trpc";
 
 export type Side = "tenant" | "landlord";
@@ -22,6 +23,8 @@ export interface AnalyzedTerm {
   clauseRef: string;
   currentText: string;
   favoredParty: string;
+  /** How damaging the term is to the represented side; the brief is served worst-first. */
+  severity: Severity;
   yourLadder: LadderRung[];
   counterparty: Counterparty;
 }

@@ -29,7 +29,7 @@ export default function TermCard({ term, heading, side }: TermCardProps) {
         originalText: term.currentText,
         proposedText: rung.proposedText,
         rationale: rung.rationale,
-        severity: "high",
+        severity: term.severity,
       };
       const result = await service.applyTrackedChange(edit);
       switch (result.status) {
@@ -60,6 +60,7 @@ export default function TermCard({ term, heading, side }: TermCardProps) {
         <span className="sim-ref">{term.clauseRef}</span>
         {heading && <span className="sim-heading">{heading}</span>}
         <span className={`sim-favors ${term.favoredParty}`}>favors {term.favoredParty}</span>
+        <span className={`a-sev sev-${term.severity}`}>{term.severity}</span>
       </div>
 
       <details className="sim-current">

@@ -232,6 +232,8 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .sim-favors { margin-left: auto; font-size: 9.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; border-radius: 4px; padding: 3px 7px; background: var(--amber-soft); color: var(--amber-600); }
 .sim-favors.tenant { background: #e0f2fe; color: #0369a1; }
 .sim-favors.landlord { background: var(--amber-soft); color: var(--amber-600); }
+/* Severity pill reuses .a-sev; only sim-favors keeps the auto margin so the two pills sit together on the right. */
+.sim-card-head .a-sev { margin-left: 0; }
 
 .sim-current { padding: 10px 12px; border-bottom: 1px solid var(--border); }
 .sim-current summary { font-size: 11.5px; font-weight: 500; color: var(--text-secondary); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px; }
