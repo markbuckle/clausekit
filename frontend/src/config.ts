@@ -6,11 +6,13 @@
 
 /**
  * Where "Try the demo" sends visitors — the ClauseKit playground.
- * Note: the local playground dev server runs over HTTPS (Office dev certs), so
- * the default must be https, not http (http → ERR_EMPTY_RESPONSE against TLS).
+ * Note: the local dev server runs over HTTPS (Office dev certs), so the
+ * default must be https, not http (http → ERR_EMPTY_RESPONSE against TLS).
+ * Default targets the add-in dev server (`npm run dev-server` / `npm start`,
+ * port 3000); the standalone `npm run playground` serves the same page on 3001.
  */
 export const PLAYGROUND_URL =
-  import.meta.env.VITE_PLAYGROUND_URL ?? "https://localhost:3001/playground.html";
+  import.meta.env.VITE_PLAYGROUND_URL ?? "https://localhost:3000/playground.html";
 
 /** The sample lease offered on the "run in real Word" path (served from public/). */
 export const LEASE_DOCX_URL = import.meta.env.VITE_LEASE_DOCX_URL ?? "/lease.docx";
