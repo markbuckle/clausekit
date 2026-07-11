@@ -848,9 +848,9 @@ html.ck-snap { scroll-snap-type: y proximity; scroll-padding-top: 64px; }
 
 /* ============================================================
    DESKTOP-ONLY MODAL  (DesktopOnlyModal.tsx)
-   Shown when the "Run in browser" / "Run in Word" CTAs are tapped on a
-   phone-sized screen — the live demo is desktop-class, so we redirect the
-   visitor rather than degrade it. Styled to match the .cta / landing look.
+   Shown when the Word-tutorial CTAs are tapped on a phone-sized screen —
+   installing the add-in is desktop-class, so we redirect the visitor
+   rather than degrade it. Styled to match the .cta / landing look.
    ============================================================ */
 .ck-modal-overlay {
   position: fixed; inset: 0; z-index: 200;
@@ -887,9 +887,15 @@ html.ck-snap { scroll-snap-type: y proximity; scroll-padding-top: 64px; }
   background: linear-gradient(90deg, transparent 28%, rgba(245, 158, 11, .55) 50%, transparent 72%);
 }
 .ck-modal-card > * { position: relative; }
-.ck-modal-card h2 { font-size: clamp(26px, 7vw, 32px); line-height: 1.08; letter-spacing: -.02em; margin: 10px auto 0; max-width: 16ch; }
+/* text-wrap: balance evens out the centred line breaks (same trick as the
+   tutorial steps — no one-word orphans on the last line). */
+.ck-modal-card h2 { font-size: clamp(26px, 7vw, 32px); line-height: 1.08; letter-spacing: -.02em; margin: 10px auto 0; max-width: 18ch; text-wrap: balance; }
 .ck-modal-card .kicker { display: inline-block; }
-.ck-modal-card p { font-size: 15px; color: var(--muted); line-height: 1.6; margin: 16px auto 0; max-width: 42ch; }
+.ck-modal-card p { font-size: 15px; color: var(--muted); line-height: 1.6; margin: 16px auto 0; max-width: 42ch; text-wrap: balance; }
+/* On phones the centred paragraph reads better ranged left. */
+@media (max-width: 768px) {
+  .ck-modal-card p { text-align: left; text-wrap: pretty; }
+}
 .ck-modal-cta { margin-top: 26px; justify-content: center; }
 .ck-modal-close {
   position: absolute; top: 14px; right: 14px; z-index: 2;

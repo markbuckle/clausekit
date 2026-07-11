@@ -6,10 +6,10 @@ interface DesktopOnlyModalProps {
 }
 
 /**
- * Shown when a visitor taps "Run in browser" / "Run in Word" on a small screen.
- * ClauseKit's live demo is a desktop-class, side-by-side Word/browser experience
- * that doesn't fit a phone, so rather than degrade it we politely redirect the
- * user to their laptop. Styled to match the landing page (dark card, amber
+ * Shown when a visitor taps one of the Word-tutorial CTAs on a small screen.
+ * Installing the add-in is a desktop-class Word experience that doesn't fit a
+ * phone, so rather than degrade it we politely redirect the user to their
+ * laptop. Styled to match the landing page (dark card, amber
  * accents, Newsreader display heading).
  */
 export default function DesktopOnlyModal({ open, onClose }: DesktopOnlyModalProps) {
@@ -57,13 +57,13 @@ export default function DesktopOnlyModal({ open, onClose }: DesktopOnlyModalProp
 
         <span className="kicker">Best on desktop</span>
         <h2 id="ck-modal-title" className="serif-grad">
-          ClauseKit is built for your laptop
+          ClauseKit for Word is built for your laptop only
         </h2>
         <p>
           The live demo runs contracts side-by-side with the assistant - a
           desktop-class experience that needs the room only a laptop or larger
           screen can give. Head over to your computer and open this page there to
-          run ClauseKit in the browser or in Word
+          run ClauseKit in the browser or in Word.
         </p>
 
         <button className="btn demo lg ck-modal-cta" onClick={onClose}>
