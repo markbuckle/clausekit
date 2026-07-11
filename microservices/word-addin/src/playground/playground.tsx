@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { createRoot } from "react-dom/client";
 import App from "../taskpane/components/App";
 import { DocumentServiceProvider } from "../services";
@@ -56,16 +56,43 @@ function LeaseDocument() {
 }
 
 function Playground() {
+  // On phones the pane becomes a bottom sheet; this tracks whether it's
+  // expanded (collapsed on load so the contract gets the first impression).
+  // Desktop ignores it entirely (the toggle bar is display: none).
+  const [sheetOpen, setSheetOpen] = useState(false);
+
   return (
-    <div className="pg-root">
+    <div className={`pg-root ${sheetOpen ? "pg-sheet-open" : "pg-sheet-closed"}`}>
       <div className="pg-doc-pane">
         <LeaseDocument />
       </div>
       <div className="pg-pane-host">
-        <DocumentServiceProvider service={documentService}>
-          <App title="ClauseKit" />
-        </DocumentServiceProvider>
+        <button
+          type="button"
+          className="pg-sheet-toggle"
+          aria-expanded={sheetOpen}
+          onClick={() => setSheetOpen((open) => !open)}
+        >
+          <span className="pg-sheet-grip" aria-hidden="true" />
+          <span className="pg-sheet-name">ClauseKit</span>
+          <svg className="pg-sheet-chev" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+            <path d="M3.5 6l4.5 4.5L12.5 6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+        <div className="pg-pane-body">
+          <DocumentServiceProvider service={documentService}>
+            <App title="ClauseKit" />
+          </DocumentServiceProvider>
+        </div>
       </div>
+      <button
+        type="button"
+        className="pg-sheet-fab"
+        aria-label="Open ClauseKit"
+        onClick={() => setSheetOpen(true)}
+      >
+        <img src="assets/ck-mark-amber.svg" alt="" />
+      </button>
     </div>
   );
 }
