@@ -26,7 +26,7 @@ import wordstep8 from '../../assets/tutorial/wordstep8.jpg';
 const OFFICE_VIEWER = 'https://view.officeapps.live.com/op/view.aspx?src=';
 
 interface Step {
-  title: string;
+  title: ReactNode;
   body: ReactNode;
   img?: string;
   alt?: string;
@@ -117,8 +117,8 @@ export default function WordTutorial() {
       title: 'Upload the ClauseKit Add-in',
       body: (
         <>
-          Open <b>Manage My Add-ins</b> (top-right of the Office Add-ins dialog),<br></br> then choose{' '}
-          <b>Upload My Add-in</b>.<br></br> A &ldquo;Cannot connect to catalog&rdquo; note is harmless - ignore it.
+          Open <b>Manage My Add-ins</b> (top-right of the Office Add-ins dialog), then choose{' '}
+          <b>Upload My Add-in</b>. A &ldquo;Cannot connect to catalog&rdquo; note is harmless - ignore it.
         </>
       ),
     },
@@ -135,11 +135,14 @@ export default function WordTutorial() {
     {
       img: wordstep7,
       alt: 'The file picker with clausekit-manifest.xml selected',
-      title: 'Choose the manifest you downloaded earlier',
+      title: (
+        <>
+          Choose the manifest you downloaded<span className="tut-hide-sm"> earlier</span>
+        </>
+      ),
       body: (
         <>
-          Select the <code>clausekit-manifest.xml</code> file you downloaded in step 1,<br></br> then confirm to
-          upload it.
+          Select the <code>clausekit-manifest.xml</code> file you downloaded in step 1, then confirm to upload it.
         </>
       ),
     },
@@ -148,11 +151,7 @@ export default function WordTutorial() {
       img: wordstep8,
       alt: 'ClauseKit applying a redline as a native tracked change',
       title: 'Get started',
-      body: (
-        <>
-          Ask any question or select the suggested prompts<br></br> and let ClauseKit do its magic
-        </>
-      ),
+      body: <>Ask any question or select the suggested prompts and let ClauseKit do its magic</>,
     },
   ];
 

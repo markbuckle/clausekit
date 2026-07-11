@@ -2,7 +2,7 @@ import type { DocumentService } from "../DocumentService";
 import type { ApplyResult, ScrollTarget, Selection, SuggestedEdit } from "../types";
 
 const NOT_IMPLEMENTED =
-  "ClauseKit can't read or edit the Word document yet — the live Word integration arrives in step 7.";
+  "ClauseKit can't read or edit the Word document yet - the live Word integration arrives in step 7.";
 
 /**
  * Placeholder DocumentService so the task pane still mounts inside real Word
