@@ -1,33 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
-// Vite imports: the mobile mark ships inline as a string (?raw) so its CSS
-// animations run and the DOM stays scriptable; the desktop mark is an <mp4>
-// URL (Vite copies + hashes it as a separately-cached asset).
-// TEMP: mobile SVG swapped out for the mp4 to compare — restore this import and
-// the mobile branch below to bring back ck-custom-animated-mobile.svg.
+// TEMP: mobile SVG swapped out for the mp4 to compare; restore this import and the mobile branch below to bring it back.
 // import mobileMarkup from '../../assets/ck-custom-animated-mobile.svg?raw';
 import desktopVideo from '../../assets/ck-custom.mp4';
 
-// Phones get the mobile-optimised inline SVG; iPad/laptop/desktop get the mp4.
-// Matches the app's own 560px phone breakpoint in landing.css.
+// Matches the 560px phone breakpoint in landing.css.
 const MOBILE_QUERY = '(max-width: 560px)';
 
 interface AnimatedLogoProps {
-  /** Passed straight through to the wrapper (e.g. "pill-img"). Size the inner
-   *  <svg>/<video> via CSS (`.pill-img svg, .pill-img video { ... }`). */
+  // Passed straight through to the wrapper (e.g. "pill-img"); size the inner svg/video via CSS.
   className?: string;
-  /**
-   * Pause all animation. The component also auto-pauses while scrolled
-   * offscreen so nothing decodes/composites when the logo isn't visible.
-   */
+  // Pause all animation. Also auto-pauses while scrolled offscreen.
   paused?: boolean;
 }
 
-/**
- * Animated ClauseKit mark. Desktop plays the mp4 (video quality/size test);
- * below 560px it swaps to the inline mobile SVG. NOTE: the SVG contains element
- * ids — mount at most one inline instance per page; use the static mark for
- * repeats.
- */
+// Animated ClauseKit mark. The inline SVG has element ids, so mount at most one per page.
 export default function AnimatedLogo({ className, paused = false }: AnimatedLogoProps) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useRef(true);
@@ -35,7 +21,7 @@ export default function AnimatedLogo({ className, paused = false }: AnimatedLogo
     () => typeof window !== 'undefined' && window.matchMedia(MOBILE_QUERY).matches,
   );
 
-  // Track viewport crossing the phone breakpoint so we swap SVG <-> video.
+  // Swap SVG <-> video when the viewport crosses the phone breakpoint.
   useEffect(() => {
     const mq = window.matchMedia(MOBILE_QUERY);
     const onChange = () => setIsMobile(mq.matches);
@@ -44,8 +30,7 @@ export default function AnimatedLogo({ className, paused = false }: AnimatedLogo
     return () => mq.removeEventListener('change', onChange);
   }, []);
 
-  // Play/pause whatever is mounted (SVG CSS animations or the <video>) based on
-  // the `paused` prop and on-screen visibility. Re-runs on the SVG<->video swap.
+  // Play/pause whatever is mounted based on the `paused` prop and visibility.
   useEffect(() => {
     const root = ref.current;
     if (!root) return;
@@ -66,9 +51,7 @@ export default function AnimatedLogo({ className, paused = false }: AnimatedLogo
     return () => io.disconnect();
   }, [paused, isMobile]);
 
-  // TEMP: both mobile and desktop play the mp4 for comparison. To restore the
-  // mobile SVG, re-add the import above and put back the `if (isMobile)` branch
-  // that rendered `mobileMarkup` via dangerouslySetInnerHTML.
+  // TEMP: mp4 everywhere for now; put back the `if (isMobile)` branch to restore the mobile SVG.
   void isMobile;
 
   return (

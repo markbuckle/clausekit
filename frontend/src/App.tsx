@@ -18,15 +18,8 @@ import Footer from './components/Footer';
 import EntranceReveal from './components/EntranceReveal';
 import { HERO_REVEAL_MS } from './intro';
 
-/**
- * Premium scroll-animation layer. Pure IntersectionObserver + a single
- * passive scroll listener (no libraries). Every visual effect is driven by
- * `.ck-*` classes that only do anything inside the
- * `@media (prefers-reduced-motion: no-preference)` block in landing.css, so:
- *   - reduced-motion users get a no-op (we also bail out of all JS below),
- *   - if the JS never runs, nothing is left at opacity:0.
- * A timed snap-in safety net guarantees nothing on-screen can get stuck hidden.
- */
+
+// scroll-animation layer
 function useScrollAnimations() {
   useLayoutEffect(() => {
     if (
@@ -34,10 +27,7 @@ function useScrollAnimations() {
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
     ) return;
 
-    // Intro timeline lives in intro.ts: on the first load of a session the
-    // entrance cover plays, the nav drops behind it, then the hero fades up as
-    // the cover lifts. On repeat loads everything reveals almost immediately.
-    // Everything below the fold reveals on scroll.
+    // Intro timing comes from intro.ts; everything below the fold reveals on scroll.
     const HERO_REVEAL_DELAY = HERO_REVEAL_MS;
 
     const observers: IntersectionObserver[] = [];
@@ -47,8 +37,7 @@ function useScrollAnimations() {
     const q = (sel: string, root: ParentNode = document) =>
       Array.from(root.querySelectorAll<HTMLElement>(sel));
 
-    // Set an element's hidden start state. Done from JS only, so non-JS and
-    // reduced-motion users never see opacity:0.
+    // Hidden start state is set from JS only, so non-JS users never see opacity:0.
     const arm = (el: HTMLElement | null, classes: string[], delay = 0) => {
       if (!el) return;
       el.classList.add('ck-armed', ...classes);
@@ -74,9 +63,7 @@ function useScrollAnimations() {
       observers.push(io);
     };
 
-    // Section heading (.eyebrow-row): kicker -> h2 -> sub fade up, slowly, and
-    // only once the heading reaches the centre band of the viewport (so it
-    // never reveals while still off-screen — important for tall sections).
+    // Section headings fade up once they reach the centre band of the viewport.
     const animateHeading = (section: Element | null) => {
       if (!section) return;
       const row = section.querySelector('.eyebrow-row') ?? section;
@@ -85,30 +72,21 @@ function useScrollAnimations() {
       onEnter(row, () => head.forEach(enter), { threshold: 0, rootMargin: '-40% 0px -40% 0px' });
     };
 
-    // ---- Hero: stagger the reveal children, h1 also scales 0.97 -> 1 ----
-    // (translateY + scale only — never translateX — so the nowrap h1 can't
-    //  trigger a horizontal scrollbar.)
+    // Hero: translateY + scale only, since translateX on the nowrap h1 can cause a horizontal scrollbar.
     const heroSection = q('.hero').find((s) => !s.querySelector('.shot'));
     if (heroSection) {
-      // Include .pill-img so the whole hero (logo included) stays hidden during
-      // the intro — the initial screen should be just the black background.
+      // .pill-img included so the logo stays hidden during the intro too.
       const items = q('.reveal, .pill-img', heroSection);
-      // No stagger: the whole hero fades in together (slowly), via .ck-hero.
+      // No stagger: the whole hero fades in together via .ck-hero.
       items.forEach((el) =>
         arm(el, [el.tagName === 'H1' ? 'ck-heroh1' : 'ck-up', 'ck-hero']),
       );
-      // Hero waits for the intro (nav drops first), then fades up. It's above
-      // the fold, so we reveal it on a timer rather than on scroll.
+      // Above the fold, so reveal on a timer rather than on scroll.
       const heroTimer = window.setTimeout(() => items.forEach(enter), HERO_REVEAL_DELAY);
       cleanups.push(() => window.clearTimeout(heroTimer));
     }
 
-    // ---- Run-in-Word page: full-viewport sections. The intro reveals on load
-    //      (after the nav drops, mirroring the hero); each step and the closing
-    //      card reveal as they scroll to the centre of the viewport. ----
-    // The scroll-arrows are hidden up front and fade in LAST — a beat after
-    // their section's content has begun revealing — so each arrow reads as the
-    // final cue to move on rather than appearing before the content.
+    // Run-in-Word page: intro reveals on load, steps reveal on scroll; arrows fade in last so they read as the cue to move on.
     const armArrow = (el: HTMLElement | null) => el && el.classList.add('ck-arrow-armed');
     const revealArrow = (el: HTMLElement | null, delay: number) => {
       if (!el) return;
@@ -130,8 +108,7 @@ function useScrollAnimations() {
       q('.tut-step-inner, .tut-alt-inner').forEach((inner) => {
         const section = inner.closest('.tut-step, .tut-alt') ?? inner;
         const arrow = section.querySelector<HTMLElement>('.tut-scroll');
-        // Stagger the step's children (number badge → title → body → CTA →
-        // screenshot) instead of revealing the block in one piece.
+        // Stagger the step's children instead of revealing the block in one piece.
         const kids = Array.from(inner.children) as HTMLElement[];
         kids.forEach((kid, i) => arm(kid, ['ck-up', 'ck-slow'], i * 110));
         armArrow(arrow);
@@ -140,11 +117,10 @@ function useScrollAnimations() {
       });
     }
 
-    // ---- Pillars heading (only the eyebrow-row renders) ----
+    // Pillars heading (only the eyebrow-row renders)
     animateHeading(document.querySelector('#features'));
 
-    // ---- Spotlights: copy slides from the left, the visual from the right;
-    //      flipped when the split is reversed (.split.rev) ----
+    // Spotlights: copy slides in from one side, the visual from the other.
     const setupSplit = (split: HTMLElement | null) => {
       if (!split) return;
       const rev = split.classList.contains('rev');
@@ -157,10 +133,10 @@ function useScrollAnimations() {
     setupSplit(document.querySelector<HTMLElement>('.split:not(.rev)'));
     setupSplit(document.querySelector<HTMLElement>('.split.rev'));
 
-    // ---- RiskFlags heading ----
+    // RiskFlags heading
     animateHeading(document.querySelector('#risk'));
 
-    // ---- RiskFlags: rows slide in from the left + the severity pill pops ----
+    // RiskFlags rows slide in from the left and the severity pill pops.
     const riskwrap = document.querySelector('.riskwrap');
     if (riskwrap) {
       const rows = q('.risk', riskwrap);
@@ -173,8 +149,7 @@ function useScrollAnimations() {
       onEnter(riskwrap, () => rows.forEach(enter));
     }
 
-    // ---- ProductShot: head fades up, then the mock rises + scales in,
-    //      plus a gentle upward scroll parallax on the inner host ----
+    // ProductShot: head fades up, mock rises in, plus a gentle scroll parallax on the host.
     const shot = document.querySelector<HTMLElement>('.shot');
     const productSection = shot?.closest('section');
     if (shot && productSection) {
@@ -190,7 +165,7 @@ function useScrollAnimations() {
           ticking = false;
           const rect = shot.getBoundingClientRect();
           const vh = window.innerHeight || 1;
-          // -1 (below viewport) .. 0 (centered) .. 1 (above): drift up ~0.2x.
+          // p runs -1 (below viewport) to 1 (above); drift up ~0.2x.
           const p = (vh / 2 - (rect.top + rect.height / 2)) / vh;
           const py = Math.max(-50, Math.min(50, -p * 50));
           host.style.transform = `translateY(${py.toFixed(2)}px)`;
@@ -206,7 +181,7 @@ function useScrollAnimations() {
       }
     }
 
-    // ---- Security: cards fade + scale(0.94 -> 1) in a springy cascade ----
+    // Security cards fade + scale in a springy cascade.
     const security = document.querySelector('#security');
     if (security) {
       animateHeading(security);
@@ -216,8 +191,7 @@ function useScrollAnimations() {
       onEnter(security, () => cards.forEach(enter));
     }
 
-    // ---- FinalCta: ambient glow pulse on the radial ::before, heading and
-    //      buttons stagger in beneath it ----
+    // FinalCta: glow pulse on the radial ::before, heading and buttons stagger in.
     const cta = document.querySelector<HTMLElement>('.cta');
     const ctaSection = document.querySelector('#demo');
     if (cta && ctaSection) {
@@ -233,7 +207,7 @@ function useScrollAnimations() {
       });
     }
 
-    // ---- Ambient amber wash whenever a live .section enters the viewport ----
+    // Ambient amber wash whenever a section enters the viewport.
     q('.section').forEach((section) => {
       onEnter(
         section,
@@ -246,9 +220,7 @@ function useScrollAnimations() {
       );
     });
 
-    // ---- Safety net: anything armed but not yet revealed that's already in
-    //      (or above) the viewport gets snapped visible so it can't get stuck.
-    //      Below-the-fold elements stay armed and animate on scroll. ----
+    // Safety net: snap anything armed but unrevealed that's already in view, so nothing gets stuck hidden.
     const snap = (el: HTMLElement) => {
       el.style.transition = 'none';
       el.style.opacity = '1';
@@ -272,19 +244,11 @@ function useScrollAnimations() {
 
 export default function App() {
   useScrollAnimations();
-  // Lightweight 2-page routing: "/run-in-word" is a dedicated tutorial page,
-  // everything else is the landing. Real navigation (full page load) — fine for
-  // a marketing site, and avoids a router dependency. Needs the Vercel SPA
-  // rewrite (frontend/vercel.json) so /run-in-word serves index.html.
+  // Lightweight two page routing: /run-in-word is the tutorial, everything else is the landing (vercel.json rewrites it to index.html).
   const path = window.location.pathname.replace(/\/+$/, '');
   const isTutorial = path === '/run-in-word';
 
-  // Enable gentle scroll-snap: `tut-snap` on the Run-in-Word page (full-viewport
-  // steps, snap to centre), `ck-snap` on the landing (variable-height sections,
-  // snap each top under the nav). Both use `proximity`, so they only pull the
-  // viewport into place when the user comes to rest near a section — never
-  // fighting a deliberate scroll. The class lives on <html>, so it's scoped by
-  // route here rather than in static CSS.
+  // Scroll-snap class per route: tut-snap centres the tutorial steps, ck-snap snaps landing sections under the nav.
   useEffect(() => {
     const el = document.documentElement;
     const cls = isTutorial ? 'tut-snap' : 'ck-snap';
@@ -303,17 +267,12 @@ export default function App() {
       ) : (
         <main id="top">
           <Hero />
-          {/* <TrustedBy /> */}
           <Pillars />
           <SpotlightApply />
           <SpotlightGrounded />
           <RiskFlags />
           <ProductShot />
           <Security />
-          {/* TODO: when re-enabled, wire these into useScrollAnimations()
-              (e.g. Stats count-up cascade, Testimonial fade). */}
-          {/* <Stats /> */}
-          {/* <Testimonial /> */}
           <FinalCta />
         </main>
       )}

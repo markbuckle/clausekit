@@ -3,17 +3,15 @@ import ckMark from '../../assets/ck-mark.svg';
 import { NAV_DROP_MS } from '../intro';
 
 interface NavProps {
-  /** Where the brand click goes. '#top' on the landing, '/' on a sub-page. */
+  // Where the brand click goes: '#top' on the landing, '/' on a sub-page.
   homeHref?: string;
-  /** Hide the "Try the demo" button (e.g. on the Run-in-Word page). */
+  // Hide the "Try the demo" button (e.g. on the Run-in-Word page).
   showDemoCta?: boolean;
 }
 
 export default function Nav({ homeHref = '#top', showDemoCta = true }: NavProps) {
   const [hidden, setHidden] = useState(false);
-  // Intro: the nav starts off-screen and drops in on the shared timeline
-  // (behind the lifting entrance cover on first load, near-instantly after).
-  // Reduced-motion users skip the intro and see it in place immediately.
+  // Nav starts off-screen and drops in on the shared intro timeline; reduced-motion users see it in place immediately.
   const [intro, setIntro] = useState(
     () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   );

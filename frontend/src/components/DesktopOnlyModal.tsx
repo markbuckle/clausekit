@@ -5,20 +5,13 @@ interface DesktopOnlyModalProps {
   onClose: () => void;
 }
 
-/**
- * Shown when a visitor taps one of the Word-tutorial CTAs on a small screen.
- * Installing the add-in is a desktop-class Word experience that doesn't fit a
- * phone, so rather than degrade it we politely redirect the user to their
- * laptop. Styled to match the landing page (dark card, amber
- * accents, Newsreader display heading).
- */
+// Shown when a Word-tutorial CTA is tapped on a small screen; installing the add-in needs a desktop, so we point people there.
 export default function DesktopOnlyModal({ open, onClose }: DesktopOnlyModalProps) {
-  // Close on Escape and fully lock scroll (incl. mobile touch) while up.
+  // Close on Escape and lock scroll (including mobile touch) while up.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    // Swallow touch scrolling — `overflow: hidden` alone doesn't stop it on
-    // iOS Safari. The card's content is short, so blocking all touchmove is safe.
+    // overflow: hidden alone doesn't stop touch scrolling on iOS Safari.
     const onTouchMove = (e: TouchEvent) => e.preventDefault();
 
     document.addEventListener('keydown', onKey);

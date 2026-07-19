@@ -3,12 +3,9 @@ import type { MouseEvent, ReactNode } from 'react';
 import { LEASE_DOCX_URL, MANIFEST_URL } from '../config';
 import DesktopOnlyModal from './DesktopOnlyModal';
 
-// Below this width the "Download the add-in" / "Open in Word" steps can't be
-// completed (Word sideloading is a desktop-class flow), so we intercept those
-// taps and point visitors to their desktop instead. Matches FinalCta's guard.
+// Word sideloading is a desktop flow, so below this width we intercept the CTA taps and point visitors to their desktop.
 const MOBILE_QUERY = '(max-width: 768px)';
-// Imported so Vite bundles + hashes them (files under frontend/assets/ aren't
-// served by URL - only frontend/public/ is). Same pattern as Nav/Footer/Hero.
+// Imported so Vite bundles them; files under frontend/assets/ aren't served by URL.
 import wordstep1 from '../../assets/tutorial/wordstep1.jpg';
 import wordstep2 from '../../assets/tutorial/wordstep2.jpg';
 import wordstep3 from '../../assets/tutorial/wordstep3.jpg';
@@ -17,12 +14,7 @@ import wordstep6 from '../../assets/tutorial/wordstep6.jpg';
 import wordstep7 from '../../assets/tutorial/wordstep7.jpg';
 import wordstep8 from '../../assets/tutorial/wordstep8.jpg';
 
-/**
- * "Open in Word" opens the hosted sample lease in Word for the web via the Office
- * Online viewer, which shows it with an "Edit a Copy" button - that saves an
- * editable copy to the user's OneDrive (prompting sign-in if needed). Requires
- * the lease to be publicly reachable, i.e. deployed - not on localhost.
- */
+// Office Online viewer shows the hosted lease with an "Edit a Copy" button; the lease has to be publicly reachable, so no localhost.
 const OFFICE_VIEWER = 'https://view.officeapps.live.com/op/view.aspx?src=';
 
 interface Step {
@@ -31,14 +23,11 @@ interface Step {
   img?: string;
   alt?: string;
   cta?: ReactNode;
-  /** Top-align this step's content instead of centring it — for tall steps
-   *  (extra button or a tall screenshot) that otherwise overflow the viewport. */
+  // Top-align tall steps that would otherwise overflow the viewport.
   alignTop?: boolean;
 }
 
-// Bouncing down-chevron (white -> grey gradient) shown near the bottom of the
-// intro and every step to invite the next scroll. The gradient is defined once
-// in <WordTutorial> and referenced here by id (#tutArrowGrad).
+// Bouncing down-chevron that invites the next scroll; the gradient is defined once in WordTutorial (#tutArrowGrad).
 function ScrollArrow({ href, label = 'Scroll down' }: { href: string; label?: string }) {
   return (
     <a className="tut-scroll" href={href} aria-label={label}>
@@ -51,15 +40,13 @@ function ScrollArrow({ href, label = 'Scroll down' }: { href: string; label?: st
 }
 
 export default function WordTutorial() {
-  // Absolute, public URL to the hosted lease (same origin as this landing page),
-  // fed to the Office viewer so "Open in Word" opens the actual document.
+  // Absolute URL to the hosted lease, fed to the Office viewer.
   const leaseSrc = `${window.location.origin}${LEASE_DOCX_URL}`;
   const openInWordUrl = `${OFFICE_VIEWER}${encodeURIComponent(leaseSrc)}`;
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  // On mobile, stop the action and show the "use your desktop" modal.
-  // On desktop, let the link behave normally.
+  // On mobile, block the action and show the "use your desktop" modal instead.
   const guardMobile = (e: MouseEvent<HTMLAnchorElement>) => {
     if (window.matchMedia(MOBILE_QUERY).matches) {
       e.preventDefault();
