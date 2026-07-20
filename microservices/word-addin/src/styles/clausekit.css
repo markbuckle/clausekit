@@ -1,9 +1,4 @@
-/* ── ClauseKit Task Pane Design System ──
- *
- * Single source of truth for the task-pane UI. Loaded by both the Office
- * entry (src/taskpane/index.tsx) and the browser playground
- * (src/playground/playground.tsx) so the pane looks identical in either host.
- */
+/* Single source of truth for the task-pane UI. Loaded by both the Office entry (src/taskpane/index.tsx) and the browser playground (src/playground/playground.tsx) so the pane looks identical in either host. */
 :root {
   --navy: #0E0E12;
   --navy-700: #2b2b34;
@@ -272,11 +267,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text-p
 .sim-counter-icon { width: 13px; height: 13px; flex: none; background: var(--amber); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
 .sim-counter-pred { font-size: 12.5px; line-height: 1.55; margin: 0; color: #eef0f5; }
 
-/* ── Scrollbars ──
- * Modern, slim black/grey track + thumb. Applies to the pane scrollbar and
- * every inner scroll area (chat, simulator). WebKit/Chromium hosts use the
- * ::-webkit-scrollbar pseudo-elements; Firefox uses scrollbar-* properties.
- */
+/* Modern, slim black/grey track + thumb for the pane scrollbar and every inner scroll area. WebKit/Chromium hosts use ::-webkit-scrollbar pseudo-elements; Firefox uses scrollbar-* properties. */
 * {
   scrollbar-width: thin;
   scrollbar-color: #4b4b55 transparent;

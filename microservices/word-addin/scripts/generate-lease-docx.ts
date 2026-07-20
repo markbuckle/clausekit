@@ -1,33 +1,13 @@
-/*
- * Generates lease.docx from the seeded fixture — same clauses, headings, and
- * text as getLeaseFullText(), preserving exact punctuation (curly quotes, §,
- * em-dashes) so model-proposed originalText spans match what Word.run reads back.
- *
- * This is the test document, the file the add-in opens in the "run in real Word"
- * demo, and the file the landing page offers for download — written to all
- * consumers at once (see OUT_PATHS). Run with: npm run gen:docx
- */
+// Generates lease.docx from the seeded fixture, preserving exact punctuation (curly quotes, §, em-dashes) so model-proposed originalText spans match what Word.run reads back. Run with: npm run gen:docx
 import { mkdirSync, writeFileSync } from "fs";
 import { dirname } from "path";
 import { AlignmentType, Document, LineRuleType, Packer, Paragraph, TextRun } from "docx";
 import { LEASE_TITLE, leaseRecitals, leaseClauses } from "../src/fixtures/lease";
 
-// Written to both consumers so the copies can't drift: the add-in's demo dir
-// (the file Word sideloads) and the landing page's public dir (served by the
-// "Run in Word" download button). Paths are relative to this package's root,
-// which is the cwd when run via `npm run gen:docx`.
+// The add-in's demo dir (sideloaded by Word) and the landing page's public dir (served by the "Run in Word" button); paths are relative to this package's root.
 const OUT_PATHS = ["demo/lease.docx", "../../frontend/public/lease.docx"];
 
-/*
- * Formatting mirrors the browser playground's document pane (playground.css) so
- * the real-Word demo reads identically to "Run in Browser": a Georgia serif
- * body, a centered uppercase title, justified prose, and clause headings whose
- * §-ref sits in gray monospace beside a bold heading.
- *
- * CSS px are converted to Word units: pt = px * 0.75 (96dpi); docx font `size`
- * is in half-points, paragraph `spacing` (before/after) in twips (pt * 20), and
- * line `spacing.line` in 240ths of a line (line-height * 240, AUTO rule).
- */
+// Formatting mirrors the browser playground's document pane (playground.css) so the real-Word demo reads identically to "Run in Browser". CSS px converts to Word units: pt = px * 0.75 (96dpi), docx `size` in half-points, `spacing` in twips (pt * 20), `spacing.line` in 240ths of a line.
 const SERIF = "Georgia";
 const MONO = "Consolas";
 const INK = "1F2430"; // playground body color
@@ -60,9 +40,7 @@ async function main() {
   ];
 
   for (const clause of leaseClauses) {
-    // .pg-clause-head — gray monospace ref + bold serif heading, 8px gap below.
-    // The ref keeps its trailing period ("§5.") so OfficeDocumentService.scrollTo,
-    // which searches for `${clauseRef}.`, can still locate the heading in real Word.
+    // The ref keeps its trailing period ("§5.") so OfficeDocumentService.scrollTo, which searches for `${clauseRef}.`, can still locate the heading in real Word.
     children.push(
       new Paragraph({
         spacing: { after: 120 },

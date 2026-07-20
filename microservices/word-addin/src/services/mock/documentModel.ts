@@ -2,36 +2,26 @@ import type { ApplyResult, SuggestedEdit } from "../types";
 import type { LeaseClause } from "../../fixtures/lease";
 import { LEASE_TITLE, leaseRecitals, leaseClauses } from "../../fixtures/lease";
 
-/**
- * A run within a clause: either unchanged `text`, or a tracked `change` holding
- * the struck `original` and the inserted `proposed`.
- */
+// A run within a clause: either unchanged `text`, or a tracked `change` holding the struck `original` and the inserted `proposed`.
 export type Segment =
   | { kind: "text"; text: string }
   | { kind: "change"; original: string; proposed: string };
 
-/** A clause in the mutable working copy. */
+// A clause in the mutable working copy.
 export interface WorkingClause {
   ref: string;
   heading: string;
   segments: Segment[];
 }
 
-/**
- * Stable DOM id for a clause in the canvas. Shared by the canvas renderer and
- * the mock service's scrollTo so they agree on element ids.
- */
+// Stable DOM id for a clause in the canvas, shared by the canvas renderer and the mock service's scrollTo so they agree on element ids.
 export function clauseDomId(ref: string): string {
   return `clause-${ref}`;
 }
 
 type Listener = () => void;
 
-/**
- * Observable working copy of the lease. Initialized from the immutable fixture
- * (which is never mutated), it records applied tracked-changes and notifies
- * subscribers so the canvas can re-render. Pure data + subscriptions — no DOM.
- */
+// Observable working copy of the lease. Initialized from the immutable fixture, which is never mutated; records applied tracked-changes and notifies subscribers so the canvas can re-render. Pure data plus subscriptions, no DOM.
 export class DocumentModel {
   private clauses: WorkingClause[];
   private listeners = new Set<Listener>();
@@ -44,7 +34,7 @@ export class DocumentModel {
     }));
   }
 
-  /** Subscribe to change notifications; returns an unsubscribe fn. */
+  // Subscribe to change notifications; returns an unsubscribe fn.
   subscribe = (listener: Listener): (() => void) => {
     this.listeners.add(listener);
     return () => {
@@ -52,7 +42,7 @@ export class DocumentModel {
     };
   };
 
-  /** Current working clauses. Reference changes only when the model mutates. */
+  // Current working clauses. Reference changes only when the model mutates.
   getSnapshot = (): WorkingClause[] => this.clauses;
 
   private notify(): void {
@@ -63,7 +53,7 @@ export class DocumentModel {
     return c.segments.map((s) => (s.kind === "text" ? s.text : s.proposed)).join("");
   }
 
-  /** Full document text, reflecting applied changes (proposed text wins). */
+  // Full document text, reflecting applied changes (proposed text wins).
   getFullText(): string {
     const body = this.clauses
       .map((c) => `${c.ref}. ${c.heading}\n\n${this.clauseText(c)}`)
@@ -71,12 +61,7 @@ export class DocumentModel {
     return `${LEASE_TITLE}\n\n${leaseRecitals}\n\n${body}\n`;
   }
 
-  /**
-   * Apply a tracked change. Searches for `edit.originalText` SCOPED to the
-   * clause named by `edit.clauseRef`, and only within still-unchanged text
-   * runs. Exactly one match → records the change and notifies. Zero →
-   * not-found. More than one → ambiguous (never guesses which to edit).
-   */
+  // Applies a tracked change: searches for `edit.originalText` scoped to the clause named by `edit.clauseRef`, and only within still-unchanged text runs. Exactly one match records the change; zero is not-found; more than one is ambiguous.
   applyChange(edit: SuggestedEdit): ApplyResult {
     const idx = this.clauses.findIndex((c) => c.ref === edit.clauseRef);
     if (idx === -1) return { status: "not-found", searchedText: edit.originalText };

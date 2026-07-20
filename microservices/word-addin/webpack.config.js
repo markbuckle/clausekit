@@ -6,9 +6,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 
 const urlDev = "https://localhost:3000/";
-// Production host for the add-in's manifest URLs (taskpane, icons). The canonical
-// prod manifest is frontend/public/manifest.xml; this keeps a webpack-built
-// dist/manifest.xml consistent too. Override via ADDIN_BASE_URL.
+// Production host for the add-in's manifest URLs (taskpane, icons). The canonical prod manifest is frontend/public/manifest.xml; this keeps a webpack-built dist/manifest.xml consistent too. Override via ADDIN_BASE_URL.
 const urlProd = process.env.ADDIN_BASE_URL || "https://clausekit-delta.vercel.app/";
 
 async function getHttpsOptions() {
@@ -103,8 +101,7 @@ module.exports = async (env, options) => {
       new webpack.ProvidePlugin({
         Promise: ["es6-promise", "Promise"],
       }),
-      // Inject the backend base URL at build time. Defaults to the local backend;
-      // set API_BASE_URL in the environment when building for deployment (8b).
+      // Inject the backend base URL at build time. Defaults to the local backend; set API_BASE_URL in the environment when building for deployment.
       new webpack.DefinePlugin({
         __CLAUSEKIT_API_BASE_URL__: JSON.stringify(
           process.env.API_BASE_URL || "http://localhost:4000"

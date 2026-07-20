@@ -9,11 +9,7 @@ import { useNegotiate } from "./useNegotiate";
 
 interface AppProps {
   title: string;
-  /**
-   * Render the app's own branded header. Defaults to true (the browser
-   * playground). Hidden inside the Office task pane, whose host chrome already
-   * shows the add-in name — so Word doesn't stack two "ClauseKit" headers.
-   */
+  // Render the app's own branded header. Defaults to true (the browser playground); hidden inside the Office task pane, whose host chrome already shows the add-in name.
   showHeader?: boolean;
 }
 

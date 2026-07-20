@@ -3,15 +3,9 @@ import type { ApplyResult, ScrollTarget, Selection, SuggestedEdit } from "../typ
 
 /* global Word */
 
-/**
- * Real Word implementation of the DocumentService seam, via Word.run / Office.js.
- * Only the Office entry injects this; the playground keeps the mock. Edits land
- * as NATIVE Word tracked changes.
- */
+// Real Word implementation of the DocumentService seam, via Word.run / Office.js. Only the Office entry injects this; the playground keeps the mock. Edits land as native Word tracked changes.
 
-// Word's body.search caps the query at ~255 chars and is finicky with some
-// punctuation. Above this (or when search unexpectedly finds nothing) we fall
-// back to locating the span in the document's actual text.
+// Word's body.search caps the query at ~255 chars and is finicky with some punctuation; above this (or when search unexpectedly finds nothing) we fall back to locating the span in the document's actual text.
 const SEARCH_MAX = 255;
 const ANCHOR_MAX = 200;
 const CONTEXT_CHARS = 40;
@@ -93,11 +87,7 @@ export class OfficeDocumentService implements DocumentService {
   }
 }
 
-/**
- * Locate `needle` and report whether it matches exactly once. Primary path is
- * body.search (gives a real range cheaply); falls back to the document's actual
- * text for spans over the search cap or that search can't match.
- */
+// Locate `needle` and report whether it matches exactly once. Primary path is body.search (a real range, cheaply); falls back to the document's actual text for spans over the search cap or that search can't match.
 async function locate(context: Word.RequestContext, needle: string): Promise<Located> {
   const body = context.document.body;
 
@@ -121,15 +111,13 @@ async function locate(context: Word.RequestContext, needle: string): Promise<Loc
   for (let i = first; i !== -1; i = text.indexOf(needle, i + needle.length)) count++;
   if (count > 1) return { status: "many", count };
 
-  // Exactly one occurrence: resolve it to a Range via prefix/suffix anchors that
-  // are short enough for body.search, then expand between them.
+  // Exactly one occurrence: resolve it to a Range via prefix/suffix anchors short enough for body.search, then expand between them.
   const range = await resolveByAnchors(context, needle);
-  // If we can't safely resolve a range, treat as not-found rather than risk
-  // editing the wrong span.
+  // Can't safely resolve a range — treat as not-found rather than risk editing the wrong span.
   return range ? { status: "one", range } : { status: "none" };
 }
 
-/** First match range for `needle` (uniqueness not required) — used for scrolling. */
+// First match range for `needle` (uniqueness not required) — used for scrolling.
 async function findFirst(context: Word.RequestContext, needle: string): Promise<Word.Range | null> {
   const body = context.document.body;
   const query = needle.length <= SEARCH_MAX ? needle : clampAnchor(needle, "start");
@@ -139,11 +127,7 @@ async function findFirst(context: Word.RequestContext, needle: string): Promise<
   return results.items.length > 0 ? results.items[0] : null;
 }
 
-/**
- * Build a Range spanning `needle` by searching for its start and end anchors
- * (each within the search cap) and expanding between them. Verifies the expanded
- * range's text matches before returning, so a mismatch resolves to null.
- */
+// Build a Range spanning `needle` by searching for its start and end anchors (each within the search cap) and expanding between them; verifies the expanded range's text matches before returning, so a mismatch resolves to null.
 async function resolveByAnchors(
   context: Word.RequestContext,
   needle: string
@@ -167,7 +151,7 @@ async function resolveByAnchors(
   return full.text === needle ? full : null;
 }
 
-/** A start/end slice of `s` no longer than ANCHOR_MAX, cut at a word boundary. */
+// A start/end slice of `s` no longer than ANCHOR_MAX, cut at a word boundary.
 function clampAnchor(s: string, which: "start" | "end"): string {
   if (s.length <= ANCHOR_MAX) return s;
   if (which === "start") {

@@ -1,13 +1,6 @@
 import type { ContestedClause } from "./types";
 
-/**
- * Curated reference sidecar for the seeded lease — SEPARATE from the prose in
- * ./document.ts. This is NOT an answer key fed to the LLM: it is our curation
- * for review and the pre-wired fallback ladders the step 9 Negotiation
- * Simulator reuses. Each ladder is ordered landlord-favorable → tenant-favorable,
- * with rung[0] echoing the clause's current (off-market) language, so either
- * side can be role-played from its own end of the ladder.
- */
+// Curated reference sidecar for the seeded lease, kept separate from the prose in ./document.ts and never fed to the LLM as an answer key. Each ladder runs landlord-favorable to tenant-favorable, with rung[0] echoing the clause's current (off-market) language, for the step 9 Negotiation Simulator.
 export const contestedClauses: ContestedClause[] = [
   {
     clauseRef: "§5",
@@ -184,10 +177,10 @@ export const contestedClauses: ContestedClause[] = [
   },
 ];
 
-/** Refs of the contested clauses, in document order. */
+// Refs of the contested clauses, in document order.
 export const contestedRefs: string[] = contestedClauses.map((c) => c.clauseRef);
 
-/** Returns the contested-clause metadata for a ref, or undefined. */
+// Returns the contested-clause metadata for a ref, or undefined.
 export function getContestedClause(ref: string): ContestedClause | undefined {
   return contestedClauses.find((c) => c.clauseRef === ref);
 }

@@ -1,14 +1,6 @@
-/* ── ClauseKit Playground chrome ──
- *
- * Playground-only layout: a two-pane demo surface (lease document on the
- * left, the real task pane docked on the right). This file styles ONLY the
- * playground shell and the rendered document — the task pane itself comes
- * entirely from the shared design system (clausekit.css).
- */
+/* Playground-only layout: a two-pane demo surface (lease document on the left, the real task pane docked on the right). Styles only the playground shell and rendered document — the task pane itself comes from the shared design system (clausekit.css). */
 
-/* Mobile browsers paint a translucent blue highlight over tapped elements —
-   and with React's delegated event handlers it can land on ancestors too.
-   Kill it page-wide; :focus-visible outlines are unaffected. */
+/* Mobile browsers paint a translucent blue highlight over tapped elements, and with React's delegated event handlers it can land on ancestors too. Kill it page-wide; :focus-visible outlines are unaffected. */
 * { -webkit-tap-highlight-color: transparent; }
 
 .pg-root {
@@ -28,9 +20,7 @@
   padding: 32px 24px 64px;
   display: flex;
   justify-content: center;
-  /* Top-align so the page sizes to its content height instead of being
-     stretched to the (viewport-bound) pane height. The pane is the scroll
-     container; gray shows only as the margin around the page. */
+  /* Top-align so the page sizes to its content height instead of stretching to the (viewport-bound) pane height; the pane is the scroll container, gray shows only as the margin around the page. */
   align-items: flex-start;
 }
 
@@ -42,8 +32,7 @@
   border-radius: 4px;
   box-shadow: 0 4px 24px rgba(17, 24, 39, 0.08);
   padding: 56px 72px 72px;
-  /* height is auto (grows with content); fill the viewport when the document
-     is short. 96px = the pane's top (32) + bottom (64) padding. */
+  /* height is auto (grows with content); fills the viewport when the document is short. 96px = the pane's top (32) + bottom (64) padding. */
   min-height: calc(100vh - 96px);
   /* A serif gives the document a contractual feel, distinct from the pane UI. */
   font-family: Georgia, 'Times New Roman', serif;
@@ -148,11 +137,7 @@
   height: 100%;
 }
 
-/* ── Mobile: full-width document + the pane as a collapsible bottom sheet ──
- * Matches the 768px breakpoint the landing page uses for phone layouts.
- * The document takes the whole screen; the task pane is pinned to the bottom
- * edge and slides down to a slim "ClauseKit" bar when collapsed, so redlines
- * and clause flashes stay visible behind it. */
+/* Mobile: full-width document + the pane as a collapsible bottom sheet, matching the 768px breakpoint the landing page uses for phone layouts. The pane is pinned to the bottom edge and slides down to a slim "ClauseKit" bar when collapsed, so redlines and clause flashes stay visible behind it. */
 @media (max-width: 768px) {
   /* Height of the always-visible sheet header bar. */
   :root { --pg-bar-h: 46px; }
@@ -199,16 +184,12 @@
     border-top: 1px solid #d6dae0;
     border-radius: 16px 16px 0 0;
     box-shadow: 0 -12px 40px rgba(17, 24, 39, 0.28);
-    /* Opening: pops up from the bottom edge with a soft overshoot, delayed
-       until the widget has rolled off to the right. */
+    /* Opening: pops up from the bottom edge with a soft overshoot, delayed until the widget has rolled off to the right. */
     transition:
       transform 0.45s cubic-bezier(0.22, 1.2, 0.36, 1) 0.25s,
       visibility 0s;
   }
-  /* Collapsed: the sheet slides straight down off-screen (48px extra clears
-     its shadow), then the widget rolls back in. visibility flips after the
-     transition so the hidden sheet leaves the tab order and can't cover the
-     document. */
+  /* Collapsed: the sheet slides straight down off-screen (48px extra clears its shadow), then the widget rolls back in; visibility flips after the transition so the hidden sheet leaves the tab order and can't cover the document. */
   .pg-sheet-closed .pg-pane-host {
     transform: translateY(calc(100% + 48px));
     visibility: hidden;
@@ -221,17 +202,14 @@
     .pg-pane-host, .pg-sheet-fab { transition: none; }
   }
 
-  /* The sheet is short, so the empty state must be allowed to shrink and
-     scroll — otherwise its natural height pushes the chat input below the
-     viewport (flex min-height:auto). */
+  /* The sheet is short, so the empty state must be allowed to shrink and scroll — otherwise its natural height pushes the chat input below the viewport (flex min-height:auto). */
   .pg-pane-body .ck-empty {
     min-height: 0;
     overflow-y: auto;
     padding: 24px 18px;
   }
 
-  /* The sheet bar replaces the pane's own dark header (same styling), so the
-     sheet doesn't stack two "ClauseKit" headers. */
+  /* The sheet bar replaces the pane's own dark header (same styling), so the sheet doesn't stack two "ClauseKit" headers. */
   .pg-pane-host .ck-header {
     display: none;
   }
@@ -274,8 +252,7 @@
     color: rgba(255, 255, 255, 0.75);
   }
 
-  /* Circular re-open widget, shown only while the sheet is dismissed. Same
-     dark treatment as the empty-state mark (.e-mark), amber logo inside. */
+  /* Circular re-open widget, shown only while the sheet is dismissed. Same dark treatment as the empty-state mark (.e-mark), amber logo inside. */
   .pg-sheet-fab {
     position: fixed;
     right: 16px;
@@ -293,13 +270,7 @@
     user-select: none;
     touch-action: manipulation;
     box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
-    /* Sheet open: the widget has rolled off the right edge — clockwise spin
-       plus enough travel (16px inset + 58px circle + shadow room) to clear
-       the screen, like a ball rolling away.
-       NB: every state of this button must keep this exact function list
-       (translateX rotate scale). If the lists differ, the transition falls
-       back to matrix interpolation, which collapses rotate(270deg) to
-       rotate(-90deg) and the roll turns into a counter-rotating slide. */
+    /* Sheet open: the widget rolls off the right edge (clockwise spin plus enough travel to clear the screen). Every state of this button must keep the same transform function list (translateX rotate scale) — otherwise the transition falls back to matrix interpolation, which collapses rotate(270deg) to rotate(-90deg) and turns the roll into a counter-rotating slide. */
     transform: translateX(122px) rotate(270deg) scale(1);
     pointer-events: none;
     visibility: hidden;
@@ -311,16 +282,12 @@
     transform: translateX(0) rotate(0deg) scale(1);
     pointer-events: auto;
     visibility: visible;
-    /* Closing: once the sheet has slid down, roll back in from the right and
-       settle with a slight overshoot. */
+    /* Closing: once the sheet has slid down, roll back in from the right and settle with a slight overshoot. */
     transition:
       transform 0.42s cubic-bezier(0.22, 1.15, 0.36, 1) 0.32s,
       visibility 0s linear 0.32s;
   }
-  /* Press feedback. Scoped to the closed state so that the instant the tap
-     flips the root class to open this rule stops matching — otherwise its
-     transform/transition would override the roll-out and the widget would
-     blink out instead of rolling. */
+  /* Press feedback, scoped to the closed state: once the tap flips the root class to open, this rule stops matching — otherwise its transform/transition would override the roll-out and the widget would blink out instead of rolling. */
   .pg-sheet-closed .pg-sheet-fab:active {
     transform: translateX(0) rotate(0deg) scale(0.9);
     transition: transform 0.1s ease-out;

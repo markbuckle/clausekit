@@ -11,12 +11,7 @@ import "./playground.css";
 
 /* global document */
 
-/**
- * Browser playground: the real task pane (reused, not reimplemented) running
- * next to the seeded lease, now wired to a live MockDocumentService. Applying a
- * redline from the pane mutates the shared model; the canvas subscribes and
- * re-renders the tracked change. No Office host — React mounts directly.
- */
+// Browser playground: the real task pane (reused, not reimplemented) running next to the seeded lease, wired to a live MockDocumentService. Applying a redline mutates the shared model; the canvas subscribes and re-renders. No Office host — React mounts directly.
 
 const model = new DocumentModel();
 const documentService = new MockDocumentService(model);
@@ -56,9 +51,7 @@ function LeaseDocument() {
 }
 
 function Playground() {
-  // On phones the pane becomes a bottom sheet; this tracks whether it's
-  // expanded (collapsed on load so the contract gets the first impression).
-  // Desktop ignores it entirely (the toggle bar is display: none).
+  // On phones the pane becomes a bottom sheet; tracks whether it's expanded (collapsed on load so the contract gets the first impression). Desktop ignores it entirely (toggle bar is display: none).
   const [sheetOpen, setSheetOpen] = useState(false);
 
   return (

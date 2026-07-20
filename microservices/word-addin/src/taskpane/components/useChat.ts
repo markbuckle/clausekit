@@ -6,17 +6,13 @@ import { trpc } from "../../services/trpc";
 export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
-  /** § refs the answer relies on (assistant turns only). */
+  // § refs the answer relies on (assistant turns only).
   citations?: string[];
-  /** A concrete redline, present only when the model proposed one. */
+  // A concrete redline, present only when the model proposed one.
   edit?: SuggestedEdit;
 }
 
-/**
- * How many prior turns to send as conversation history. The document itself
- * never rides in history — it goes in `documentText`, which the backend caches
- * as a stable prefix. Keeping history short keeps the uncached part small.
- */
+// How many prior turns to send as conversation history. The document itself never rides in history — it goes in `documentText`, which the backend caches as a stable prefix — so keeping history short keeps the uncached part small.
 const HISTORY_TURNS = 6;
 
 export interface UseChat {
@@ -27,11 +23,7 @@ export interface UseChat {
   retry: () => void;
 }
 
-/**
- * Owns the live chat: the message list, loading/error state, and the call to
- * the backend's /api/ask, grounded in the document via the DocumentService seam.
- * Assistant turns carry the structured citations and optional redline edit.
- */
+// Owns the live chat: the message list, loading/error state, and the call to the backend's /api/ask, grounded in the document via the DocumentService seam.
 export function useChat(): UseChat {
   const service = useDocumentService();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -44,11 +36,7 @@ export function useChat(): UseChat {
       setError(null);
       try {
         const documentText = await service.getFullText();
-        // Fully typed end to end: input and response types are inferred from
-        // the backend's AppRouter (zod schemas) — no hand-written response
-        // types, and drift fails at compile time. Server errors (rate limit,
-        // spend cap, model failure) surface as TRPCClientError with the
-        // server's user-facing message.
+        // Fully typed end to end: input and response types are inferred from the backend's AppRouter (zod schemas), so drift fails at compile time. Server errors surface as TRPCClientError with the server's user-facing message.
         const data = await trpc.ask.mutate({
           documentText,
           message,
@@ -86,8 +74,7 @@ export function useChat(): UseChat {
 
   const retry = useCallback(() => {
     if (loading) return;
-    // On error the assistant reply was never appended, so the last message is
-    // the user turn that failed — re-ask it with the history before it.
+    // On error the assistant reply was never appended, so the last message is the user turn that failed — re-ask it with the history before it.
     let lastUserIdx = -1;
     for (let i = messages.length - 1; i >= 0; i--) {
       if (messages[i].role === "user") {

@@ -6,12 +6,7 @@ const FLASH_CLASS = "pg-flash";
 const FLASH_MS = 1200;
 const CONTEXT_CHARS = 40;
 
-/**
- * In-browser DocumentService backed by a {@link DocumentModel}. Text operations
- * delegate to the model; selection and scrolling read/drive the live canvas DOM
- * (which is appropriate here — this is the mock used by the playground and
- * tests, not the real Word host).
- */
+// In-browser DocumentService backed by a DocumentModel. Text operations delegate to the model; selection and scrolling read/drive the live canvas DOM, which is fine here since this is the mock used by the playground and tests, not the real Word host.
 export class MockDocumentService implements DocumentService {
   constructor(private readonly model: DocumentModel) {}
 

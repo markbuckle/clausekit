@@ -8,7 +8,7 @@ const TIER_LABELS: Record<string, string> = { ideal: "Ideal", market: "Market", 
 interface TermCardProps {
   term: AnalyzedTerm;
   heading?: string;
-  /** The side the brief was run for — determines who the counterparty is. */
+  // The side the brief was run for — determines who the counterparty is.
   side: Side;
 }
 
@@ -17,8 +17,7 @@ export default function TermCard({ term, heading, side }: TermCardProps) {
   const [appliedTier, setAppliedTier] = useState<string | null>(null);
   const [pendingTier, setPendingTier] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  // Inline wording tweaks, keyed by tier. A rung with no draft applies the
-  // model's proposal; cancelling an edit deletes the draft to revert.
+  // Inline wording tweaks, keyed by tier. A rung with no draft applies the model's proposal; cancelling an edit deletes the draft to revert.
   const [editingTier, setEditingTier] = useState<string | null>(null);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
 

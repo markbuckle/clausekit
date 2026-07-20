@@ -10,8 +10,7 @@ interface ChatPaneProps {
   onRetry: () => void;
 }
 
-/** Minimal inline rendering: **bold** spans, with line breaks preserved as
- *  separate paragraphs so lists in the model's answer stay readable. */
+// Minimal inline rendering: **bold** spans, with line breaks preserved as separate paragraphs so lists in the model's answer stay readable.
 function renderContent(text: string) {
   return text.split("\n").map((line, lineIdx) => {
     if (line.trim() === "") return <div key={lineIdx} className="ck-gap" />;

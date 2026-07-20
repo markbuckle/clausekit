@@ -1,12 +1,6 @@
 import type { LeaseClause } from "./types";
 
-/**
- * The seeded demo document: a long-form commercial lease (landlord vs tenant)
- * authored as clause-addressable data. This is the genuine input the LLM
- * reasons over — it contains NO answer key. Six clauses carry deliberately
- * off-market, landlord-favorable language (see ./metadata.ts for the curated
- * sidecar): §5, §9, §11, §15, §16, §17.
- */
+// The seeded demo document: a long-form commercial lease authored as clause-addressable data. This is the genuine input the LLM reasons over, with no answer key. Six clauses carry deliberately off-market, landlord-favorable language (see ./metadata.ts): §5, §9, §11, §15, §16, §17.
 
 export const LEASE_TITLE = "COMMERCIAL LEASE AGREEMENT";
 
@@ -215,16 +209,12 @@ export const leaseClauses: LeaseClause[] = [
   },
 ];
 
-/** Returns the clause with the given ref, or undefined. */
+// Returns the clause with the given ref, or undefined.
 export function getClauseByRef(ref: string): LeaseClause | undefined {
   return leaseClauses.find((c) => c.ref === ref);
 }
 
-/**
- * Derives the full plain text of the lease from its clause structure. This is
- * what a DocumentService.getFullText() implementation backed by this fixture
- * would return.
- */
+// Derives the full plain text of the lease from its clause structure; what a DocumentService.getFullText() implementation backed by this fixture would return.
 export function getLeaseFullText(): string {
   const body = leaseClauses.map((c) => `${c.ref}. ${c.heading}\n\n${c.text}`).join("\n\n");
   return `${LEASE_TITLE}\n\n${leaseRecitals}\n\n${body}\n`;
