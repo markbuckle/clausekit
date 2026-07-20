@@ -9,27 +9,14 @@ import { runAsk, runNegotiate, ModelCallError, MODEL } from "./handlers";
 import { spendGuard, tokensUsedToday, seedSpendFromDb } from "./spend";
 import { initDb, dbConnected } from "./db";
 
-/**
- * ClauseKit backend. The API is served twice from the same handlers:
- *
- *   - tRPC (canonical): POST /trpc/ask and /trpc/negotiate via the Express
- *     adapter. The word-addin client infers full request/response types from
- *     AppRouter (see router.ts) — no hand-written response types client-side.
- *   - REST (DEPRECATED): POST /api/ask and /api/negotiate kept temporarily as
- *     thin wrappers for curl-ability and smoke tests. New clients use tRPC.
- *
- * Express owns the cross-cutting middleware — CORS, per-route rate limits, and
- * the daily spend guard — mounted ahead of BOTH surfaces, so tRPC calls get the
- * exact same protections as the legacy routes.
- */
+// The API is served twice from the same handlers: tRPC (canonical, /trpc/*) and REST (deprecated, /api/*, kept for curl smoke tests).
+// Express owns CORS, rate limits, and the spend guard, mounted ahead of both surfaces so they share the same protections.
 
 const PORT = Number(process.env.PORT) || 4000;
 
 // ── Production hardening config (env-driven; localhost defaults for dev) ──
 
-// CORS allowlist. In prod set ALLOWED_ORIGINS to the deployed frontend/playground
-// origin(s), comma-separated. Defaults cover local dev: vite (5173/5174) and the
-// HTTPS add-in + playground dev servers (3000/3001).
+// CORS allowlist; set ALLOWED_ORIGINS (comma-separated) in prod. Defaults cover local vite + the HTTPS add-in/playground dev servers.
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS ?? "")
   .split(",")
   .map((s) => s.trim())
@@ -42,18 +29,12 @@ const DEV_ORIGINS = [
 ];
 const ORIGIN_ALLOWLIST = ALLOWED_ORIGINS.length > 0 ? ALLOWED_ORIGINS : DEV_ORIGINS;
 
-// Per-IP rate limits: /api/ask generous, /api/negotiate tight (each negotiate is
-// ~4k+ tokens) with a low daily cap too.
+// Per-IP rate limits: /api/ask generous, /api/negotiate tight since each run is ~4k+ tokens.
 const ASK_PER_MIN = Number(process.env.ASK_RATE_PER_MIN) || 30;
 const NEGOTIATE_PER_MIN = Number(process.env.NEGOTIATE_RATE_PER_MIN) || 5;
 const NEGOTIATE_PER_DAY = Number(process.env.NEGOTIATE_RATE_PER_DAY) || 25;
 
-/**
- * Rate-limit responder that speaks both wire formats: the tRPC error envelope
- * on /trpc/* (so TRPCClientError surfaces the human message) and the legacy
- * { error } JSON on the deprecated REST routes. One limiter instance is mounted
- * on both surfaces, so the counters are shared across them.
- */
+// Rate-limit responder that speaks both wire formats: the tRPC error envelope on /trpc/*, legacy { error } JSON elsewhere.
 function limitHandler(message: string): express.RequestHandler {
   return (req, res) => {
     if (req.originalUrl.startsWith("/trpc")) {
@@ -91,8 +72,7 @@ const negotiateDayLimiter = rateLimit({
 });
 
 const app = express();
-// Behind a single proxy in prod (Cloud Run etc.) so req.ip reflects the real
-// client for rate limiting (not the proxy).
+// Behind a single proxy in prod (Cloud Run etc.), so req.ip reflects the real client, not the proxy.
 app.set("trust proxy", 1);
 app.use(
   cors({
@@ -111,9 +91,7 @@ app.get("/health", (_req, res) => {
 
 // ── tRPC (canonical surface) ────────────────────────────────────────────────
 
-// The per-procedure middleware below matches on the /trpc/<procedure> path, so
-// batched calls (/trpc/ask,negotiate) would slip past the limiters. Our client
-// uses httpLink (no batching); reject batch URLs outright as defense in depth.
+// Batched calls (/trpc/ask,negotiate) would slip past the per-procedure limiters below; reject them outright as defense in depth.
 app.use("/trpc", (req, res, next) => {
   if (req.path.includes(",")) {
     res.status(404).json({ error: "Batched tRPC calls are not supported." });
@@ -132,8 +110,7 @@ app.use(
 );
 
 // ── REST (DEPRECATED — thin wrappers over the same handlers) ───────────────
-// Kept temporarily for curl-based smoke tests. The word-addin uses tRPC only;
-// remove these once nothing external depends on them.
+// Kept for curl smoke tests; the word-addin uses tRPC only. Remove once nothing external depends on these.
 
 function restError(res: express.Response, err: unknown, fallback: string): express.Response {
   if (err instanceof ModelCallError) {
@@ -170,8 +147,7 @@ app.post("/api/negotiate", negotiateDayLimiter, negotiateMinuteLimiter, spendGua
   }
 });
 
-// Connect to Mongo (best-effort — the API serves regardless), seed the spend
-// counter from the persisted total, then start listening.
+// Connect to Mongo (best-effort), seed the spend counter, then start listening.
 void initDb()
   .then(() => seedSpendFromDb())
   .finally(() => {

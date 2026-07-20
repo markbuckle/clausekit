@@ -1,11 +1,7 @@
 import { initTRPC } from "@trpc/server";
 import type * as express from "express";
 
-/**
- * tRPC initialization. The context carries the Express request/response so
- * procedures could read headers etc.; CORS, rate limiting, and the spend guard
- * stay as Express middleware mounted ahead of the adapter (see index.ts).
- */
+// tRPC context carries the Express req/res; CORS, rate limiting, and the spend guard stay as Express middleware (see index.ts).
 export interface TrpcContext {
   req: express.Request;
   res: express.Response;

@@ -8,7 +8,7 @@ import {
 } from "./schemas";
 import { runAsk, runNegotiate, ModelCallError } from "./handlers";
 
-/** Map a handler failure to a TRPCError whose message is safe to show users. */
+// Map a handler failure to a TRPCError whose message is safe to show users.
 function toTrpcError(err: unknown, fallback: string): TRPCError {
   if (err instanceof ModelCallError) {
     return new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: err.message });
@@ -16,14 +16,9 @@ function toTrpcError(err: unknown, fallback: string): TRPCError {
   return new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: fallback });
 }
 
-/**
- * The ClauseKit API as typed procedures. Input AND output are zod-validated,
- * and the word-addin's tRPC client infers its call signatures from AppRouter —
- * one source of truth for the wire contract. Both procedures are mutations
- * (each call spends LLM tokens; neither is idempotent or cacheable).
- */
+// Input and output are zod-validated; the word-addin's tRPC client infers its call signatures from AppRouter.
 export const appRouter = router({
-  /** Contract-review Q&A grounded in the document. */
+  // Contract-review Q&A grounded in the document.
   ask: publicProcedure
     .input(askInputSchema)
     .output(askOutputSchema)
@@ -35,7 +30,7 @@ export const appRouter = router({
       }
     }),
 
-  /** Negotiation Simulator: off-market terms + fallback ladders for one side. */
+  // Negotiation Simulator: off-market terms + fallback ladders for one side.
   negotiate: publicProcedure
     .input(negotiateInputSchema)
     .output(negotiateOutputSchema)

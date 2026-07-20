@@ -17,22 +17,13 @@ import {
 import { recordUsage } from "./spend";
 import { logSession } from "./db";
 
-/**
- * The model layer: prompts, tool definitions, response validation, and the two
- * handlers (runAsk / runNegotiate) shared by the tRPC procedures and the
- * deprecated REST wrappers. Transport-agnostic — no Express or tRPC imports.
- */
+// The model layer: prompts, tool definitions, response validation, and the two handlers shared by tRPC and the deprecated REST wrappers. Transport-agnostic, no Express or tRPC imports.
 
-// Structured-output path. Default Haiku 4.5 for cost. originalText is validated
-// verbatim server-side and any non-exact edit is dropped, so a cheaper model can
-// only reduce how often an edit is offered, never ship a broken one. Swappable
+// Default Haiku 4.5 for cost; originalText is validated verbatim server-side, so a cheaper model can only reduce how often an edit is offered, never ship a broken one.
 export const MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-4-5";
 const MAX_TOKENS = 1024;
 
-// Negotiation Simulator runs on Sonnet — the sharpest-reasoning task in the
-// product (multi-perspective role-play + verbatim anchors), and where prompt
-// caching re-engages. Swappable via env (bump to claude-opus-4-8 if quality needs it).
-// const NEGOTIATE_MODEL = process.env.NEGOTIATE_MODEL || "claude-sonnet-4-6";
+// Negotiation Simulator is the sharpest-reasoning task in the product; swap to claude-sonnet-4-6 or claude-opus-4-8 via env if quality needs it.
 export const NEGOTIATE_MODEL = process.env.NEGOTIATE_MODEL || "claude-haiku-4-5";
 const NEGOTIATE_MAX_TOKENS = 8000;
 const MAX_TERMS = 6;
@@ -45,7 +36,7 @@ if (!process.env.ANTHROPIC_API_KEY) {
 // Reads ANTHROPIC_API_KEY from the environment.
 const anthropic = new Anthropic();
 
-/** Thrown when the model call fails; carries the HTTP status for REST parity. */
+// Thrown when the model call fails; carries the HTTP status for REST parity.
 export class ModelCallError extends Error {
   constructor(
     message: string,
@@ -121,8 +112,7 @@ const REVIEW_TOOL: Anthropic.Tool = {
   },
 };
 
-// Stable system prompt for the Negotiation Simulator — no dynamic content (the
-// side rides in the user message), so it stays part of the cached prefix.
+// Stable system prompt for the Negotiation Simulator; the side rides in the user message so this stays part of the cached prefix.
 const NEGOTIATE_SYSTEM_PROMPT = `You are ClauseKit's negotiation strategist. You represent ONE side of a commercial contract negotiation — the side is given in the user's message — and you prepare a negotiation brief.
 
 Your job: identify the terms in the contract that are off-market or one-sided AGAINST the side you represent, and for each, build a negotiation plan. Identify the off-market terms yourself from the contract — do not assume a fixed list. Focus on the most material ones; include at most ${MAX_TERMS}.
@@ -206,18 +196,14 @@ const NEGOTIATE_TOOL: Anthropic.Tool = {
   },
 };
 
-/** The real section refs present in the document, e.g. {"§1",…,"§20"}. */
+// The real section refs present in the document, e.g. {"§1",…,"§20"}.
 function documentRefs(documentText: string): Set<string> {
   const refs = new Set<string>();
   for (const m of documentText.matchAll(/§\d+/g)) refs.add(m[0]);
   return refs;
 }
 
-/**
- * Validate a candidate edit against the schema AND the verbatim guarantee:
- * originalText must be an EXACT substring of the document — otherwise null, so
- * the client never receives an edit it can't locate.
- */
+// Validate a candidate edit against the schema and the verbatim guarantee: originalText must be an exact substring of the document, else null.
 function validateEdit(raw: unknown, documentText: string): SuggestedEdit | null {
   const parsed = suggestedEditSchema.safeParse(raw);
   if (!parsed.success) return null;
@@ -230,7 +216,7 @@ function validateEdit(raw: unknown, documentText: string): SuggestedEdit | null 
   return parsed.data;
 }
 
-/** Validate a fallback ladder; keeps only well-formed rungs. */
+// Validate a fallback ladder; keeps only well-formed rungs.
 function validateLadder(raw: unknown): LadderRung[] {
   if (!Array.isArray(raw)) return [];
   const rungs: LadderRung[] = [];
@@ -243,12 +229,7 @@ function validateLadder(raw: unknown): LadderRung[] {
 
 const SEVERITY_RANK: Record<Severity, number> = { high: 0, medium: 1, low: 2 };
 
-/**
- * Order the brief worst-first: high → medium → low. Within a tier, terms keep
- * document order (position of currentText — always ≥ 0, validateTerms already
- * enforced the verbatim guarantee), with the model's order as the final
- * tiebreak via sort stability.
- */
+// Order the brief worst-first (high -> medium -> low); within a tier, keep document order, then the model's order as the final tiebreak.
 function rankTerms(terms: AnalyzedTerm[], documentText: string): AnalyzedTerm[] {
   return terms.sort(
     (a, b) =>
@@ -257,13 +238,8 @@ function rankTerms(terms: AnalyzedTerm[], documentText: string): AnalyzedTerm[] 
   );
 }
 
-/**
- * Validate the negotiation terms. Same verbatim guarantee as ask: a term's
- * currentText must be an EXACT substring of the document, else it's dropped, so
- * a rung can always locate what it replaces. Also requires a non-empty ladder
- * and a counterparty. A missing or invalid severity defaults to "medium"
- * rather than dropping an otherwise-good term. Caps at MAX_TERMS.
- */
+// Same verbatim guarantee as ask: currentText must be an exact substring, else dropped. Requires a non-empty ladder and a counterparty;
+// a missing/invalid severity defaults to "medium" rather than dropping an otherwise-good term. Caps at MAX_TERMS.
 function validateTerms(raw: unknown, documentText: string): AnalyzedTerm[] {
   if (!Array.isArray(raw)) return [];
   const terms: AnalyzedTerm[] = [];
@@ -300,7 +276,7 @@ function validateTerms(raw: unknown, documentText: string): AnalyzedTerm[] {
   return terms;
 }
 
-/** Contract-review Q&A: one grounded answer with citations and an optional redline. */
+// Contract-review Q&A: one grounded answer with citations and an optional redline.
 export async function runAsk(input: AskInput): Promise<AskOutput> {
   const { documentText, message, history = [] } = input;
 
@@ -314,10 +290,7 @@ export async function runAsk(input: AskInput): Promise<AskOutput> {
     response = await anthropic.messages.create({
       model: MODEL,
       max_tokens: MAX_TOKENS,
-      // The tool definition + system prompt + contract are identical across
-      // requests, so they form a cacheable stable prefix (tools and system both
-      // sit before the breakpoint). cache_control on the LAST system block sets
-      // the breakpoint; the per-turn message + history below it stay uncached.
+      // Tool definition + system prompt + contract are identical per request, forming a cacheable prefix; cache_control on the last system block sets the breakpoint.
       tools: [REVIEW_TOOL],
       tool_choice: { type: "tool", name: REVIEW_TOOL.name },
       system: [
@@ -335,8 +308,7 @@ export async function runAsk(input: AskInput): Promise<AskOutput> {
     throw toModelCallError(err, "Failed to get an answer from the model.");
   }
 
-  // Extract the structured tool output. On any shortfall we degrade to an
-  // answer-only response rather than failing.
+  // Extract the structured tool output; degrade to an answer-only response rather than failing.
   const toolUse = response.content.find(
     (b): b is Anthropic.ToolUseBlock => b.type === "tool_use" && b.name === REVIEW_TOOL.name
   );
@@ -360,7 +332,7 @@ export async function runAsk(input: AskInput): Promise<AskOutput> {
   }
 
   if (!answer) {
-    // Degrade gracefully: fall back to any prose text, drop unreliable structure.
+    // Fall back to any prose text, drop unreliable structure.
     const text = response.content
       .filter((b): b is Anthropic.TextBlock => b.type === "text")
       .map((b) => b.text)
@@ -379,7 +351,7 @@ export async function runAsk(input: AskInput): Promise<AskOutput> {
       `cache_read=${u.cache_read_input_tokens ?? 0} output=${u.output_tokens} ` +
       `citations=${citations.length} edit=${edit ? edit.clauseRef : "none"}`
   );
-  // Usage-history record (metadata only — never the contract text).
+  // Usage-history record (metadata only, never the contract text).
   logSession({
     ts: new Date(),
     route: "ask",
@@ -400,7 +372,7 @@ export async function runAsk(input: AskInput): Promise<AskOutput> {
   return payload;
 }
 
-/** Negotiation Simulator: the off-market terms + fallback ladders for one side. */
+// Negotiation Simulator: the off-market terms + fallback ladders for one side.
 export async function runNegotiate(input: NegotiateInput): Promise<NegotiateOutput> {
   const { documentText, side } = input;
 
@@ -409,9 +381,7 @@ export async function runNegotiate(input: NegotiateInput): Promise<NegotiateOutp
     response = await anthropic.messages.create({
       model: NEGOTIATE_MODEL,
       max_tokens: NEGOTIATE_MAX_TOKENS,
-      // Tool definition + system prompt + contract form the cacheable prefix
-      // (caching re-engages on Sonnet); only the per-request side rides in the
-      // message below, after the breakpoint.
+      // Tool definition + system prompt + contract form the cacheable prefix; only the per-request side rides in the message below.
       tools: [NEGOTIATE_TOOL],
       tool_choice: { type: "tool", name: NEGOTIATE_TOOL.name },
       system: [
@@ -454,7 +424,7 @@ export async function runNegotiate(input: NegotiateInput): Promise<NegotiateOutp
       `cache_read=${u.cache_read_input_tokens ?? 0} output=${u.output_tokens} ` +
       `terms=${terms.length}`
   );
-  // Usage-history record (metadata only — never the contract text).
+  // Usage-history record (metadata only, never the contract text).
   logSession({
     ts: new Date(),
     route: "negotiate",

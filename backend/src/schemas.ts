@@ -1,27 +1,16 @@
 import { z } from "zod";
 
-/**
- * Single source of truth for the API's I/O shapes.
- *
- * These zod schemas are both the runtime validation (tRPC inputs, model tool
- * outputs, deprecated REST bodies) AND the compile-time contract: the tRPC
- * client in microservices/word-addin infers its request/response types from
- * them via AppRouter, so renaming a field here fails the add-in's typecheck
- * instead of breaking at runtime. The shapes deliberately mirror the add-in's
- * host-agnostic vocabulary in microservices/word-addin/src/services/types.ts
- * (SuggestedEdit, Severity) — structural typing enforces the match at the
- * client's assignment sites.
- */
+// Single source of truth for the API's I/O shapes: these zod schemas are both the runtime validation and the compile-time
+// contract the word-addin's tRPC client infers types from, so a renamed field fails the add-in's typecheck instead of breaking at runtime.
 
-/** Non-empty after trimming, but the value itself is passed through untouched —
- *  documentText must stay byte-identical so verbatim substring checks hold. */
+// Non-empty after trimming, but passed through untouched — documentText must stay byte-identical for verbatim substring checks.
 const nonBlankString = (label: string) =>
   z.string().refine((s) => s.trim().length > 0, { message: `${label} is required` });
 
 export const severitySchema = z.enum(["low", "medium", "high"]);
 export type Severity = z.infer<typeof severitySchema>;
 
-/** An AI-proposed contract edit — matches the add-in's SuggestedEdit. */
+// An AI-proposed contract edit, matches the add-in's SuggestedEdit.
 export const suggestedEditSchema = z.object({
   clauseRef: z.string(),
   originalText: z.string().min(1),
@@ -54,7 +43,7 @@ export type AskOutput = z.infer<typeof askOutputSchema>;
 export const sideSchema = z.enum(["tenant", "landlord"]);
 export type Side = z.infer<typeof sideSchema>;
 
-/** One position on the user's fallback ladder (ideal → market → floor). */
+// One position on the user's fallback ladder (ideal -> market -> floor).
 export const ladderRungSchema = z.object({
   tier: z.string(),
   proposedText: z.string().min(1),
@@ -62,17 +51,14 @@ export const ladderRungSchema = z.object({
 });
 export type LadderRung = z.infer<typeof ladderRungSchema>;
 
-/** The opposing-counsel simulation for a term. */
+// The opposing-counsel simulation for a term.
 export const counterpartySchema = z.object({
   predictedCounter: z.string(),
   argument: z.string(),
 });
 export type Counterparty = z.infer<typeof counterpartySchema>;
 
-/** One off-market term analyzed for the negotiation brief.
- *  favoredParty is always a string here: validateTerms coerces a non-string
- *  from the model to "" before this shape is ever constructed; likewise an
- *  invalid or missing severity is defaulted to "medium" there. */
+// One off-market term analyzed for the negotiation brief. favoredParty is always a string here since validateTerms coerces it.
 export const analyzedTermSchema = z.object({
   clauseRef: z.string(),
   currentText: z.string().min(1),
